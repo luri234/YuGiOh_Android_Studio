@@ -157,7 +157,7 @@
         app:layout_constraintStart_toStartOf="@+id/guideline3"
         app:layout_constraintTop_toTopOf="@+id/guideline16"
         app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@drawable/img" />
+        app:srcCompat="@drawable/m_craneoconvocado" />
 
     <ImageView
         android:id="@+id/imageView2"
@@ -170,7 +170,7 @@
         app:layout_constraintStart_toStartOf="@+id/guideline11"
         app:layout_constraintTop_toTopOf="@+id/guideline16"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/img_1" />
+        app:srcCompat="@drawable/m_duendemistico" />
 
     <View
         android:id="@+id/cuadrado"
