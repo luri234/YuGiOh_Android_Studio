@@ -10,6 +10,13 @@
     tools:context=".MainActivity"
     tools:visibility="visible">
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_seccionRoja"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.83994526" />
+
     <View
         android:id="@+id/seccion_roja"
         android:layout_width="0dp"
@@ -19,39 +26,62 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline_seccionRoja"
+        app:layout_constraintTop_toTopOf="@+id/ScrollRojo"
         app:layout_constraintVertical_bias="0.0" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_seccionRoja"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.80" />
+    <View
+        android:id="@+id/cuadritorojo"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#4E0419"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_seccionRoja"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guidelineTop_SeccionVida" />
 
     <View
         android:id="@+id/seccion_azul"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#DE0D2990"
-        app:layout_constraintBottom_toTopOf="@+id/guideline_seccionAzul"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineBottom_SeccionAzul"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mano_maquina"
-        app:layout_constraintVertical_bias="0.578" />
+        app:layout_constraintVertical_bias="0.0" />
+
+    <View
+        android:id="@+id/cuadritoAzul"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#DE111F6F"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_cuadroVidaMaquina"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guidelineBottom_SeccionAzul"
+        app:layout_constraintVertical_bias="0.0" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_seccionAzul"
+        android:id="@+id/guideline_cuadroVidaMaquina"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.20" />
+        app:layout_constraintGuide_percent="0.18" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineIzq_VidaJugador"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.6" />
 
     <HorizontalScrollView
         android:id="@+id/ScrollAzul"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineBottom_ScrollSeccionAzul"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineBottom_SeccionAzul"
         app:layout_constraintEnd_toStartOf="@+id/guidelineDerecho_scroll"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guidelineIzquierdo_scroll"
@@ -112,16 +142,16 @@
         app:layout_constraintEnd_toStartOf="@+id/guidelineDerecho_scroll"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guidelineIzquierdo_scroll"
-        app:layout_constraintTop_toTopOf="@+id/guidelineTop_ScrollSeccionRojo"
+        app:layout_constraintTop_toTopOf="@+id/guideline_seccionRoja"
         app:layout_constraintVertical_bias="0.0">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="100dp"
+                android:layout_width="99dp"
                 android:layout_height="match_parent"
                 android:layout_marginRight="2dp"
                 android:scaleType="centerInside"
@@ -162,7 +192,7 @@
     </HorizontalScrollView>
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineTop_ScrollSeccionRojo"
+        android:id="@+id/guidelineTop_SeccionVida"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -190,11 +220,11 @@
         app:layout_constraintGuide_percent="0.9775" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineBottom_ScrollSeccionAzul"
+        android:id="@+id/guidelineBottom_SeccionAzul"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.18" />
+        app:layout_constraintGuide_percent="0.16" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineTop_ScrollSeccionAzul"
@@ -322,7 +352,9 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="vertical" />
+            android:orientation="vertical" >
+
+        </LinearLayout>
     </HorizontalScrollView>
 
     <ImageView
@@ -457,6 +489,13 @@
         app:layout_constraintGuide_percent="0.45" />
 
     <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineVidaMaquina_Texto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.4" />
+
+    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineIzq3_MonstruoMaquina"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -483,5 +522,31 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.95" />
+
+    <TextView
+        android:id="@+id/puntos_vida"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fontFamily="sans-serif-smallcaps"
+        android:text="Puntos de vida: 4000"
+        android:textColor="#DEFFFCFC"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_seccionRoja"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineDerecho_scroll"
+        app:layout_constraintStart_toStartOf="@+id/guidelineIzq_VidaJugador"
+        app:layout_constraintTop_toTopOf="@+id/guidelineTop_SeccionVida" />
+
+    <TextView
+        android:id="@+id/puntos_maquina"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fontFamily="sans-serif-smallcaps"
+        android:text="Puntos de vida: 4000"
+        android:textColor="#DEFFFCFC"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_cuadroVidaMaquina"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineVidaMaquina_Texto"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guidelineIzq1_EspecialMaquina"
+        app:layout_constraintTop_toTopOf="@+id/guidelineBottom_SeccionAzul"
+        app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
