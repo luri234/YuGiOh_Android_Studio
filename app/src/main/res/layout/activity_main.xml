@@ -10,20 +10,6 @@
     tools:context=".MainActivity"
     tools:visibility="visible">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_seccionRoja"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.80" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_seccionAzul"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.20" />
-
     <View
         android:id="@+id/seccion_roja"
         android:layout_width="0dp"
@@ -36,16 +22,87 @@
         app:layout_constraintTop_toTopOf="@+id/guideline_seccionRoja"
         app:layout_constraintVertical_bias="0.0" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_seccionRoja"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.80" />
+
     <View
         android:id="@+id/seccion_azul"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#DE112380"
+        android:background="#DE0D2990"
         app:layout_constraintBottom_toTopOf="@+id/guideline_seccionAzul"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mano_maquina"
         app:layout_constraintVertical_bias="0.578" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_seccionAzul"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.20" />
+
+    <HorizontalScrollView
+        android:id="@+id/ScrollAzul"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineBottom_ScrollSeccionAzul"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineDerecho_scroll"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guidelineIzquierdo_scroll"
+        app:layout_constraintTop_toTopOf="@+id/guidelineTop_ScrollSeccionAzul"
+        app:layout_constraintVertical_bias="0.0">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="2dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/m_dragonblancodeojosazules" />
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="2dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/m_dragonblancodeojosazules" />
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="2dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/m_dragonblancodeojosazules" />
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="2dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/m_dragonblancodeojosazules" />
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="2dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/m_dragonblancodeojosazules" />
+
+
+        </LinearLayout>
+
+
+    </HorizontalScrollView>
 
     <HorizontalScrollView
         android:id="@+id/ScrollRojo"
@@ -65,35 +122,35 @@
 
             <ImageView
                 android:layout_width="100dp"
-                android:layout_height="120dp"
+                android:layout_height="match_parent"
                 android:layout_marginRight="2dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/m_dragonblancodeojosazules" />
 
             <ImageView
                 android:layout_width="100dp"
-                android:layout_height="120dp"
+                android:layout_height="match_parent"
                 android:layout_marginRight="2dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/m_dragonblancodeojosazules" />
 
             <ImageView
                 android:layout_width="100dp"
-                android:layout_height="120dp"
+                android:layout_height="match_parent"
                 android:layout_marginRight="2dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/m_dragonblancodeojosazules" />
 
             <ImageView
                 android:layout_width="100dp"
-                android:layout_height="120dp"
+                android:layout_height="match_parent"
                 android:layout_marginRight="2dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/m_dragonblancodeojosazules" />
 
             <ImageView
                 android:layout_width="100dp"
-                android:layout_height="120dp"
+                android:layout_height="match_parent"
                 android:layout_marginRight="2dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/m_dragonblancodeojosazules" />
@@ -103,20 +160,6 @@
 
 
     </HorizontalScrollView>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineIzquierdo_scroll"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.025" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineDerecho_scroll"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.9775" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineTop_ScrollSeccionRojo"
@@ -133,6 +176,20 @@
         app:layout_constraintGuide_percent="0.98" />
 
     <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineIzquierdo_scroll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.025" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineDerecho_scroll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.9775" />
+
+    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineBottom_ScrollSeccionAzul"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -147,119 +204,112 @@
         app:layout_constraintGuide_percent="0.02" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
+        android:id="@+id/guidelineTop_MonstruosJugador"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.53" />
+        app:layout_constraintGuide_percent="0.51" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline5"
+        android:id="@+id/guidelineFinal_MonstruosMaquina"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.48" />
+        app:layout_constraintGuide_percent="0.49" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline3"
+        android:id="@+id/guidelineIzq1_EspecialMaquina"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.1" />
+        app:layout_constraintGuide_percent="0.03" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline10"
+        android:id="@+id/guidelineDer1_EspecialMaquina"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.3" />
+        app:layout_constraintGuide_percent="0.2" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline11"
+        android:id="@+id/guidelineIzq2_EspecialMaquina"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.4" />
+        app:layout_constraintGuide_percent="0.36" />
 
     <ImageView
         android:id="@+id/imageView11"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline7"
-        app:layout_constraintEnd_toStartOf="@+id/guideline12"
-        app:layout_constraintStart_toStartOf="@+id/guideline11"
-        app:layout_constraintTop_toTopOf="@+id/guideline6"
+        app:layout_constraintBottom_toTopOf="@+id/GuidelineFinal_EspecialesMaquina"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineDer2_EspecialMaquina"
+        app:layout_constraintStart_toStartOf="@+id/guidelineIzq2_EspecialMaquina"
+        app:layout_constraintTop_toTopOf="@+id/guidelineTop_EspecialesMaquina"
         app:srcCompat="@drawable/t_rebatinadelaunion" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline12"
+        android:id="@+id/guidelineDer2_EspecialMaquina"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.6" />
+        app:layout_constraintGuide_percent="0.57" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline13"
+        android:id="@+id/guidelineIzq_EspecialMaquina"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.7" />
+        app:layout_constraintGuide_percent="0.70" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline14"
+        android:id="@+id/guidelineDer3_EspecialMaquina"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.9" />
+        app:layout_constraintGuide_percent="0.88" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline4"
+        android:id="@+id/guidelineTop_EspecialesMaquina"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.15" />
+        app:layout_constraintGuide_percent="0.21" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline6"
+        android:id="@+id/GuidelineFinal_EspecialesMaquina"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.18" />
+        app:layout_constraintGuide_percent="0.345" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline7"
+        android:id="@+id/guidelineTop_MonstruosMaquina"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.32" />
+        app:layout_constraintGuide_percent="0.355" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline8"
+        android:id="@+id/guidelineFinal_MonstruosJugador"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.34" />
+        app:layout_constraintGuide_percent="0.645" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline15"
+        android:id="@+id/guidelineTop_EspecialesJugador"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.66" />
+        app:layout_constraintGuide_percent="0.655" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline16"
+        android:id="@+id/guidelineFinal_EspecialesJugador"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.68" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline17"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.82" />
+        app:layout_constraintGuide_percent="0.79" />
 
     <HorizontalScrollView
         android:id="@+id/mano_maquina"
@@ -279,10 +329,10 @@
         android:id="@+id/imageView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline17"
-        app:layout_constraintEnd_toStartOf="@+id/guideline10"
-        app:layout_constraintStart_toStartOf="@+id/guideline3"
-        app:layout_constraintTop_toTopOf="@+id/guideline16"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineFinal_EspecialesJugador"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineDer1_MonstruoMaquina"
+        app:layout_constraintStart_toStartOf="@+id/guidelineIzq1_MonstruoMaquina"
+        app:layout_constraintTop_toTopOf="@+id/guidelineTop_EspecialesJugador"
         app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/magic_espadalegendaria" />
 
@@ -290,34 +340,22 @@
         android:id="@+id/imageView2"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginEnd="2dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline17"
-        app:layout_constraintEnd_toStartOf="@+id/guideline12"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineFinal_EspecialesJugador"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineDer2_MonstruoMaquina"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/guideline11"
-        app:layout_constraintTop_toTopOf="@+id/guideline16"
+        app:layout_constraintStart_toStartOf="@+id/guidelineIzq2_MonstruoMaquina"
+        app:layout_constraintTop_toTopOf="@+id/guidelineTop_EspecialesJugador"
         app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/t_almaeterna" />
-
-    <View
-        android:id="@+id/cuadrado"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#DE0D2990"
-        app:layout_constraintBottom_toTopOf="@+id/guideline4"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.578" />
 
     <ImageView
         android:id="@+id/imageView3"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline17"
-        app:layout_constraintEnd_toStartOf="@+id/guideline14"
-        app:layout_constraintStart_toStartOf="@+id/guideline13"
-        app:layout_constraintTop_toTopOf="@+id/guideline16"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineFinal_EspecialesJugador"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineDer3_MonstruoMaquina"
+        app:layout_constraintStart_toStartOf="@+id/guidelineIzq3_MonstruoMaquina"
+        app:layout_constraintTop_toTopOf="@+id/guidelineTop_EspecialesJugador"
         app:srcCompat="@drawable/magic_velodemagiaoscura" />
 
     <ImageView
@@ -325,11 +363,11 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline15"
-        app:layout_constraintEnd_toStartOf="@+id/guideline10"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineFinal_MonstruosJugador"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineDer1_EspecialMaquina"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/guideline3"
-        app:layout_constraintTop_toTopOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="@+id/guidelineIzq1_EspecialMaquina"
+        app:layout_constraintTop_toTopOf="@+id/guidelineTop_MonstruosJugador"
         app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/m_magooscuro" />
 
@@ -337,40 +375,40 @@
         android:id="@+id/imageView5"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline15"
-        app:layout_constraintEnd_toStartOf="@+id/guideline12"
-        app:layout_constraintStart_toStartOf="@+id/guideline11"
-        app:layout_constraintTop_toTopOf="@+id/guideline2"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineFinal_MonstruosJugador"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineDer2_EspecialMaquina"
+        app:layout_constraintStart_toStartOf="@+id/guidelineIzq2_EspecialMaquina"
+        app:layout_constraintTop_toTopOf="@+id/guidelineTop_MonstruosJugador"
         app:srcCompat="@drawable/m_dragonblancodeojosazules" />
 
     <ImageView
         android:id="@+id/imageView6"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline15"
-        app:layout_constraintEnd_toStartOf="@+id/guideline14"
-        app:layout_constraintStart_toStartOf="@+id/guideline13"
-        app:layout_constraintTop_toTopOf="@+id/guideline2"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineFinal_MonstruosJugador"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineDer3_EspecialMaquina"
+        app:layout_constraintStart_toStartOf="@+id/guidelineIzq_EspecialMaquina"
+        app:layout_constraintTop_toTopOf="@+id/guidelineTop_MonstruosJugador"
         app:srcCompat="@drawable/m_guardiaflamvell" />
 
     <ImageView
         android:id="@+id/imageView7"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline5"
-        app:layout_constraintEnd_toStartOf="@+id/guideline10"
-        app:layout_constraintStart_toStartOf="@+id/guideline3"
-        app:layout_constraintTop_toTopOf="@+id/guideline8"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineFinal_MonstruosMaquina"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineDer1_MonstruoMaquina"
+        app:layout_constraintStart_toStartOf="@+id/guidelineIzq1_MonstruoMaquina"
+        app:layout_constraintTop_toTopOf="@+id/guidelineTop_MonstruosMaquina"
         app:srcCompat="@drawable/m_duendemistico" />
 
     <ImageView
         android:id="@+id/imageView8"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline5"
-        app:layout_constraintEnd_toStartOf="@+id/guideline12"
-        app:layout_constraintStart_toStartOf="@+id/guideline11"
-        app:layout_constraintTop_toTopOf="@+id/guideline8"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineFinal_MonstruosMaquina"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineDer2_MonstruoMaquina"
+        app:layout_constraintStart_toStartOf="@+id/guidelineIzq2_MonstruoMaquina"
+        app:layout_constraintTop_toTopOf="@+id/guidelineTop_MonstruosMaquina"
         app:layout_constraintVertical_bias="0.717"
         app:srcCompat="@drawable/m_cabezacanon" />
 
@@ -378,30 +416,72 @@
         android:id="@+id/imageView9"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline5"
-        app:layout_constraintEnd_toStartOf="@+id/guideline14"
-        app:layout_constraintStart_toStartOf="@+id/guideline13"
-        app:layout_constraintTop_toTopOf="@+id/guideline8"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineFinal_MonstruosMaquina"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineDer3_MonstruoMaquina"
+        app:layout_constraintStart_toStartOf="@+id/guidelineIzq3_MonstruoMaquina"
+        app:layout_constraintTop_toTopOf="@+id/guidelineTop_MonstruosMaquina"
         app:srcCompat="@drawable/m_dragonnegrodeojosrojos" />
 
     <ImageView
         android:id="@+id/imageView10"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline7"
-        app:layout_constraintEnd_toStartOf="@+id/guideline10"
-        app:layout_constraintStart_toStartOf="@+id/guideline3"
-        app:layout_constraintTop_toTopOf="@+id/guideline6"
+        app:layout_constraintBottom_toTopOf="@+id/GuidelineFinal_EspecialesMaquina"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineDer1_EspecialMaquina"
+        app:layout_constraintStart_toStartOf="@+id/guidelineIzq1_EspecialMaquina"
+        app:layout_constraintTop_toTopOf="@+id/guidelineTop_EspecialesMaquina"
         app:srcCompat="@drawable/t_golpesolemne" />
 
     <ImageView
         android:id="@+id/imageView12"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline7"
-        app:layout_constraintEnd_toStartOf="@+id/guideline14"
-        app:layout_constraintStart_toStartOf="@+id/guideline13"
-        app:layout_constraintTop_toTopOf="@+id/guideline6"
+        app:layout_constraintBottom_toTopOf="@+id/GuidelineFinal_EspecialesMaquina"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineDer3_EspecialMaquina"
+        app:layout_constraintStart_toStartOf="@+id/guidelineIzq_EspecialMaquina"
+        app:layout_constraintTop_toTopOf="@+id/guidelineTop_EspecialesMaquina"
         app:srcCompat="@drawable/magic_torbellinosgemelos" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineIzq1_MonstruoMaquina"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.15" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineIzq2_MonstruoMaquina"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.45" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineIzq3_MonstruoMaquina"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.73" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineDer1_MonstruoMaquina"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.37" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineDer2_MonstruoMaquina"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.65" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineDer3_MonstruoMaquina"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.95" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
