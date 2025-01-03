@@ -15,14 +15,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.80" />
+        app:layout_constraintGuide_percent="0.84" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_seccionAzul"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/guideline_seccionRoja2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.20" />
+        app:layout_constraintGuide_begin="789dp"
+        app:layout_constraintGuide_percent="0.84" />
 
     <View
         android:id="@+id/seccion_roja"
@@ -33,19 +34,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline_seccionRoja"
+        app:layout_constraintTop_toTopOf="@+id/ScrollRojo"
         app:layout_constraintVertical_bias="0.0" />
 
     <View
         android:id="@+id/seccion_azul"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#DE112380"
-        app:layout_constraintBottom_toTopOf="@+id/guideline_seccionAzul"
+        android:background="#DE111F6F"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineBottom_ScrollSeccionAzul"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mano_maquina"
-        app:layout_constraintVertical_bias="0.578" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <HorizontalScrollView
         android:id="@+id/ScrollRojo"
@@ -55,11 +57,11 @@
         app:layout_constraintEnd_toStartOf="@+id/guidelineDerecho_scroll"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guidelineIzquierdo_scroll"
-        app:layout_constraintTop_toTopOf="@+id/guidelineTop_ScrollSeccionRojo"
+        app:layout_constraintTop_toTopOf="@+id/guideline_seccionRoja2"
         app:layout_constraintVertical_bias="0.0">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
@@ -172,7 +174,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.3" />
+        app:layout_constraintGuide_percent="0.30" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline11"
@@ -403,5 +405,53 @@
         app:layout_constraintStart_toStartOf="@+id/guideline13"
         app:layout_constraintTop_toTopOf="@+id/guideline6"
         app:srcCompat="@drawable/magic_torbellinosgemelos" />
+
+    <View
+        android:id="@+id/cuadritorojo"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#4E0419"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_seccionRoja2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guidelineTop_ScrollSeccionRojo" />
+
+    <TextView
+        android:id="@+id/puntos_vida"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fontFamily="sans-serif-smallcaps"
+        android:text="Puntos de vida: 4000"
+        android:textColor="#DEFFFCFC"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_seccionRoja2"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineDerecho_scroll"
+        app:layout_constraintStart_toStartOf="@+id/guideline12"
+        app:layout_constraintTop_toTopOf="@+id/guidelineTop_ScrollSeccionRojo" />
+
+    <TextView
+        android:id="@+id/puntos_vida2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fontFamily="sans-serif-smallcaps"
+        android:text="Puntos de vida: 4000"
+        android:textColor="#DEFFFCFC"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_seccionRoja2"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineDerecho_scroll"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guideline12"
+        app:layout_constraintTop_toTopOf="@+id/guidelineTop_ScrollSeccionRojo"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/puntos_maquina"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fontFamily="sans-serif-smallcaps"
+        android:text="Puntos de vida: 4000"
+        android:textColor="#FCDEFFFC"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineBottom_ScrollSeccionAzul"
+        app:layout_constraintEnd_toStartOf="@+id/guideline11"
+        app:layout_constraintStart_toStartOf="@+id/guidelineIzquierdo_scroll"
+        app:layout_constraintTop_toTopOf="@+id/guideline4" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
