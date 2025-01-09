@@ -1,0 +1,8 @@
+Formato: Nombre, Descripción, IncrementoAtaque, IncrementoDefensa, TipoDeMonstruo, Archivo
+Espada Legendaria, Incrementa el ataque de monstruos tipo Lanzador de Conjuros, 300, 300, L, magic_espadalegendaria.png
+Torbellinos Gemelos, Incrementa la defensa de monstruos tipo Demonio, 0, 400, O, magic_torbellinosgemelos.png
+Velo de Magia Oscura, Incrementa el ataque de monstruos tipo Lanzador de Conjuros, 150, 0, L, magic_velodemagiaoscura.png
+La Piedra del Sabio, Incrementa la defensa de monstruos tipo Lanzador de Conjuros, 0, 150, L, magic_lapiedradelsabio.png
+Cartas de la Consonancia, Incrementa la defensa de monstruos tipo Dragón, 0, 300, D, magic_cartasdelaconsonancia.png
+Raigeki, Incrementa la defensa de monstruos tipo Dragón, 0, 400, D, magic_raigeki.png
+Ataque Mágico Oscuro, Incrementa el ataque de monstruos tipo Lanzador de Conjuros, 200, 0, L, magic_ataquemagicooscuro.png

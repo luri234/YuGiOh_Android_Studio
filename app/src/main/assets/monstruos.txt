@@ -1,0 +1,74 @@
+Nombre, Tipo, Atributo, ATK, DEF, Descripción, Archivo
+Cráneo Convocado, O, OSCURIDAD, 2500, 1200, Un demonio con poderes oscuros para confundir al enemigo, m_craneoconvocado.png
+Dragón Blanco de Ojos Azules, D, LUZ, 3000, 2500, Un legendario dragón poderoso, m_dragonblancodeojosazules.png
+Dragón Negro de Ojos Rojos, D, OSCURIDAD, 2400, 2000, Un dragón que quema con fuego oscuro, m_dragonnegrodeojosrojos.png
+Mago Oscuro, L, OSCURIDAD, 2500, 2100, El mago definitivo en ataque y defensa, m_magooscuro.png
+Dragón Arcavaliente, D, LUZ, 2400, 2000, Un dragón celestial que dispara flechas de energía pura para purificar el campo de batalla, m_dragonarcavaliente.png
+Duende Místico, L, LUZ, 800, 2000, Un elfo delicado que carece de ataque pero tiene una defensa fantástica, m_duendemistico.png
+Guardia Flamvell, D, FUEGO, 100, 2000, Un guardián Flamvell que controla el fuedo a voluntad, m_guardiaflamvell.png
+Brazo Derecho del Prohibido, L, OSCURIDAD, 200, 300, Un brazo derecho prohibido sellado mágicamente, m_brazoderechodelprohibido.png
+Brazo Izquierdo del Prohibido, L, OSCURIDAD, 200, 300, Un brazo izquierdo prohibido sellado mágicamente, m_brazoizquierdodelprohibido.png
+Pierna Derecha del Prohibido, L, OSCURIDAD, 200, 300, Una pierna derecha prohibida sellada mágicamente, m_piernaderechadelprohibidio.png
+Pierna Izquierda del Prohibido, L, OSCURIDAD, 200, 300, Una pierna izquierda prohibida sellada mágicamente, m_piernaizquierdadelprohibido.png
+Maestro de Azules Ojos, L, LUZ, 300, 1200, Un sabio estratega que domina el poder de los dragones de Ojos Azules, m_maestrodeazulesojos.png
+Túnica del Mago, L, OSCURIDAD, 700, 2000, Un aprendiz de la magia arcana que utiliza su túnica encantada para amplificar su poder y protegerse de ataques enemigos, m_tunicadelmago.png
+Mahad El Oráculo Paladio, L, LUZ, 2500, 2100, Un hechicero legendario dedicado a proteger la luz y enfrentar la oscuridad, m_mahad.png
+Monje Invocador, L, OSCURIDAD, 800, 1600, Un monje misterioso que utiliza su dominio de los conjuros para invocar aliados directamente al campo de batalla, m_monjeinvocador.png
+Dragón Pulsardeluz, D, LUZ, 2500, 1500, Es un faro de esperanza y un destructor implacable, m_dragonpulsardeluz.png
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
