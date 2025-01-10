@@ -89,11 +89,11 @@
         app:layout_constraintGuide_percent="0.61" />
 
     <HorizontalScrollView
-        android:id="@+id/ScrollAzul"
+        android:id="@+id/Scroll Azul"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineBottom_SeccionAzul"
-        app:layout_constraintEnd_toStartOf="@+id/der_deck_user"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/izq1_esp_user_ydeckmmaquina"
         app:layout_constraintTop_toTopOf="@+id/guidelineTop_ScrollSeccionAzul"
@@ -105,45 +105,44 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="100dp"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
-                android:layout_marginRight="2dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/magic_lapiedradelsabio" />
 
             <ImageView
-                android:layout_width="100dp"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
-                android:layout_marginRight="2dp"
+                android:layout_marginRight="0dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/t_almaeterna" />
 
             <ImageView
-                android:layout_width="100dp"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
-                android:layout_marginRight="2dp"
+                android:layout_marginRight="0dp"
                 android:contentDescription="cartas de la maquina"
                 android:scaleType="centerInside"
                 android:src="@drawable/t_navegaciondelmago" />
 
             <ImageView
-                android:layout_width="100dp"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
-                android:layout_marginRight="2dp"
+                android:layout_marginRight="0dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/m_paladinoscuro" />
+                android:src="@drawable/m_dragonarcavaliente" />
 
             <ImageView
-                android:layout_width="100dp"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
-                android:layout_marginRight="2dp"
+                android:layout_marginRight="0dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/m_guardiaflamvell" />
 
             <ImageView
-                android:layout_width="100dp"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
-                android:layout_marginRight="2dp"
+                android:layout_marginRight="0dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/m_craneoconvocado" />
 
@@ -158,7 +157,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineBottom_ScrollSeccionRojo"
-        app:layout_constraintEnd_toStartOf="@+id/der_deck_user"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/izq1_esp_user_ydeckmmaquina"
         app:layout_constraintTop_toTopOf="@+id/guideline_seccionRoja"
@@ -170,38 +169,38 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="100dp"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
-                android:layout_marginRight="2dp"
+                android:layout_marginRight="0dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/m_craneoconvocado" />
 
             <ImageView
-                android:layout_width="100dp"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
-                android:layout_marginRight="2dp"
+                android:layout_marginRight="0dp"
                 android:contentDescription="cartas de tu mano"
                 android:scaleType="centerInside"
                 android:src="@drawable/t_barreradimensional" />
 
             <ImageView
-                android:layout_width="100dp"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
-                android:layout_marginRight="2dp"
+                android:layout_marginRight="0dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/t_negarataque" />
 
             <ImageView
-                android:layout_width="100dp"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
-                android:layout_marginRight="2dp"
+                android:layout_marginRight="0dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/magic_cartasdelaconsonancia" />
 
             <ImageView
-                android:layout_width="100dp"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
-                android:layout_marginRight="2dp"
+                android:layout_marginRight="0dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/magic_ataquemagicooscuro" />
 
@@ -258,14 +257,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.53" />
+        app:layout_constraintGuide_percent="0.54" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineFinal_MonstruosMaquina"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.47" />
+        app:layout_constraintGuide_percent="0.46" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/der1_esp_user"
@@ -307,42 +306,42 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.21" />
+        app:layout_constraintGuide_percent="0.20" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/GuidelineFinal_EspecialesMaquina"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.32" />
+        app:layout_constraintGuide_percent="0.31" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineTop_MonstruosMaquina"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.35" />
+        app:layout_constraintGuide_percent="0.34" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineFinal_MonstruosJugador"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.65" />
+        app:layout_constraintGuide_percent="0.66" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineTop_EspecialesJugador"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.68" />
+        app:layout_constraintGuide_percent="0.69" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineFinal_EspecialesJugador"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.79" />
+        app:layout_constraintGuide_percent="0.80" />
 
     <HorizontalScrollView
         android:id="@+id/mano_maquina"
@@ -361,10 +360,10 @@
     </HorizontalScrollView>
 
     <ImageView
-        android:id="@+id/especial_1_user"
+        android:id="@+id/esp_1_user_fondo"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:contentDescription="carta especial jugador"
+        android:contentDescription="el fondo de la carta especial user 1"
         app:layout_constraintBottom_toTopOf="@+id/guidelineFinal_EspecialesJugador"
         app:layout_constraintEnd_toStartOf="@+id/der1_esp_user"
         app:layout_constraintHorizontal_bias="0.0"
@@ -374,7 +373,7 @@
         app:srcCompat="@drawable/contorno_carta" />
 
     <ImageView
-        android:id="@+id/especial_2_user"
+        android:id="@+id/esp_2_user_fondo"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:contentDescription="carta especial jugador"
@@ -387,7 +386,7 @@
         app:srcCompat="@drawable/contorno_carta" />
 
     <ImageView
-        android:id="@+id/especial_3_user"
+        android:id="@+id/esp_3_user_fondo"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:contentDescription="carta especial jugador"
@@ -400,7 +399,7 @@
         app:srcCompat="@drawable/contorno_carta" />
 
     <ImageView
-        android:id="@+id/monstruo_1_user"
+        android:id="@+id/mons_1_user_fondo"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineFinal_MonstruosJugador"
@@ -410,7 +409,7 @@
         app:srcCompat="@drawable/contorno_carta" />
 
     <ImageView
-        android:id="@+id/monstruo_2_user"
+        android:id="@+id/mons_2_user_fondo"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineFinal_MonstruosJugador"
@@ -420,7 +419,7 @@
         app:srcCompat="@drawable/contorno_carta" />
 
     <ImageView
-        android:id="@+id/monstruo_1_maquina"
+        android:id="@+id/mons_3_user_fondo"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineFinal_MonstruosJugador"
@@ -630,7 +629,7 @@
         app:layout_constraintGuide_percent="0.97" />
 
     <ImageView
-        android:id="@+id/imageView5"
+        android:id="@+id/mons_2_maq_fondo"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineFinal_MonstruosMaquina"
@@ -642,16 +641,7 @@
         app:srcCompat="@drawable/contorno_carta" />
 
     <ImageView
-        android:id="@+id/imageView6"
-        android:layout_width="58dp"
-        android:layout_height="69dp"
-        app:layout_constraintTop_toBottomOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="168dp"
-        tools:srcCompat="@tools:sample/avatars" />
-
-    <ImageView
-        android:id="@+id/imageView7"
+        android:id="@+id/mons_2_maq_carta"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="2dp"
@@ -666,7 +656,7 @@
         app:srcCompat="@drawable/carta_bocaabajo" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/mons_3_maq_fondo"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineFinal_MonstruosMaquina"
@@ -676,7 +666,22 @@
         app:srcCompat="@drawable/contorno_carta" />
 
     <ImageView
-        android:id="@+id/imageView8"
+        android:id="@+id/mons_3_maq_carta"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="2dp"
+        android:rotation="0"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineFinal_MonstruosMaquina"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineDer3_EspecialMaquina"
+        app:layout_constraintStart_toStartOf="@+id/guide_izq3_mons_user"
+        app:layout_constraintTop_toTopOf="@+id/guidelineTop_MonstruosMaquina"
+        app:srcCompat="@drawable/m_dragonnegrodeojosrojos" />
+
+    <ImageView
+        android:id="@+id/mons_1_maq_fondo"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineFinal_MonstruosMaquina"
@@ -688,38 +693,7 @@
         app:srcCompat="@drawable/contorno_carta" />
 
     <ImageView
-        android:id="@+id/imageView9"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/GuidelineFinal_EspecialesMaquina"
-        app:layout_constraintEnd_toStartOf="@+id/guideline"
-        app:layout_constraintStart_toStartOf="@+id/izq1_esp_maq"
-        app:layout_constraintTop_toTopOf="@+id/guidelineTop_EspecialesMaquina2"
-        app:srcCompat="@drawable/contorno_carta" />
-
-    <ImageView
-        android:id="@+id/imageView10"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/GuidelineFinal_EspecialesMaquina"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_der_esp_2m"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/izq2_esp_maq"
-        app:layout_constraintTop_toTopOf="@+id/guidelineTop_EspecialesMaquina2"
-        app:srcCompat="@drawable/contorno_carta" />
-
-    <ImageView
-        android:id="@+id/imageView11"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/GuidelineFinal_EspecialesMaquina"
-        app:layout_constraintEnd_toStartOf="@+id/der3_esp_maq"
-        app:layout_constraintStart_toStartOf="@+id/izq3_esp_maq"
-        app:layout_constraintTop_toTopOf="@+id/guidelineTop_EspecialesMaquina2"
-        app:srcCompat="@drawable/contorno_carta" />
-
-    <ImageView
-        android:id="@+id/imageView13"
+        android:id="@+id/mons_1_maq_carta"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="2dp"
@@ -734,51 +708,17 @@
         app:srcCompat="@drawable/m_duendemistico" />
 
     <ImageView
-        android:id="@+id/imageView15"
+        android:id="@+id/esp_3_maq_fondo"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="2dp"
-        android:layout_marginBottom="2dp"
-        android:rotation="-90"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineFinal_MonstruosJugador"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineDer3_EspecialMaquina"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/guide_izq3_mons_user"
-        app:layout_constraintTop_toTopOf="@+id/guidelineTop_MonstruosJugador"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/m_cabezacanon" />
+        app:layout_constraintBottom_toTopOf="@+id/GuidelineFinal_EspecialesMaquina"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="@+id/izq1_esp_maq"
+        app:layout_constraintTop_toTopOf="@+id/guidelineTop_EspecialesMaquina2"
+        app:srcCompat="@drawable/contorno_carta" />
 
     <ImageView
-        android:id="@+id/imageView16"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="2dp"
-        android:layout_marginBottom="2dp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineFinal_MonstruosJugador"
-        app:layout_constraintEnd_toStartOf="@+id/guide_der2_mons_user_andpvuser"
-        app:layout_constraintStart_toStartOf="@+id/monstruo_2_user"
-        app:layout_constraintTop_toTopOf="@+id/guidelineTop_MonstruosJugador"
-        app:srcCompat="@drawable/m_dragonblancodeojosazules" />
-
-    <ImageView
-        android:id="@+id/imageView17"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="2dp"
-        android:layout_marginBottom="2dp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineFinal_MonstruosJugador"
-        app:layout_constraintEnd_toStartOf="@+id/guide_der1_mons_user"
-        app:layout_constraintStart_toStartOf="@+id/monstruo_1_user"
-        app:layout_constraintTop_toTopOf="@+id/guidelineTop_MonstruosJugador"
-        app:srcCompat="@drawable/m_magooscuro" />
-
-    <ImageView
-        android:id="@+id/imageView18"
+        android:id="@+id/esp_3_maq_carta"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="2dp"
@@ -793,7 +733,18 @@
         app:srcCompat="@drawable/magic_torbellinosgemelos" />
 
     <ImageView
-        android:id="@+id/imageView19"
+        android:id="@+id/esp_2_maq_fondo"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/GuidelineFinal_EspecialesMaquina"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_der_esp_2m"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/izq2_esp_maq"
+        app:layout_constraintTop_toTopOf="@+id/guidelineTop_EspecialesMaquina2"
+        app:srcCompat="@drawable/contorno_carta" />
+
+    <ImageView
+        android:id="@+id/esp_2_maq_carta"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="2dp"
@@ -808,7 +759,17 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineTop_EspecialesMaquina2" />
 
     <ImageView
-        android:id="@+id/imageView20"
+        android:id="@+id/esp_1_maq_fondo"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/GuidelineFinal_EspecialesMaquina"
+        app:layout_constraintEnd_toStartOf="@+id/der3_esp_maq"
+        app:layout_constraintStart_toStartOf="@+id/izq3_esp_maq"
+        app:layout_constraintTop_toTopOf="@+id/guidelineTop_EspecialesMaquina2"
+        app:srcCompat="@drawable/contorno_carta" />
+
+    <ImageView
+        android:id="@+id/esp_1_maq_carta"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="2dp"
@@ -823,7 +784,51 @@
         app:srcCompat="@drawable/t_golpesolemne" />
 
     <ImageView
-        android:id="@+id/imageView21"
+        android:id="@+id/mons_3_user_carta"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="2dp"
+        android:rotation="-90"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineFinal_MonstruosJugador"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineDer3_EspecialMaquina"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guide_izq3_mons_user"
+        app:layout_constraintTop_toTopOf="@+id/guidelineTop_MonstruosJugador"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/m_craneoconvocado" />
+
+    <ImageView
+        android:id="@+id/mons_2_user_carta"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="2dp"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineFinal_MonstruosJugador"
+        app:layout_constraintEnd_toStartOf="@+id/guide_der2_mons_user_andpvuser"
+        app:layout_constraintStart_toStartOf="@+id/mons_2_user_fondo"
+        app:layout_constraintTop_toTopOf="@+id/guidelineTop_MonstruosJugador"
+        app:srcCompat="@drawable/m_dragonblancodeojosazules" />
+
+    <ImageView
+        android:id="@+id/mons_1_user_carta"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="2dp"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineFinal_MonstruosJugador"
+        app:layout_constraintEnd_toStartOf="@+id/guide_der1_mons_user"
+        app:layout_constraintStart_toStartOf="@+id/mons_1_user_fondo"
+        app:layout_constraintTop_toTopOf="@+id/guidelineTop_MonstruosJugador"
+        app:srcCompat="@drawable/m_magooscuro" />
+
+    <ImageView
+        android:id="@+id/esp_3_user_carta"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="2dp"
@@ -832,12 +837,12 @@
         android:layout_marginBottom="2dp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineFinal_EspecialesJugador"
         app:layout_constraintEnd_toStartOf="@+id/der3_esp_user"
-        app:layout_constraintStart_toStartOf="@+id/especial_3_user"
+        app:layout_constraintStart_toStartOf="@+id/esp_3_user_fondo"
         app:layout_constraintTop_toTopOf="@+id/guidelineTop_EspecialesJugador"
         app:srcCompat="@drawable/magic_velodemagiaoscura" />
 
     <ImageView
-        android:id="@+id/imageView22"
+        android:id="@+id/esp_2_user_carta"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="2dp"
@@ -851,7 +856,7 @@
         app:srcCompat="@drawable/t_almaeterna" />
 
     <ImageView
-        android:id="@+id/imageView23"
+        android:id="@+id/esp_1_user_carta"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="2dp"
@@ -864,19 +869,24 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineTop_EspecialesJugador"
         app:srcCompat="@drawable/magic_espadalegendaria" />
 
-    <ImageView
-        android:id="@+id/imageView24"
+    <Button
+        android:id="@+id/button_fases"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="2dp"
-        android:layout_marginBottom="2dp"
-        android:rotation="0"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineFinal_MonstruosMaquina"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineDer3_EspecialMaquina"
-        app:layout_constraintStart_toStartOf="@+id/guide_izq3_mons_user"
-        app:layout_constraintTop_toTopOf="@+id/guidelineTop_MonstruosMaquina"
-        app:srcCompat="@drawable/m_dragonnegrodeojosrojos" />
+        android:layout_marginTop="11dp"
+        android:layout_marginBottom="11dp"
+        android:backgroundTint="#F4F0F0"
+        android:fontFamily="@font/alkatra"
+        android:text="Siguiente Fase"
+        android:textColor="#070707"
+        android:textColorLink="#16246D"
+        android:textSize="11sp"
+        app:iconTint="#3F51B5"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineTop_MonstruosJugador"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guide_der2_mons_user_andpvuser"
+        app:layout_constraintTop_toTopOf="@+id/guidelineFinal_MonstruosMaquina"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
