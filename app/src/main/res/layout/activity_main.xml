@@ -89,7 +89,7 @@
         app:layout_constraintGuide_percent="0.61" />
 
     <HorizontalScrollView
-        android:id="@+id/Scroll Azul"
+        android:id="@+id/ScrollAzul"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineBottom_SeccionAzul"
@@ -130,7 +130,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginRight="0dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/m_dragonarcavaliente" />
+                android:src="@drawable/m_dragonnegrodeojosrojos" />
 
             <ImageView
                 android:layout_width="80dp"
