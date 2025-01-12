@@ -1,49 +1,52 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="#368DD3"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:background="#00CCFF">
+    android:padding="16dp">
 
     <!-- Nombre Carta -->
+
+    <!--    contenedor ataque y defensa-->
     <TextView
         android:id="@+id/c_nombre"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/baloo"
+        android:gravity="center"
         android:text="Nombre Carta"
-        android:textColor="#EE0E0E"
-        android:textSize="20sp"
-        android:fontFamily="sans-serif-medium"
-        android:gravity="center" />
+        android:textColor="#061535"
+        android:textSize="20sp" />
 
-<!--    contenedor ataque y defensa-->
     <LinearLayout
         android:id="@+id/layout_atqYdef"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginTop="1dp"
-        android:gravity="end">
+        android:gravity="end"
+        android:orientation="horizontal">
 
         <!-- ataque -->
+
+        <!-- Defensa -->
         <TextView
             android:id="@+id/c_atk"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="50dp"
+            android:fontFamily="@font/aldrich"
             android:text="ATK: "
-            android:textColor="@color/white"
+            android:textColor="#161847"
             android:textSize="16sp" />
 
-        <!-- Defensa -->
         <TextView
             android:id="@+id/c_def"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
+            android:fontFamily="@font/aldrich"
             android:text="DEF: "
-            android:textColor="@color/white"
+            android:textColor="#161847"
             android:textSize="16sp" />
 
     </LinearLayout>
@@ -53,9 +56,10 @@
         android:id="@+id/c_desc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/alata"
         android:text="Descripcion: "
         android:textColor="@color/white"
-        android:layout_marginTop="8dp"
         android:textSize="16sp" />
 
     <!-- Atributo -->
@@ -63,9 +67,10 @@
         android:id="@+id/c_atributo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/alata"
         android:text="Atributo: "
         android:textColor="@color/white"
-        android:layout_marginTop="8dp"
         android:textSize="16sp" />
 
     <!-- Tipo -->
@@ -73,34 +78,35 @@
         android:id="@+id/c_tipo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/alata"
         android:text="Tipo: "
         android:textColor="@color/white"
-        android:layout_marginTop="8dp"
         android:textSize="16sp" />
 
     <!-- Botones -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginTop="16dp"
-        android:gravity="end">
+        android:gravity="end"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/btn_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancelar"
             android:backgroundTint="#EE0E0E"
+            android:text="Cancelar"
             android:textColor="@color/white" />
 
         <Button
             android:id="@+id/btn_accept"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Colocar"
             android:layout_marginStart="8dp"
             android:backgroundTint="#000099"
+            android:text="Colocar"
             android:textColor="@color/white" />
     </LinearLayout>
 </LinearLayout>
