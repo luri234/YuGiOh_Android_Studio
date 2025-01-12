@@ -1,4 +1,4 @@
-package com.example.yugioh;
+package com.example.yugioh.modelo;
 
 public class CartaMonstruo extends Carta {
     private TipoAtributo tipoAtributo;

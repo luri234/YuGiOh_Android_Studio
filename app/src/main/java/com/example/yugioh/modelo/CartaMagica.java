@@ -1,4 +1,4 @@
-package com.example.yugioh;
+package com.example.yugioh.modelo;
 
 import androidx.annotation.NonNull;
 

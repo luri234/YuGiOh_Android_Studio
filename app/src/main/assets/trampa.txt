@@ -1,8 +1,8 @@
-Nombre, Descripción, Atributo(ignorar las descripciones xd, deben ser corregidas de acuerdo al juego)
-Agujero Trampa, Destruye una carta mágica o trampa en el campo, LUZ, t_agujerotrampa.png
+Nombre, Descripción, Atributo, ruta Imagen
+Agujero Trampa, Cancela el taque de un mosntruo con el atributo LUZ, LUZ, t_agujerotrampa.png
 Barrera Dimensional, Detiene el ataque de un monstruo con el atributo FUEGO, FUEGO, t_barreradimensional.png
-Alma Eterna, Protege un monstruo de los efectos de otras cartas trampa, OSCURIDAD, t_almaeterna.png
-Golpe Solemne, No permite que un monstruo cambie de posición de ataque a defensa, FUEGO, t_golpesolemne.png
-Rebatiña de la Unión, Permite que un monstruo cambie su posición de defensa a ataque, LUZ, t_rebatinadelaunion.png
+Alma Eterna, Detiene el ataque de un monstruo con el atributo OSCURIDAD, OSCURIDAD, t_almaeterna.png
+Golpe Solemne, Cancela el ataque de un monstruo con el atributo FUEGO, FUEGO, t_golpesolemne.png
+Rebatiña de la Unión, Detiene el ataque de un monstruo con el atributo LUZ, LUZ, t_rebatinadelaunion.png
 Negar Ataque, Niega el ataque de un monstruo con el atributo LUZ, LUZ, t_negarataque.png
 Navegación del Mago, Niega el ataque de un monstruo con el atributo OSCURIDAD, OSCURIDAD, t_navegaciondelmago.png

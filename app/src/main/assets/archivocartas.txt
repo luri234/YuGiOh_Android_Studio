@@ -1,0 +1,30 @@
+CartaMonstruo, Cráneo Convocado, O, OSCURIDAD, 2500, 1200, Un demonio con poderes oscuros para confundir al enemigo, m_craneoconvocado
+CartaMonstruo, Dragón Blanco de Ojos Azules, D, LUZ, 3000, 2500, Un legendario dragón poderoso, m_dragonblancodeojosazules
+CartaMonstruo, Dragón Negro de Ojos Rojos, D, OSCURIDAD, 2400, 2000, Un dragón que quema con fuego oscuro, m_dragonnegrodeojosrojos
+CartaMonstruo, Mago Oscuro, L, OSCURIDAD, 2500, 2100, El mago definitivo en ataque y defensa, m_magooscuro
+CartaMonstruo, Dragón Arcavaliente, D, LUZ, 2400, 2000, Un dragón celestial que dispara flechas de energía pura para purificar el campo de batalla, m_dragonarcavaliente
+CartaMonstruo, Duende Místico, L, LUZ, 800, 2000, Un elfo delicado que carece de ataque pero tiene una defensa fantástica, m_duendemistico
+CartaMonstruo, Guardia Flamvell, D, FUEGO, 100, 2000, Un guardián Flamvell que controla el fuedo a voluntad, m_guardiaflamvell
+CartaMonstruo, Brazo Derecho del Prohibido, L, OSCURIDAD, 200, 300, Un brazo derecho prohibido sellado mágicamente, m_brazoderechodelprohibido
+CartaMonstruo, Brazo Izquierdo del Prohibido, L, OSCURIDAD, 200, 300, Un brazo izquierdo prohibido sellado mágicamente, m_brazoizquierdodelprohibido
+CartaMonstruo, Pierna Derecha del Prohibido, L, OSCURIDAD, 200, 300, Una pierna derecha prohibida sellada mágicamente, m_piernaderechadelprohibido
+CartaMonstruo, Pierna Izquierda del Prohibido, L, OSCURIDAD, 200, 300, Una pierna izquierda prohibida sellada mágicamente, m_piernaizquierdadelprohibido
+CartaMonstruo, Maestro de Azules Ojos, L, LUZ, 300, 1200, Un sabio estratega que domina el poder de los dragones de Ojos Azules, m_maestrodeazulesojos
+CartaMonstruo, Túnica del Mago, L, OSCURIDAD, 700, 2000, Un aprendiz de la magia arcana que utiliza su túnica encantada para amplificar su poder y protegerse de ataques enemigos, m_tunicadelmago
+CartaMonstruo, Mahad El Oráculo Paladio, L, LUZ, 2500, 2100, Un hechicero legendario dedicado a proteger la luz y enfrentar la oscuridad, m_mahad
+CartaMonstruo, Monje Invocador, L, OSCURIDAD, 800, 1600, Un monje misterioso que utiliza su dominio de los conjuros para invocar aliados directamente al campo de batalla, m_monjeinvocador
+CartaMonstruo, Dragón Pulsardeluz, D, LUZ, 2500, 1500, Es un faro de esperanza y un destructor implacable, m_dragonpulsardeluz
+CartaMagia, Espada Legendaria, Incrementa el ataque de monstruos tipo Lanzador de Conjuros, 300, 300, L, magic_espadalegendaria
+CartaMagia, Torbellinos Gemelos, Incrementa la defensa de monstruos tipo Demonio, 0, 400, O, magic_torbellinosgemelos
+CartaMagia, Velo de Magia Oscura, Incrementa el ataque de monstruos tipo Lanzador de Conjuros, 150, 0, L, magic_velodemagiaoscura
+CartaMagia, La Piedra del Sabio, Incrementa la defensa de monstruos tipo Lanzador de Conjuros, 0, 150, L, magic_lapiedradelsabio
+CartaMagia, Cartas de la Consonancia, Incrementa la defensa de monstruos tipo Dragón, 0, 300, D, magic_cartasdelaconsonancia
+CartaMagia, Raigeki, Incrementa la defensa de monstruos tipo Dragón, 0, 400, D, magic_raigeki
+CartaMagia, Ataque Mágico Oscuro, Incrementa el ataque de monstruos tipo Lanzador de Conjuros, 200, 0, L, magic_ataquemagicooscuro
+CartaTrampa, Agujero Trampa, Cancela el ataque de un monstruo con el atributo LUZ, LUZ, t_agujerotrampa
+CartaTrampa, Barrera Dimensional, Detiene el ataque de un monstruo con el atributo FUEGO, FUEGO, t_barreradimensional
+CartaTrampa, Alma Eterna, Detiene el ataque de un monstruo con el atributo OSCURIDAD, OSCURIDAD, t_almaeterna
+CartaTrampa, Golpe Solemne, Cancela el ataque de un monstruo con el atributo FUEGO, FUEGO, t_golpesolemne
+CartaTrampa, Rebatiña de la Unión, Detiene el ataque de un monstruo con el atributo LUZ, LUZ, t_rebatinadelaunion
+CartaTrampa, Negar Ataque, Niega el ataque de un monstruo con el atributo LUZ, LUZ, t_negarataque
+CartaTrampa, Navegación del Mago, Niega el ataque de un monstruo con el atributo OSCURIDAD, OSCURIDAD, t_navegaciondelmago
