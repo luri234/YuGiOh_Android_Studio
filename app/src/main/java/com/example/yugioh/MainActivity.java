@@ -4,11 +4,15 @@ package com.example.yugioh;
 import android.app.AlertDialog;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.text.Layout;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +21,9 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.yugioh.modelo.Carta;
+import com.example.yugioh.modelo.CartaMagica;
+import com.example.yugioh.modelo.CartaMonstruo;
+import com.example.yugioh.modelo.CartaTrampa;
 import com.example.yugioh.modelo.Jugador;
 import com.example.yugioh.modelo.Partida;
 import com.example.yugioh.modelo.Tablero;
@@ -195,8 +202,112 @@ public class MainActivity extends AppCompatActivity {
         imV.setLayoutParams(atributos);
         imV.setScaleType(ImageView.ScaleType.CENTER_INSIDE); //centrado
 
+        //definimos su onCLick Listener para que cuando se toque aparezca sus datos
+        imV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Acción al hacer clic en la imagen
+//                Toast.makeText(getApplicationContext(),
+//                        "Clic en la carta: " + cartaAMostrar.getNombre(),
+//                        Toast.LENGTH_SHORT).show();
+                crearDialogAgregarCarta(cartaAMostrar);
+
+
+            }
+        });
+
         //agregamos la imagen al LinearLayout(Scroll)
         contenedor.addView(imV);
+    }
+
+    public void mostrarTurno(int idJugador){
+        //crea un dialogo que muestra el turno de quien de jugar una carta
+        String nombreJ = "Error de asignacion de nombre";
+        if(idJugador == 1){
+            nombreJ = j1.getNombre();
+        } else if (idJugador == 2) {
+            nombreJ = j2.getNombre();
+        }
+        crearDialog("Atencion", "Turno del jugador: " + nombreJ);
+    }
+
+
+    public void crearDialogAgregarCarta(Carta carta){
+        //obtenemos el numero de imagenes en el layout
+        LinearLayout contenedor = findViewById(R.id.contenedorScrollRojo);
+
+        int numImagenes = contenedor.getChildCount();
+        //obtenemos el size de la lista cartasEnMano logico(que debe ser igual, solo para verificar q si lo sean)
+        int tamanio =  j1.getCartasEnMano().size();
+
+        //creamos el dialogo personalizado
+        // Crear un Inflater para el diseño personalizado
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.datos_colocar_carta, null);
+        TextView nombre = dialogView.findViewById(R.id.c_nombre);
+        TextView descripcion = dialogView.findViewById(R.id.c_desc);
+        if( numImagenes == tamanio){
+            //validamos que instancia de carta es
+            if( carta instanceof CartaMonstruo){
+                CartaMonstruo cm = (CartaMonstruo)carta; 
+                // Configurar los valores dinámicos a mostrar
+                TextView ataque = dialogView.findViewById(R.id.c_atk);
+                TextView defensa = dialogView.findViewById(R.id.c_def);
+                TextView atributoCarta = dialogView.findViewById(R.id.c_atributo);
+                TextView tipoCarta = dialogView.findViewById(R.id.c_tipo);
+                //damos los nuevos valores
+
+                ataque.setText("ATK: "+ cm.getAtaque());
+                defensa.setText("DEF: "+cm.getDefensa());
+                atributoCarta.setText("Atributo: " + cm.getTipoAtributo());
+                tipoCarta.setText("Tipo de Monstruo: " + cm.getTipoMonstruoString());
+            } else if (carta instanceof CartaMagica) {
+                CartaMagica cm = (CartaMagica)carta;
+                TextView incAtk = dialogView.findViewById(R.id.c_atk);
+                TextView incDef = dialogView.findViewById(R.id.c_def);
+                TextView tipoMonstruo = dialogView.findViewById(R.id.c_tipo);
+                //asignacion valores
+                incAtk.setText("INC ATK: " + cm.getIncrementoAtaque());
+                incDef.setText("INC DEF: " + cm.getIncrementoDefensa());
+                tipoMonstruo.setText("Tipo Monstruo: " + cm.getTipoMonstruoString());
+
+                //setteamos los demas campos no utilizados para q no aparezcan
+                dialogView.findViewById(R.id.c_atributo).setVisibility(View.GONE);
+                
+            } else if (carta instanceof CartaTrampa) {
+                CartaTrampa ct = (CartaTrampa)carta;
+                TextView atributo = dialogView.findViewById(R.id.c_atributo);
+                atributo.setText("Atributo: "+ ct.getTipoAtributo());
+                dialogView.findViewById(R.id.c_tipo).setVisibility(View.GONE);
+                dialogView.findViewById(R.id.c_atk).setVisibility(View.GONE);
+                dialogView.findViewById(R.id.c_def).setVisibility(View.GONE);
+
+            }
+
+            //setteamos los valores que toda carta tiene
+            nombre.setText(carta.getNombre());
+            descripcion.setText("Descripcion: " + carta.getDescripcion());
+
+            // Crear el AlertDialog
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setView(dialogView);
+
+            // Obtener referencia a los botones y configurar listeners
+            AlertDialog dialog = builder.create();
+            dialogView.findViewById(R.id.btn_cancel).setOnClickListener(v -> {
+                dialog.dismiss(); // Cierrar el dialogo
+            });
+            dialogView.findViewById(R.id.btn_accept).setOnClickListener(v -> {
+                //accciones al clicar 'colocar'
+                Toast.makeText(this, "*procede a colocar la carta en tablero ", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            });
+            // Mostrar el diálogo
+            dialog.show();
+
+        }else{
+            crearDialog("Error de programa", "El tamanio del scroll j1 no coincide con el logico");
+        }
     }
 
 

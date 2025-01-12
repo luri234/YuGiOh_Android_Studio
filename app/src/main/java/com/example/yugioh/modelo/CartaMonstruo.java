@@ -84,8 +84,28 @@ public class CartaMonstruo extends Carta {
         this.tipoAtributo = tipoAtributo;
     }
 
-    public TipoMonstruo getTipoMonstruo() {
-        return tipoMonstruo;
+    public TipoMonstruo getTipoMonstruo(){
+        return  tipoMonstruo;
+    }
+    public String getTipoMonstruoString() {
+        String tipo = tipoMonstruo.name();
+        switch (tipo){
+            case "L":
+                return "Lanzador de Conjuros";
+            case "D":
+                return "Dragon";
+            case "Z":
+                return "Zombie";
+            case "G":
+                return "Guerrero";
+            case "B":
+                return "Bestia";
+            case "O":
+                return "Demonio";
+            default:
+                return "Error en la obtencion del tipo de monstruo";
+        }
+
     }
 
     public void setTipoMonstruo(TipoMonstruo tipoMonstruo) {

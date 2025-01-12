@@ -1,0 +1,106 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#00CCFF">
+
+    <!-- Nombre Carta -->
+    <TextView
+        android:id="@+id/c_nombre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nombre Carta"
+        android:textColor="#EE0E0E"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center" />
+
+<!--    contenedor ataque y defensa-->
+    <LinearLayout
+        android:id="@+id/layout_atqYdef"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="1dp"
+        android:gravity="end">
+
+        <!-- ataque -->
+        <TextView
+            android:id="@+id/c_atk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:text="ATK: "
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <!-- Defensa -->
+        <TextView
+            android:id="@+id/c_def"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="DEF: "
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <!-- Descripcion -->
+    <TextView
+        android:id="@+id/c_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Descripcion: "
+        android:textColor="@color/white"
+        android:layout_marginTop="8dp"
+        android:textSize="16sp" />
+
+    <!-- Atributo -->
+    <TextView
+        android:id="@+id/c_atributo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Atributo: "
+        android:textColor="@color/white"
+        android:layout_marginTop="8dp"
+        android:textSize="16sp" />
+
+    <!-- Tipo -->
+    <TextView
+        android:id="@+id/c_tipo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tipo: "
+        android:textColor="@color/white"
+        android:layout_marginTop="8dp"
+        android:textSize="16sp" />
+
+    <!-- Botones -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        android:gravity="end">
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancelar"
+            android:backgroundTint="#EE0E0E"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/btn_accept"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Colocar"
+            android:layout_marginStart="8dp"
+            android:backgroundTint="#000099"
+            android:textColor="@color/white" />
+    </LinearLayout>
+</LinearLayout>
