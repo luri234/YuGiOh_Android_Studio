@@ -41,19 +41,21 @@ public class Tablero {
         if (carta instanceof CartaMonstruo) {
             if (tableroCompartido.get(idJugador).get("CartasMonstruo").size() < 3) {
                 tableroCompartido.get(idJugador).get("CartasMonstruo").add(carta);
-                System.out.println("+----Carta " + carta.getNombre() + " añadida");
+                // quitado por el android
+                // System.out.println("+----Carta " + carta.getNombre() + " añadida");
                 quitarCartaMano(idJugador, carta);
-            } else {
-                System.out.println("No se pudo incluir esa carta, espacio lleno");
-            }
+            }// else {
+
+                //System.out.println("No se pudo incluir esa carta, espacio lleno");
+           // }
         } else if (carta instanceof CartaMagica || carta instanceof CartaTrampa) {
             if (tableroCompartido.get(idJugador).get("CartasEspeciales").size() < 3) {
                 tableroCompartido.get(idJugador).get("CartasEspeciales").add(carta);
-                System.out.println("+----Carta " + carta.getNombre() + " añadida");
+                //System.out.println("+----Carta " + carta.getNombre() + " añadida");
                 quitarCartaMano(idJugador, carta);
-            } else {
-                System.out.println("No se pudo incluir esa carta, espacio lleno");
-            }
+            } //else {
+                //System.out.println("No se pudo incluir esa carta, espacio lleno");
+            //}
         }
     }
 
@@ -65,7 +67,7 @@ public class Tablero {
         }
     }
 
-    private void quitarCartaMano(int idJugador, Carta carta) {
+    public void quitarCartaMano(int idJugador, Carta carta) {
         if (idJugador == 1) {
             jugador1.getCartasEnMano().remove(carta);
         } else if (idJugador == 2) {
@@ -261,10 +263,6 @@ public class Tablero {
     //getters and setters
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
     
     public Jugador getJugador1() {

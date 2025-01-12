@@ -3,6 +3,7 @@ package com.example.yugioh;
 
 import android.app.AlertDialog;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Layout;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ScrollView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
     Jugador j1 = null;
     Jugador j2 = null;
     Button sgtfase;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,19 +73,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        //CONTINUO AQUI
-
-        //la reescribi un poco maas abajo para q sea mas sencilla de entender y manejar -> funcion pasarFase , no hay necesidad de llamarla se activa cuando el jugador da click
-
-//        sgtfase.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //codigo que queremos que haga //v representa al boton
-//                //este es solo un ejemplo porque se necesita el cod de java
-//                crearDialog("Llenar Tablero","es turno del jugador (necesito getters y codigo) para que llene su tablero");
-//
-//            }
-//        });
 
     }
 
@@ -153,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
             //la aniadimos al scroll
             mostrarImagenScroll(cJ1, R.id.contenedorScrollRojo);
 
+
             //agregamos una a jugador 2
             Carta cJ2 = j2.tomarCartaEnTurno();
             mostrarImagenScroll(cJ2, R.id.contenedorScrollAzul);
@@ -161,13 +150,50 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    //crear una funcion para agregar cartas imagenes encima de la carta base
-    //preguntar como hacer establecer los guidelines de la imagen por codigo.
+    //funcion que agrega la imagen, trabaja con aniadircartatablero
+    public void agregarImagenTablero(Carta c, int id_view,int id_jugador){
+        ImageView v = findViewById(id_view);
+        Resources res = getResources();
+        int rId = res.getIdentifier(c.getRutaImagen(), "drawable", getPackageName());
+        quitarImagenMano(c,id_jugador);
+        v.setImageResource(rId);
+        tablero.aniadirCartaTablero(c,id_jugador);
+    }
+
+    public void quitarImagenMano(Carta c, int id_jugador){
+        if (id_jugador == 2) {
+            LinearLayout azul = findViewById(R.id.contenedorScrollAzul);
+            for (int i = 0; i < azul.getChildCount(); i++) {
+                View cartita = azul.getChildAt(i);
+                if (cartita.getTag().equals(c.getRutaImagen())){
+                    azul.removeView(cartita);
+                }
+            }
+        }else{
+            LinearLayout rojo = findViewById(R.id.contenedorScrollRojo);
+            for (int i = 0; i < rojo.getChildCount(); i ++){
+                View cartita = rojo.getChildAt(i);
+                if(cartita.getTag().equals(c.getRutaImagen()))
+                    rojo.removeView(cartita);
+            }
+        }
+        tablero.quitarCartaMano(id_jugador,c);
+    }
+    //metodo todavia en proceso -----------
+    //public void quitarImagenTablero(Carta c, int id_jugador, int id_view){
+    //    ImageView v = findViewById(id_view);
+
+    //}
+    //preguntar como hacer establecer los guidelines de la imagen por codigo
+    // .
+
 
     public void pasarFase(View v){
         //codigo que queremos que haga //v representa al boton
         //este es solo un ejemplo porque se necesita el cod de java
         crearDialog("Llenar Tablero","es turno del jugador (necesito getters y codigo) para que llene su tablero");
+        //para probar el metodo
+        agregarImagenTablero(j1.getCartasEnMano().get(0),R.id.esp_1_maq_carta,1);
 
     }
 
@@ -192,6 +218,8 @@ public class MainActivity extends AppCompatActivity {
         }
         ImageView imV = new ImageView(this);
         imV.setImageResource(rId);
+        //setTag agregado para poder identificar la carta para eliminarla despues
+        imV.setTag(cartaAMostrar.getRutaImagen());
 
         //configuramos los atributos de la imagen
         LinearLayout.LayoutParams atributos = new LinearLayout.LayoutParams(
@@ -249,7 +277,7 @@ public class MainActivity extends AppCompatActivity {
         if( numImagenes == tamanio){
             //validamos que instancia de carta es
             if( carta instanceof CartaMonstruo){
-                CartaMonstruo cm = (CartaMonstruo)carta; 
+                CartaMonstruo cm = (CartaMonstruo)carta;
                 // Configurar los valores dinámicos a mostrar
                 TextView ataque = dialogView.findViewById(R.id.c_atk);
                 TextView defensa = dialogView.findViewById(R.id.c_def);
@@ -273,7 +301,7 @@ public class MainActivity extends AppCompatActivity {
 
                 //setteamos los demas campos no utilizados para q no aparezcan
                 dialogView.findViewById(R.id.c_atributo).setVisibility(View.GONE);
-                
+
             } else if (carta instanceof CartaTrampa) {
                 CartaTrampa ct = (CartaTrampa)carta;
                 TextView atributo = dialogView.findViewById(R.id.c_atributo);
