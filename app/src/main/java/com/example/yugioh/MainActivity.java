@@ -60,26 +60,34 @@ public class MainActivity extends AppCompatActivity {
             crearDialog("ERROR", "Ha surgido un error desconocido");
         }
 
-//        Jugador j1 = new Jugador("Usuario",1);
-//        Jugador j2 = new Jugador("Máquina",2);
-        MensajeInicio("Bienvenido al juego de Yu-Gi-Oh!","Para continuar con el sorteo inicial presiona Ok",partida,j1,j2);
+        //se da la bienvenida, sorteo inicio y se reparten las 5 cartas iniciales.
+        inicioJuego("Bienvenido al juego de Yu-Gi-Oh!","Presione Ok para empezar a jugar!",partida,j1,j2);
 
-        //FUNCION que reinicie el tablero , hace el sorteo logico y muestre las cartas tomadas
-        repartirCartasIniciales();
+
 
         //CONTINUO AQUI
 
-        sgtfase.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //codigo que queremos que haga //v representa al boton
-                //este es solo un ejemplo porque se necesita el cod de java
-                crearDialog("Llenar Tablero","es turno del jugador (necesito getters y codigo) para que llene su tablero");
+        //la reescribi un poco maas abajo para q sea mas sencilla de entender y manejar -> funcion pasarFase , no hay necesidad de llamarla se activa cuando el jugador da click
 
-            }
-        });
+//        sgtfase.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //codigo que queremos que haga //v representa al boton
+//                //este es solo un ejemplo porque se necesita el cod de java
+//                crearDialog("Llenar Tablero","es turno del jugador (necesito getters y codigo) para que llene su tablero");
+//
+//            }
+//        });
+
     }
-    public void MensajeInicio(String title,String mensaje,Partida partida,Jugador j1, Jugador j2){
+
+
+
+
+    //METODOS
+    public void inicioJuego(String title,String mensaje,Partida partida,Jugador j1, Jugador j2){
+        //Antes se llamaba mostrar mensajeInicio.
+        //Muestra una bienvenida -> realiza el sorteo de inicia -> y reparte las 5 cartas iniciales, tanto para el juego logico y virtual
         AlertDialog.Builder abd = new AlertDialog.Builder(this);
         abd.setTitle(title);
         abd.setMessage(mensaje);
@@ -87,6 +95,8 @@ public class MainActivity extends AppCompatActivity {
             Jugador jinicial = partida.sorteoInicios(j1,j2);
             dialog.dismiss();
             crearDialog("Sorteo inicial","El jugador que comienza es: "+jinicial.getNombre()+"\nPara continuar da clic en 'Siguiente fase'");
+            repartirCartasIniciales();
+
         }
         );
         AlertDialog dialog = abd.create();
@@ -104,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //ignorar
     public void cargarCartasEnMemoria(){
 
         try{
@@ -141,8 +152,20 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+
     //crear una funcion para agregar cartas imagenes encima de la carta base
     //preguntar como hacer establecer los guidelines de la imagen por codigo.
+
+    public void pasarFase(View v){
+        //codigo que queremos que haga //v representa al boton
+        //este es solo un ejemplo porque se necesita el cod de java
+        crearDialog("Llenar Tablero","es turno del jugador (necesito getters y codigo) para que llene su tablero");
+
+    }
+
+
+
 
     public void mostrarImagenScroll(Carta cartaAMostrar, int idLinearLayoutScroll){
         LinearLayout contenedor = findViewById(idLinearLayoutScroll);
@@ -155,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
 
         Resources res = getResources();
         int rId = res.getIdentifier(cartaAMostrar.getRutaImagen(), "drawable", getPackageName());
+        //para mostrar en caso de error
         if(rId == 0){
             crearDialog("Error en el programa", "No se encontro la imagen: "+ cartaAMostrar.getRutaImagen());
             return;
@@ -175,7 +199,8 @@ public class MainActivity extends AppCompatActivity {
         contenedor.addView(imV);
     }
 
-    // Método para convertir dp a px (para garantizar consistencia en diferentes pantallas)
+
+    // Metodo para convertir dp a px (para garantizar consistencia en diferentes pantallas)
     private int dpToPx(int dp) {
         return Math.round(dp * getResources().getDisplayMetrics().density);
     }
