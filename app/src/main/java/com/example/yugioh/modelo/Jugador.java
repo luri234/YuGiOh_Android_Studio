@@ -62,7 +62,7 @@ public class Jugador {
     //metodo nuevo para android
 
 
-    public void jugarCarta(Partida partida, Carta cartaSeleccionada, boolean isInAtaque, CartaMonstruo cartaAAsociar) throws AgregacionCartaMonstruoException, CartaMagicaAsociacionException, SinEspacioTableroException {
+    public void jugarCarta(Partida partida, Carta cartaSeleccionada, boolean isInAtaque) throws AgregacionCartaMonstruoException, CartaMagicaAsociacionException, SinEspacioTableroException {
         Tablero tablero = partida.getTablero();
 
         //VALIDAMOS LA AGREGACION DE LA CARTA
@@ -80,19 +80,8 @@ public class Jugador {
                     cartaMonstruoSelec.setBocaArriba(false);
                 }
 
-                tablero.aniadirCartaTablero(cartaSeleccionada, this.id);
                 setNoAgregoMonstruo(false);
 
-            }
-
-            // Si la carta es trampa
-            else if (cartaSeleccionada instanceof CartaTrampa) {
-                tablero.aniadirCartaTablero(cartaSeleccionada, this.id);
-            }
-            // Si la carta es mágica
-            else if (cartaSeleccionada instanceof CartaMagica) {
-                cartaAAsociar.setCartaMagica((CartaMagica) cartaSeleccionada);
-                tablero.aniadirCartaTablero(cartaSeleccionada, this.id);
             }
         }
 
