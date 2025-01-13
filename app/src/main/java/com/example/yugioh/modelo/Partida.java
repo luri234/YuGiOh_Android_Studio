@@ -17,6 +17,7 @@ public class Partida {
         this.jugadorActual = 1; //por defecto
         this.tablero = new Tablero(am, archivoCartas);
     }
+
     //funcion cambiada para interaccion con el usuario
     public Jugador sorteoInicios(Jugador j1, Jugador j2) {
         Jugador[] jugadores = {j1, j2};
@@ -58,4 +59,7 @@ public class Partida {
     public void setRonda(int ronda) {
         this.ronda = ronda;
     }
+
+    //logica para el juego, fase llenar tablero
 }
+

@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
         //este es solo un ejemplo porque se necesita el cod de java
         crearDialog("Llenar Tablero","es turno del jugador (necesito getters y codigo) para que llene su tablero");
         //para probar el metodo
-        agregarImagenTablero(j1.getCartasEnMano().get(0),R.id.esp_1_maq_carta,1);
+
 
     }
 
