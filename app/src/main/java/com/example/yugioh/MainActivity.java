@@ -75,6 +75,31 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+    public void llenartableromaquina(Tablero tablero, Jugador j2){
+        j2.llenarTableroMaquina(tablero);
+        ArrayList<Carta> esp_mons = tablero.getTableroCompartido().get(2).get("CartasMonstruo");
+        ArrayList<Carta> esp_esp = tablero.getTableroCompartido().get(2).get("CartasEspeciales");
+        int indice = 1;
+        for (Carta carta: esp_mons){
+            CartaMonstruo c = (CartaMonstruo)carta;
+            agregarImagenTablero(c,R.id.mons_1_maq_carta,2);
+        }
+        for (Carta carta: esp_esp){
+            if (indice ==1) {
+                agregarImagenTablero(carta, R.id.esp_1_maq_carta, 2);
+            }
+            else if (indice ==2){
+                agregarImagenTablero(carta, R.id.esp_2_maq_carta,2);
+            }
+            else{
+                agregarImagenTablero(carta,R.id.esp_3_maq_carta,2);
+            }
+            indice++;
+        }
+        Toast.makeText(this, "La máquina ya ha llenado su tablero", Toast.LENGTH_SHORT).show();
+
+    }
+
 
 
 
@@ -189,12 +214,34 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void pasarFase(View v){
+        //puede representar al metodo ronda de java
         //codigo que queremos que haga //v representa al boton
         //este es solo un ejemplo porque se necesita el cod de java
-        crearDialog("Llenar Tablero","es turno del jugador (necesito getters y codigo) para que llene su tablero");
+        faseLLenarTableros();
+        partida.cambiarTurno();
+
         //para probar el metodo
 
 
+    }
+    public void faseLLenarTableros(){
+        LinearLayout rojo = findViewById(R.id.contenedorScrollRojo);
+        if (partida.getJugadorActual() == 2){
+            crearDialog("Llenar Tablero","Es el turno de la Máquina de llenar su tablero");
+            llenartableromaquina(tablero,j2);
+            restringir_movimientos(false);
+        }
+        else{
+            restringir_movimientos(true);
+        }
+    }
+    //la funcion esta pensada para que el jugador no pueda hacer nada mientras no sea su turno, al pasar false no puede hacer nada,true puede actuar
+    public void restringir_movimientos(boolean val){
+        LinearLayout rojo = findViewById(R.id.contenedorScrollRojo);
+        for (int i = 0; i <rojo.getChildCount(); i ++){
+            View cartita = rojo.getChildAt(i);
+            cartita.setEnabled(val);
+        }
     }
 
 
@@ -343,5 +390,7 @@ public class MainActivity extends AppCompatActivity {
     private int dpToPx(int dp) {
         return Math.round(dp * getResources().getDisplayMetrics().density);
     }
+
+
 
 }

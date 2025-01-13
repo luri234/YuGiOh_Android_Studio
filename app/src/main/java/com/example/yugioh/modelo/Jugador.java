@@ -1,7 +1,7 @@
 package com.example.yugioh.modelo;
 
 import java.util.ArrayList;
-
+import com.example.yugioh.MainActivity;
 public class Jugador {
     public static int jugadores; //contador de instancias
 
@@ -32,6 +32,26 @@ public class Jugador {
     public void tomar5Cartas() {
         for (int i = 0; i < 5; i++) {
             tomarCartaEnTurno();
+        }
+    }
+    public void llenarTableroMaquina(Tablero tablero) {
+        // mano_maquina sería la lista de cartas en mano del jugador
+        ArrayList<Carta> manoMaquina = new ArrayList<>(tablero.getJugador2().getCartasEnMano());//debe ser una copiar para que no se modifique
+        // Colocar cartas de monstruo
+        for (Carta carta : manoMaquina) {
+            if (carta instanceof CartaMonstruo) {
+                if (this.noAgregoMonstruo) { // si no se ha agregado monstruo en ese turno
+                    if (tablero.getTableroCompartido().get(2).get("CartasMonstruo").size() < 3) {
+                        tablero.aniadirCartaTablero(carta, 2); // agrega la carta al tablero
+                        setNoAgregoMonstruo(false); // ya tiene un monstruo agregado
+                    }
+                }
+            } else { // si no es monstruo, será cualquier otra carta
+                if (tablero.getTableroCompartido().get(2).get("CartasEspeciales").size() < 3) {
+                    tablero.aniadirCartaTablero(carta, 2);
+
+                }
+            }
         }
     }
 

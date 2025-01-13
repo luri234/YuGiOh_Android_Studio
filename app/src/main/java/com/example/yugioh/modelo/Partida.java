@@ -26,6 +26,14 @@ public class Partida {
         this.jugadorActual = turno;
         return jugadorEmpieza;
     }
+    public void cambiarTurno() {
+        this.turno++;
+        if (turno % 2 == 0) {
+            this.jugadorActual = 2;
+        } else {
+            this.jugadorActual = 1;
+        }
+    }
 
     //getter and setters
     public int getTurno() {
