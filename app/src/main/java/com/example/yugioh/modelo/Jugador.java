@@ -1,5 +1,9 @@
 package com.example.yugioh.modelo;
 
+import com.example.yugioh.modelo.exceptions.AgregacionCartaMonstruoException;
+import com.example.yugioh.modelo.exceptions.CartaMagicaAsociacionException;
+import com.example.yugioh.modelo.exceptions.SinEspacioTableroException;
+
 import java.util.ArrayList;
 
 public class Jugador {
@@ -35,9 +39,44 @@ public class Jugador {
         }
     }
 
+    //metodo nuevo para android
 
 
+    public void jugarCarta(Partida partida, Carta cartaSeleccionada, boolean isInAtaque, CartaMonstruo cartaAAsociar) throws AgregacionCartaMonstruoException, CartaMagicaAsociacionException, SinEspacioTableroException {
+        Tablero tablero = partida.getTablero();
 
+        //VALIDAMOS LA AGREGACION DE LA CARTA
+        if (tablero.sePuedeAgregarCarta(cartaSeleccionada, this)){
+            // Si la carta es un monstruo
+            if (cartaSeleccionada instanceof CartaMonstruo) {
+                //convertimos la seleccion en una carta monstruo
+                CartaMonstruo cartaMonstruoSelec = (CartaMonstruo)cartaSeleccionada;
+
+                if (isInAtaque) {
+                    cartaMonstruoSelec.setisInAtaque(true);
+                    cartaMonstruoSelec.setBocaArriba(true);
+                } else {
+                    cartaMonstruoSelec.setisInAtaque(false);
+                    cartaMonstruoSelec.setBocaArriba(false);
+                }
+
+                tablero.aniadirCartaTablero(cartaSeleccionada, this.id);
+                setNoAgregoMonstruo(false);
+
+            }
+
+            // Si la carta es trampa
+            else if (cartaSeleccionada instanceof CartaTrampa) {
+                tablero.aniadirCartaTablero(cartaSeleccionada, this.id);
+            }
+            // Si la carta es mágica
+            else if (cartaSeleccionada instanceof CartaMagica) {
+                cartaAAsociar.setCartaMagica((CartaMagica) cartaSeleccionada);
+                tablero.aniadirCartaTablero(cartaSeleccionada, this.id);
+            }
+        }
+
+    }
 
 
 
@@ -92,7 +131,7 @@ public class Jugador {
     }
 
 
-    public boolean isNoAgregoMonstruo() {
+    public boolean getNoAgregoMonstruo() {
         return noAgregoMonstruo;
     }
 

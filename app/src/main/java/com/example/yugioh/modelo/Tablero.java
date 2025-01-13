@@ -2,6 +2,10 @@ package com.example.yugioh.modelo;
 
 import android.content.res.AssetManager;
 
+import com.example.yugioh.modelo.exceptions.AgregacionCartaMonstruoException;
+import com.example.yugioh.modelo.exceptions.CartaMagicaAsociacionException;
+import com.example.yugioh.modelo.exceptions.SinEspacioTableroException;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -33,7 +37,7 @@ public class Tablero {
         tableroCompartido.put(jugador2.getId(), espacioJugador2);
     }
 
-    public Jugador aniadirJugador(AssetManager am, String archivoCartas) throws IOException{
+    public Jugador aniadirJugador(AssetManager am, String archivoCartas) throws IOException {
         return new Jugador("JugadorPrueba", new Deck(am, archivoCartas));
     }
 
@@ -46,15 +50,15 @@ public class Tablero {
                 quitarCartaMano(idJugador, carta);
             }// else {
 
-                //System.out.println("No se pudo incluir esa carta, espacio lleno");
-           // }
+            //System.out.println("No se pudo incluir esa carta, espacio lleno");
+            // }
         } else if (carta instanceof CartaMagica || carta instanceof CartaTrampa) {
             if (tableroCompartido.get(idJugador).get("CartasEspeciales").size() < 3) {
                 tableroCompartido.get(idJugador).get("CartasEspeciales").add(carta);
                 //System.out.println("+----Carta " + carta.getNombre() + " añadida");
                 quitarCartaMano(idJugador, carta);
             } //else {
-                //System.out.println("No se pudo incluir esa carta, espacio lleno");
+            //System.out.println("No se pudo incluir esa carta, espacio lleno");
             //}
         }
     }
@@ -80,7 +84,7 @@ public class Tablero {
         ArrayList<Carta> espacioMonstruosJ = tableroCompartido.get(jugador.getId()).get("CartasMonstruo");
         int i = 0;
         for (Carta cartaMonstruo : espacioMonstruosJ) {
-            if (((CartaMonstruo)cartaMonstruo).getIsBocaArriba()) {
+            if (((CartaMonstruo) cartaMonstruo).getIsBocaArriba()) {
                 i++;
             }
         }
@@ -92,7 +96,7 @@ public class Tablero {
         ArrayList<Carta> espacioMonstruosJ = tableroCompartido.get(jugador.getId()).get("CartasMonstruo");
         int i = 0;
         for (Carta cartaMonstruo : espacioMonstruosJ) {
-            if (((CartaMonstruo)cartaMonstruo).getIsInAtaque()) {
+            if (((CartaMonstruo) cartaMonstruo).getIsInAtaque()) {
                 i++;
             }
         }
@@ -115,38 +119,37 @@ public class Tablero {
     }
 
     //Revisado
-    public void eliminarCartaMagicaAsociada(Jugador jugador, CartaMonstruo cm){
+    public void eliminarCartaMagicaAsociada(Jugador jugador, CartaMonstruo cm) {
 
-        if(cm.getCartaMagica() != null ){
+        if (cm.getCartaMagica() != null) {
             int id_cartaMagicaAsociada = cm.getCartaMagica().getId();
             ArrayList<Carta> espacioCartasEspecialesJ = tableroCompartido.get(jugador.getId()).get("CartasEspeciales");
-            int i = 0; 
+            int i = 0;
             Integer indiceCarta = null;
-            for(Carta cartaEspecial : espacioCartasEspecialesJ ){
+            for (Carta cartaEspecial : espacioCartasEspecialesJ) {
                 int id_cartaEspecial = cartaEspecial.getId();
-                if( cartaEspecial instanceof CartaMagica  && id_cartaEspecial == id_cartaMagicaAsociada){
+                if (cartaEspecial instanceof CartaMagica && id_cartaEspecial == id_cartaMagicaAsociada) {
                     indiceCarta = i;
                 }
-                i+=1;
+                i += 1;
             }
             Carta cartaAEliminar = espacioCartasEspecialesJ.get(indiceCarta);
             quitarCartaTablero(cartaAEliminar, jugador.getId());
         }
     }
-    
+
     //Revisado
-    public boolean validarAgregacionCartaMagica(CartaMagica cm, Jugador jugador){
-        
+    public boolean validarAgregacionCartaMagica(CartaMagica cm, Jugador jugador) {
+
         ArrayList<Carta> espacioMonstruosJ = tableroCompartido.get(jugador.getId()).get("CartasMonstruo");
         int i = 0;
-        for( Carta cartaMonstruo : espacioMonstruosJ){
-            if(((CartaMonstruo)cartaMonstruo).getTipoMonstruo() == cm.getTipoMonstruo()){
+        for (Carta cartaMonstruo : espacioMonstruosJ) {
+            if (((CartaMonstruo) cartaMonstruo).getTipoMonstruo() == cm.getTipoMonstruo()) {
                 i += 1;
             }
-        }    
-        return i > 0 ;
+        }
+        return i > 0;
     }
-
 
 
     //revisada
@@ -257,8 +260,42 @@ public class Tablero {
 //        }
 //    }
 
+    //Metodo nuevo para android
 
-    //Falta metodo toString
+    public boolean sePuedeAgregarCarta(Carta carta, Jugador j) throws AgregacionCartaMonstruoException, SinEspacioTableroException, CartaMagicaAsociacionException {
+        //verifica si el jugador puede agregar cierta carta a su espacio y tambien si es que ya no ha agregado una carta mosntruo
+        //verifica si la carta Magica se puede asociar a un mosntruo en el tablero
+        int idJugador = j.getId();
+        ArrayList<Carta> espacioCartasMonstruo = tableroCompartido.get(idJugador).get("CartasMonstruo");
+        ArrayList<Carta> espacioCartasEspeciales = tableroCompartido.get(idJugador).get("CartasEspeciales");
+
+        if (carta instanceof CartaMonstruo) {
+            if (espacioCartasMonstruo.size() < 3 && j.getNoAgregoMonstruo()) {
+                return true;
+            } else if (!j.getNoAgregoMonstruo()) {
+                throw new AgregacionCartaMonstruoException();
+            } else if (!(espacioCartasMonstruo.size() < 3)) {
+                throw new SinEspacioTableroException(carta);
+            }
+
+        } else if (carta instanceof CartaMagica) {
+            CartaMagica cm = (CartaMagica) carta;
+            if (!validarAgregacionCartaMagica(cm, j)) {
+                throw new CartaMagicaAsociacionException(cm);
+            } else if (!(espacioCartasEspeciales.size() < 3)) {
+                throw new SinEspacioTableroException(cm);
+            } else if (validarAgregacionCartaMagica(cm, j) && espacioCartasEspeciales.size() < 3) {
+                return true;
+            }
+        } else {
+            if (!(espacioCartasEspeciales.size() < 3)) {
+                throw new SinEspacioTableroException(carta);
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
     
     //getters and setters
     public int getId() {

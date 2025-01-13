@@ -29,9 +29,13 @@ import com.example.yugioh.modelo.CartaTrampa;
 import com.example.yugioh.modelo.Jugador;
 import com.example.yugioh.modelo.Partida;
 import com.example.yugioh.modelo.Tablero;
+import com.example.yugioh.modelo.exceptions.AgregacionCartaMonstruoException;
+import com.example.yugioh.modelo.exceptions.CartaMagicaAsociacionException;
+import com.example.yugioh.modelo.exceptions.SinEspacioTableroException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -173,8 +177,9 @@ public class MainActivity extends AppCompatActivity {
             LinearLayout rojo = findViewById(R.id.contenedorScrollRojo);
             for (int i = 0; i < rojo.getChildCount(); i ++){
                 View cartita = rojo.getChildAt(i);
-                if(cartita.getTag().equals(c.getRutaImagen()))
+                if(cartita.getTag().equals(c.getRutaImagen())){
                     rojo.removeView(cartita);
+                }
             }
         }
         tablero.quitarCartaMano(id_jugador,c);
@@ -248,6 +253,7 @@ public class MainActivity extends AppCompatActivity {
         contenedor.addView(imV);
     }
 
+    //ignorar
     public void mostrarTurno(int idJugador){
         //crea un dialogo que muestra el turno de quien de jugar una carta
         String nombreJ = "Error de asignacion de nombre";
@@ -328,6 +334,7 @@ public class MainActivity extends AppCompatActivity {
             dialogView.findViewById(R.id.btn_accept).setOnClickListener(v -> {
                 //accciones al clicar 'colocar'
                 Toast.makeText(this, "*procede a colocar la carta en tablero ", Toast.LENGTH_SHORT).show();
+                //funcio que valida le agregacion de una carta y dentro llame agregarcartaTablero
                 dialog.dismiss();
             });
             // Mostrar el diálogo
@@ -336,6 +343,73 @@ public class MainActivity extends AppCompatActivity {
         }else{
             crearDialog("Error de programa", "El tamanio del scroll j1 no coincide con el logico");
         }
+    }
+
+    public void aniadirCartaTableroFisico(Carta c, Jugador j ){
+        //variables para actualizar el tablero logico
+        Boolean[] isInAtaque = {null} ;
+        CartaMonstruo cartaAAsociar = null;
+        //valida si el jugador puede aniadir una carta y procede a aniadirla
+        try {
+            if(tablero.sePuedeAgregarCarta(c, j)){
+                //validamos para cada caso de carta
+                if(c instanceof CartaMonstruo){
+                    //preguntamos si en ataque o defensa
+                    crearDialogSetPosicionCarta(resultado -> {
+                        //agregamos la carta al tablero definiendola si va girada o no de acuerdo al modo
+                        if(resultado){
+
+                            Toast.makeText(this, "Carta en Modo Ataque aniadida", Toast.LENGTH_SHORT).show();
+                            isInAtaque[0]= true;
+
+                        }else {
+                            Toast.makeText(this, "Carta en Modo Defensa Aniadida", Toast.LENGTH_SHORT).show();
+                            isInAtaque[0] = false;
+                        }
+                    });
+
+                } else if ( c instanceof  CartaMagica) {
+                    //mostramos cartas a enlazar
+                } else if ( c instanceof  CartaTrampa) {
+                    //solo agregamos al tablero (ojala todas fueran asi)
+                }
+            }
+            //actualizamos el tablero logico de la carta a aniadir
+            j.jugarCarta(partida, c, isInAtaque[0],cartaAAsociar );
+
+        } catch (AgregacionCartaMonstruoException | SinEspacioTableroException  | CartaMagicaAsociacionException e){
+            crearDialog("Error",  e.getMessage());
+        }
+
+
+
+    }
+
+    //
+    public void crearDialogSetPosicionCarta(Consumer<Boolean> retorno){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Selecciona la posición de la carta");
+
+        // botones
+        builder.setPositiveButton("Modo Ataque", (dialog, which) -> {
+            retorno.accept(true);
+            dialog.dismiss();
+        });
+
+        builder.setNegativeButton("Modo Defensa", (dialog, which) -> {
+            // Acciónes para "Modo Defensa"
+            retorno.accept(false);
+            dialog.dismiss();
+        });
+
+        // Crear y mostrar el diálogo
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public void buscarAgregarImagenTablero(){
+        //busca el espacio vacio donde pueda agregar la imagen en la seccion
+
     }
 
 
