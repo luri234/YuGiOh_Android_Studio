@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -49,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
     Jugador j1 = null;
     Jugador j2 = null;
     Button sgtfase;
+    TextView deckuser;
+    TextView deckmaq;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
         sgtfase = findViewById(R.id.button_fases);
+        deckuser = findViewById(R.id.num_deck_user);
+        deckmaq = findViewById(R.id.num_deck_maq);
 
 
         //asignando valor a las instancias , manejando posibles errores en la creacion
@@ -74,9 +79,10 @@ public class MainActivity extends AppCompatActivity {
         }catch (Exception e){
             crearDialog("ERROR", "Ha surgido un error desconocido");
         }
-
         //se da la bienvenida, sorteo inicio y se reparten las 5 cartas iniciales.
         inicioJuego("Bienvenido al juego de Yu-Gi-Oh!","Presione Ok para empezar a jugar!",partida,j1,j2);
+
+
 
 
 
@@ -123,11 +129,14 @@ public class MainActivity extends AppCompatActivity {
             dialog.dismiss();
             crearDialog("Sorteo inicial","El jugador que comienza es: "+jinicial.getNombre()+"\nPara continuar da clic en 'Siguiente fase'");
             repartirCartasIniciales();
+            restringir_movimientos(true,1);
+            restringir_movimientos(true,2);
 
         }
         );
         AlertDialog dialog = abd.create();
         dialog.show();
+
     }
     public void crearDialog(String title, String mensaje){
         AlertDialog.Builder abd = new AlertDialog.Builder(this);
@@ -169,13 +178,13 @@ public class MainActivity extends AppCompatActivity {
 
         for(int i = 0; i < 5; i++){
             //agregamos una a jugador 1
-            Carta cJ1 = j1.tomarCartaEnTurno();
+            Carta cJ1 = j1.tomarCartaEnTurno(deckuser);
             //la aniadimos al scroll
             mostrarImagenScroll(cJ1, R.id.contenedorScrollRojo);
 
 
             //agregamos una a jugador 2
-            Carta cJ2 = j2.tomarCartaEnTurno();
+            Carta cJ2 = j2.tomarCartaEnTurno(deckmaq);
             mostrarImagenScroll(cJ2, R.id.contenedorScrollAzul);
         }
 
@@ -217,9 +226,15 @@ public class MainActivity extends AppCompatActivity {
         //puede representar al metodo ronda de java
         //codigo que queremos que haga //v representa al boton
         //este es solo un ejemplo porque se necesita el cod de java
-        restringir_movimientos(false);
-        faseLLenarTableros();
-        partida.cambiarTurno();
+        if (partida.getRonda()==1 || partida.getRonda()==2) {
+                faseLLenarTableros();
+                partida.cambiarTurno();
+
+        }
+        else{
+            crearDialog("PRUEBA AVISO","a partir de esta ronda ya se puede declarar batalla");
+        }
+        partida.setRonda(partida.getRonda()+1);
 
         //para probar el metodo
 
@@ -227,24 +242,37 @@ public class MainActivity extends AppCompatActivity {
     }
     public void faseLLenarTableros(){
         if (partida.getJugadorActual() == 2){
-            crearDialog("Llenar Tablero","Es el turno de la Máquina de llenar su tablero");
+            restringir_movimientos(true,1);
+            restringir_movimientos(false,2);
+            crearDialog("Llenar Tablero","La Máquina ha robado una carta del deck y procede a llenar su tablero");
+            Carta c = j2.tomarCartaEnTurno(deckmaq);
             llenartableromaquina(tablero,j2);
-            restringir_movimientos(false);
-            Carta c = j2.tomarCartaEnTurno();
             mostrarImagenScroll(c,R.id.contenedorScrollAzul);
         }
         else{
-            restringir_movimientos(true);
-            Carta c1 = j1.tomarCartaEnTurno();
+            restringir_movimientos(false,1);
+            restringir_movimientos(true,2);
+            Carta c1 = j1.tomarCartaEnTurno(deckuser);
+            crearDialog("Llenar Tablero","Has robado una carta del deck y es tu turno de llenar tu tablero");
             mostrarImagenScroll(c1,R.id.contenedorScrollRojo);
         }
     }
-    //la funcion esta pensada para que el jugador no pueda hacer nada mientras no sea su turno, al pasar false no puede hacer nada,true puede actuar
-    public void restringir_movimientos(boolean val){
+    //la funcion esta pensada para que el jugador no pueda hacer nada mientras no sea su turno
+    //con true se restringen los movimientos
+    public void restringir_movimientos(boolean val,int id_jugador){
         LinearLayout rojo = findViewById(R.id.contenedorScrollRojo);
-        for (int i = 0; i <rojo.getChildCount(); i ++){
-            View cartita = rojo.getChildAt(i);
-            cartita.setEnabled(val);
+        LinearLayout azul = findViewById(R.id.contenedorScrollAzul);
+        if (id_jugador == 1) {
+            for (int i = 0; i < rojo.getChildCount(); i++) {
+                View cartita = rojo.getChildAt(i);
+                cartita.setEnabled(!val);
+            }
+        }
+        else{
+            for (int i = 0; i < azul.getChildCount(); i++) {
+                View cartita = azul.getChildAt(i);
+                cartita.setEnabled(!val);
+            }
         }
     }
 
@@ -289,7 +317,7 @@ public class MainActivity extends AppCompatActivity {
 //                Toast.makeText(getApplicationContext(),
 //                        "Clic en la carta: " + cartaAMostrar.getNombre(),
 //                        Toast.LENGTH_SHORT).show();
-                crearDialogAgregarCarta(cartaAMostrar);
+                crearDialogAgregarCarta(cartaAMostrar,idLinearLayoutScroll);
 
 
             }
@@ -312,13 +340,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void crearDialogAgregarCarta(Carta carta){
+    public void crearDialogAgregarCarta(Carta carta, int id_contenedor){
         //obtenemos el numero de imagenes en el layout
-        LinearLayout contenedor = findViewById(R.id.contenedorScrollRojo);
+        LinearLayout contenedor = findViewById(id_contenedor);
 
         int numImagenes = contenedor.getChildCount();
         //obtenemos el size de la lista cartasEnMano logico(que debe ser igual, solo para verificar q si lo sean)
-        int tamanio =  j1.getCartasEnMano().size();
+        Jugador jj; //esto es solo para que funcione para el user y la maquina, evita problemas con usuario malo (preguntar a May de ser necesario)
+        if (id_contenedor == R.id.contenedorScrollRojo)
+            jj = j1;
+        else
+            jj = j2;
+        int tamanio =  jj.getCartasEnMano().size();
 
         //creamos el dialogo personalizado
         // Crear un Inflater para el diseño personalizado
@@ -377,11 +410,14 @@ public class MainActivity extends AppCompatActivity {
             dialogView.findViewById(R.id.btn_cancel).setOnClickListener(v -> {
                 dialog.dismiss(); // Cierrar el dialogo
             });
-            dialogView.findViewById(R.id.btn_accept).setOnClickListener(v -> {
-                //accciones al clicar 'colocar'
-                aniadirCartaTableroFisico(carta, j1);
-                dialog.dismiss();
-            });
+            //se restringe para que solo se pueda colocar desde la mano del jugador y no desde la maquina
+            if (id_contenedor == R.id.contenedorScrollRojo) {
+                dialogView.findViewById(R.id.btn_accept).setOnClickListener(v -> {
+                    //accciones al clicar 'colocar'
+                    aniadirCartaTableroFisico(carta, j1);
+                    dialog.dismiss();
+                });
+            }
             // Mostrar el diálogo
             dialog.show();
 
@@ -414,6 +450,7 @@ public class MainActivity extends AppCompatActivity {
                             isInAtaque[0] = false;
                         }
                     });
+                    j1.setNoAgregoMonstruo(false); //con esto se activa el dialog de que solo se puede agregar un monstruo por turno
 
                 } else if ( c instanceof  CartaMagica) {
                     //mostramos en un dialog cartas a enlazar

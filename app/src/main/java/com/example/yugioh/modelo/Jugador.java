@@ -1,5 +1,9 @@
 package com.example.yugioh.modelo;
 
+import android.text.Editable;
+import android.widget.EditText;
+import android.widget.TextView;
+
 import com.example.yugioh.modelo.exceptions.AgregacionCartaMonstruoException;
 import com.example.yugioh.modelo.exceptions.CartaMagicaAsociacionException;
 import com.example.yugioh.modelo.exceptions.SinEspacioTableroException;
@@ -27,21 +31,25 @@ public class Jugador {
     }
 
     //METODOS
-    public Carta tomarCartaEnTurno() {
+    public Carta tomarCartaEnTurno(TextView deck) { //para que se actualce en el mainxml el numero del deck
         Carta cartaTomada = this.deck.robarCarta();
         this.cartasEnMano.add(cartaTomada);
+        int num = Integer.parseInt(deck.getText().toString());
+        int nuevo = num-1;
+        deck.setText(String.valueOf(nuevo));
         return cartaTomada;
     }
 
-    public void tomar5Cartas() {
+    public void tomar5Cartas(TextView deck) {
         for (int i = 0; i < 5; i++) {
-            tomarCartaEnTurno();
+            tomarCartaEnTurno(deck);
         }
     }
     public void llenarTableroMaquina(Tablero tablero) {
         // mano_maquina sería la lista de cartas en mano del jugador
         ArrayList<Carta> manoMaquina = new ArrayList<>(tablero.getJugador2().getCartasEnMano());//debe ser una copiar para que no se modifique
         // Colocar cartas de monstruo
+
         for (Carta carta : manoMaquina) {
             if (carta instanceof CartaMonstruo) {
                 if (this.noAgregoMonstruo) { // si no se ha agregado monstruo en ese turno
@@ -52,10 +60,22 @@ public class Jugador {
                 }
             } else { // si no es monstruo, será cualquier otra carta
                 if (tablero.getTableroCompartido().get(2).get("CartasEspeciales").size() < 3) {
-                    if (carta instanceof CartaMagica){
-                        if(tablero.validarAgregacionCartaMagica((CartaMagica)carta, this))
+                    if (carta instanceof CartaMagica)
                         {
-                        tablero.aniadirCartaTablero(carta, 2);}
+                            if(tablero.validarAgregacionCartaMagica((CartaMagica)carta, this)){
+                                CartaMagica carta1 = (CartaMagica)carta;
+                                for (Carta c:tablero.getTableroCompartido().get(2).get("CartasMonstruo")){
+                                    CartaMonstruo c1 = (CartaMonstruo)c;
+                                    if ((c1.getCartaMagica()==null) && (c1.getTipoMonstruo() == carta1.getTipoMonstruo()) ){
+                                        tablero.aniadirCartaTablero(carta1, 2);
+                                        c1.setCartaMagica(carta1);
+                                        return;
+                                    }}
+                            }
+
+                        }
+                    else{
+                        tablero.aniadirCartaTablero(carta,2);
                     }
 
                 }
@@ -88,6 +108,7 @@ public class Jugador {
 
             }
         }
+
 
     }
 
