@@ -1,5 +1,9 @@
 package com.example.yugioh.modelo;
 
+import com.example.yugioh.modelo.exceptions.AgregacionCartaMonstruoException;
+import com.example.yugioh.modelo.exceptions.CartaMagicaAsociacionException;
+import com.example.yugioh.modelo.exceptions.SinEspacioTableroException;
+
 import java.util.ArrayList;
 import com.example.yugioh.MainActivity;
 public class Jugador {
@@ -59,9 +63,33 @@ public class Jugador {
         }
     }
 
+    //metodo nuevo para android
 
 
+    public void jugarCarta(Partida partida, Carta cartaSeleccionada, boolean isInAtaque) throws AgregacionCartaMonstruoException, CartaMagicaAsociacionException, SinEspacioTableroException {
+        Tablero tablero = partida.getTablero();
 
+        //VALIDAMOS LA AGREGACION DE LA CARTA
+        if (tablero.sePuedeAgregarCarta(cartaSeleccionada, this)){
+            // Si la carta es un monstruo
+            if (cartaSeleccionada instanceof CartaMonstruo) {
+                //convertimos la seleccion en una carta monstruo
+                CartaMonstruo cartaMonstruoSelec = (CartaMonstruo)cartaSeleccionada;
+
+                if (isInAtaque) {
+                    cartaMonstruoSelec.setisInAtaque(true);
+                    cartaMonstruoSelec.setBocaArriba(true);
+                } else {
+                    cartaMonstruoSelec.setisInAtaque(false);
+                    cartaMonstruoSelec.setBocaArriba(false);
+                }
+
+                setNoAgregoMonstruo(false);
+
+            }
+        }
+
+    }
 
 
 
@@ -116,7 +144,7 @@ public class Jugador {
     }
 
 
-    public boolean isNoAgregoMonstruo() {
+    public boolean getNoAgregoMonstruo() {
         return noAgregoMonstruo;
     }
 

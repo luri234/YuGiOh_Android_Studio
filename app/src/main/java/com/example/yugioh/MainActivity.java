@@ -2,6 +2,7 @@ package com.example.yugioh;
 
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -18,6 +19,8 @@ import android.widget.ScrollView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -29,9 +32,13 @@ import com.example.yugioh.modelo.CartaTrampa;
 import com.example.yugioh.modelo.Jugador;
 import com.example.yugioh.modelo.Partida;
 import com.example.yugioh.modelo.Tablero;
+import com.example.yugioh.modelo.exceptions.AgregacionCartaMonstruoException;
+import com.example.yugioh.modelo.exceptions.CartaMagicaAsociacionException;
+import com.example.yugioh.modelo.exceptions.SinEspacioTableroException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -82,17 +89,17 @@ public class MainActivity extends AppCompatActivity {
         int indice = 1;
         for (Carta carta: esp_mons){
             CartaMonstruo c = (CartaMonstruo)carta;
-            agregarImagenTablero(c,R.id.mons_1_maq_carta,2);
+            agregarImagenTablero(c,R.id.mons_1_maq_carta,2, false, true);
         }
         for (Carta carta: esp_esp){
             if (indice ==1) {
-                agregarImagenTablero(carta, R.id.esp_1_maq_carta, 2);
+                agregarImagenTablero(carta, R.id.esp_1_maq_carta, 2, false, true);
             }
             else if (indice ==2){
-                agregarImagenTablero(carta, R.id.esp_2_maq_carta,2);
+                agregarImagenTablero(carta, R.id.esp_2_maq_carta,2, false, true);
             }
             else{
-                agregarImagenTablero(carta,R.id.esp_3_maq_carta,2);
+                agregarImagenTablero(carta,R.id.esp_3_maq_carta,2, false, true);
             }
             indice++;
         }
@@ -175,15 +182,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    //funcion que agrega la imagen, trabaja con aniadircartatablero
-    public void agregarImagenTablero(Carta c, int id_view,int id_jugador){
-        ImageView v = findViewById(id_view);
-        Resources res = getResources();
-        int rId = res.getIdentifier(c.getRutaImagen(), "drawable", getPackageName());
-        quitarImagenMano(c,id_jugador);
-        v.setImageResource(rId);
-        tablero.aniadirCartaTablero(c,id_jugador);
-    }
+
 
     public void quitarImagenMano(Carta c, int id_jugador){
         if (id_jugador == 2) {
@@ -198,8 +197,9 @@ public class MainActivity extends AppCompatActivity {
             LinearLayout rojo = findViewById(R.id.contenedorScrollRojo);
             for (int i = 0; i < rojo.getChildCount(); i ++){
                 View cartita = rojo.getChildAt(i);
-                if(cartita.getTag().equals(c.getRutaImagen()))
+                if(cartita.getTag().equals(c.getRutaImagen())){
                     rojo.removeView(cartita);
+                }
             }
         }
         tablero.quitarCartaMano(id_jugador,c);
@@ -299,6 +299,7 @@ public class MainActivity extends AppCompatActivity {
         contenedor.addView(imV);
     }
 
+    //ignorar
     public void mostrarTurno(int idJugador){
         //crea un dialogo que muestra el turno de quien de jugar una carta
         String nombreJ = "Error de asignacion de nombre";
@@ -378,7 +379,7 @@ public class MainActivity extends AppCompatActivity {
             });
             dialogView.findViewById(R.id.btn_accept).setOnClickListener(v -> {
                 //accciones al clicar 'colocar'
-                Toast.makeText(this, "*procede a colocar la carta en tablero ", Toast.LENGTH_SHORT).show();
+                aniadirCartaTableroFisico(carta, j1);
                 dialog.dismiss();
             });
             // Mostrar el diálogo
@@ -389,12 +390,167 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void aniadirCartaTableroFisico(Carta c, Jugador j ){
+        //variables para actualizar el tablero logico
+        Boolean[] isInAtaque = {null} ;
+        CartaMonstruo cartaAAsociar = null;
+        //valida si el jugador puede aniadir una carta y procede a aniadirla
+        try {
+            if(tablero.sePuedeAgregarCarta(c, j)){
+                //validamos para cada caso de carta
+                if(c instanceof CartaMonstruo){
+                    //preguntamos si en ataque o defensa
+                    crearDialogSetPosicionCarta(resultado -> {
+                        //agregamos la carta al tablero definiendola si va girada o no de acuerdo al modo
+                        if(resultado){
+                            buscarAgregarImagenTablero(c, findViewById(R.id.CartasMonstruoJugador), false, true);
+                            Toast.makeText(this, "Carta en Modo Ataque aniadida", Toast.LENGTH_SHORT).show();
+                            isInAtaque[0]= true;
+
+                        }else {
+                            //ojo si se agrega en defensa se debe dar el drawable de la carta boca abajo
+                            buscarAgregarImagenTablero(c, findViewById(R.id.CartasMonstruoJugador), true, false);
+                            Toast.makeText(this, "Carta en Modo Defensa Aniadida", Toast.LENGTH_SHORT).show();
+                            isInAtaque[0] = false;
+                        }
+                    });
+
+                } else if ( c instanceof  CartaMagica) {
+                    //mostramos en un dialog cartas a enlazar
+                    crearDialogEnlazarCarta(c, findViewById(R.id.CartasEspecialesJugador));
+
+
+                } else if ( c instanceof  CartaTrampa) {
+                    //ojo se deben agregar boca abajo
+                    //solo agregamos al tablero (ojala todas fueran asi xd)
+                    buscarAgregarImagenTablero(c, findViewById(R.id.CartasEspecialesJugador), false, true);
+                    Toast.makeText(this, "Carta Trampa Aniadida", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            //actualizamos el tablero logico de la carta a aniadir
+
+            //hay problemas con jugarCarta
+            //j.jugarCarta(partida, c, isInAtaque[0]);
+
+        } catch (AgregacionCartaMonstruoException | SinEspacioTableroException  | CartaMagicaAsociacionException e){
+            crearDialog("Error",  e.getMessage());
+        }
+
+
+
+    }
+
+
+    //
+    public void crearDialogSetPosicionCarta(Consumer<Boolean> retorno){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Selecciona la posición de la carta");
+
+        // botones
+        builder.setPositiveButton("Modo Ataque", (dialog, which) -> {
+            retorno.accept(true);
+            dialog.dismiss();
+        });
+
+        builder.setNegativeButton("Modo Defensa", (dialog, which) -> {
+            // Acciónes para "Modo Defensa"
+            retorno.accept(false);
+            dialog.dismiss();
+        });
+
+        // Crear y mostrar el diálogo
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public void buscarAgregarImagenTablero(Carta cartaAAgregar, ConstraintLayout contenedorCartas, boolean vaGirada, boolean mostrar){
+        //busca el espacio vacio donde pueda agregar la imagen en la seccion
+
+
+        int totalHijos = contenedorCartas.getChildCount();
+
+        for(int i = 0; i < totalHijos; i++){
+            View hijo = contenedorCartas.getChildAt(i);
+            if(hijo instanceof ImageView){
+                ImageView imV = (ImageView)hijo;
+                int idImage = imV.getId();
+                if(imV.getContentDescription().equals("Casillero Disponible")){
+                    agregarImagenTablero(cartaAAgregar, idImage, j1.getId(), vaGirada, mostrar);
+                    return;
+                }
+
+            }
+        }
+
+    }
+
+    //funcion que agrega la imagen, trabaja con aniadircartatablero
+    public void agregarImagenTablero(Carta c, int id_view,int id_jugador , boolean vaGirada, boolean mostrar){
+        ImageView v = findViewById(id_view); //
+        Resources res = getResources(); //
+        int rId = R.drawable.carta_bocaabajo;
+
+        //aniadido
+        if(mostrar){
+            rId = res.getIdentifier(c.getRutaImagen(), "drawable", getPackageName()); //
+        }
+        quitarImagenMano(c,id_jugador); //
+        v.setImageResource(rId); //
+        //aniadido
+        if(vaGirada) v.setRotation(-90f);
+        tablero.aniadirCartaTablero(c,id_jugador);
+
+        //cambiamos el estado a casillero ocupado
+        v.setContentDescription("Casillero ocupado");
+    }
 
     // Metodo para convertir dp a px (para garantizar consistencia en diferentes pantallas)
     private int dpToPx(int dp) {
         return Math.round(dp * getResources().getDisplayMetrics().density);
     }
 
+    public void crearDialogEnlazarCarta(Carta cartaMagica, ConstraintLayout contenedorCartasEspeciales ){
+        // Lista de nombres
+        final String[] names = {"Carta1", "Carta2", "Carta3"};
+
+        // Crear el AlertDialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Selecciona la carta a Enlazar")
+                .setSingleChoiceItems(names, -1, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Se puede capturar la selección aquí si es necesario
+                    }
+                })
+                .setPositiveButton("Enlazar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Obtener el nombre seleccionado
+                        int selectedPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
+                        if (selectedPosition != -1) {
+                            String selectedName = names[selectedPosition];
+                            // Realizar acción con el nombre seleccionado (por ejemplo, enlazar)
+                            Toast.makeText(MainActivity.this, "Enlazado con " + selectedName, Toast.LENGTH_SHORT).show();
+                            buscarAgregarImagenTablero(cartaMagica, contenedorCartasEspeciales, false, true);
+                        } else {
+                            Toast.makeText(MainActivity.this, "No se seleccionó ningúna carta", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Acción de cancelación
+                        dialog.dismiss();
+                        Toast.makeText(MainActivity.this, "Enlace cancelado", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        // Crear y mostrar el diálogo
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 
 
 }
