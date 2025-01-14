@@ -48,7 +48,11 @@ public class Jugador {
                 }
             } else { // si no es monstruo, será cualquier otra carta
                 if (tablero.getTableroCompartido().get(2).get("CartasEspeciales").size() < 3) {
-                    tablero.aniadirCartaTablero(carta, 2);
+                    if (carta instanceof CartaMagica){
+                        if(tablero.validarAgregacionCartaMagica((CartaMagica)carta, this))
+                        {
+                        tablero.aniadirCartaTablero(carta, 2);}
+                    }
 
                 }
             }

@@ -217,6 +217,7 @@ public class MainActivity extends AppCompatActivity {
         //puede representar al metodo ronda de java
         //codigo que queremos que haga //v representa al boton
         //este es solo un ejemplo porque se necesita el cod de java
+        restringir_movimientos(false);
         faseLLenarTableros();
         partida.cambiarTurno();
 
@@ -225,14 +226,17 @@ public class MainActivity extends AppCompatActivity {
 
     }
     public void faseLLenarTableros(){
-        LinearLayout rojo = findViewById(R.id.contenedorScrollRojo);
         if (partida.getJugadorActual() == 2){
             crearDialog("Llenar Tablero","Es el turno de la Máquina de llenar su tablero");
             llenartableromaquina(tablero,j2);
             restringir_movimientos(false);
+            Carta c = j2.tomarCartaEnTurno();
+            mostrarImagenScroll(c,R.id.contenedorScrollAzul);
         }
         else{
             restringir_movimientos(true);
+            Carta c1 = j1.tomarCartaEnTurno();
+            mostrarImagenScroll(c1,R.id.contenedorScrollRojo);
         }
     }
     //la funcion esta pensada para que el jugador no pueda hacer nada mientras no sea su turno, al pasar false no puede hacer nada,true puede actuar
