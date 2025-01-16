@@ -107,6 +107,16 @@ public class CartaMonstruo extends Carta {
         }
 
     }
+    public Tupla obtenerIncrementosATKyDEF(){
+        if(this.getCartaMagica() != null){
+            //si tiene asociada -> se guarda sus incrementos de ATK y DEF y se devuelven
+            Integer incAtk = this.getCartaMagica().getIncrementoAtaque();
+            Integer incDef = this.getCartaMagica().getIncrementoDefensa();
+            return new Tupla(incAtk, incDef);
+        }else{
+            return new Tupla(0,0);
+        }
+    }
 
     public void setTipoMonstruo(TipoMonstruo tipoMonstruo) {
         this.tipoMonstruo = tipoMonstruo;

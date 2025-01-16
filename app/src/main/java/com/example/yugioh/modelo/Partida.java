@@ -3,6 +3,7 @@ package com.example.yugioh.modelo;
 import android.content.res.AssetManager;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Random;
 public class Partida {
     private int turno;
@@ -32,6 +33,22 @@ public class Partida {
             this.jugadorActual = 2;
         } else {
             this.jugadorActual = 1;
+        }
+    }
+    public void resetearEstadoCartasMonstruo() {
+        //permite que en el siguiente turno el usuario y la maquina puedan jugar con todos sus monstruos
+        //un monstruo solo puede atacar una vez por turno
+        int idJ1 = tablero.getJugador1().getId();
+        int idJ2 = tablero.getJugador2().getId();
+        ArrayList<Carta> cartasMonstruoJ1 = tablero.getTableroCompartido().get(idJ1).get("CartasMonstruo");
+        ArrayList<Carta> cartasMonstruoJ2 = tablero.getTableroCompartido().get(idJ2).get("CartasMonstruo");
+        for (Carta carta : cartasMonstruoJ1) {
+            CartaMonstruo carta_c = (CartaMonstruo)carta;
+            carta_c.setPuedeAtacar(true);
+        }
+        for (Carta carta : cartasMonstruoJ2) {
+            CartaMonstruo carta_c = (CartaMonstruo)carta;
+            carta_c.setPuedeAtacar(true);
         }
     }
 

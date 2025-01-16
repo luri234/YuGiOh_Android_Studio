@@ -33,6 +33,7 @@ import com.example.yugioh.modelo.CartaTrampa;
 import com.example.yugioh.modelo.Jugador;
 import com.example.yugioh.modelo.Partida;
 import com.example.yugioh.modelo.Tablero;
+import com.example.yugioh.modelo.Utilitaria;
 import com.example.yugioh.modelo.exceptions.AgregacionCartaMonstruoException;
 import com.example.yugioh.modelo.exceptions.CartaMagicaAsociacionException;
 import com.example.yugioh.modelo.exceptions.SinEspacioTableroException;
@@ -52,6 +53,10 @@ public class MainActivity extends AppCompatActivity {
     Button sgtfase;
     TextView deckuser;
     TextView deckmaq;
+    public static ConstraintLayout contenedorMonstruosUser;
+    public static ConstraintLayout contenedorEspecialesUser;
+    public static ConstraintLayout contenedorMontruosMaquina;
+    public static ConstraintLayout contenedorEspecialesMaquina;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         sgtfase = findViewById(R.id.button_fases);
         deckuser = findViewById(R.id.num_deck_user);
         deckmaq = findViewById(R.id.num_deck_maq);
+        contenedorMonstruosUser = findViewById(R.id.CartasMonstruoJugador);
 
 
         //asignando valor a las instancias , manejando posibles errores en la creacion
@@ -74,76 +80,78 @@ public class MainActivity extends AppCompatActivity {
             tablero = partida.getTablero();
             j1 = tablero.getJugador1();
             j2 = tablero.getJugador2();
-        }catch (IOException e){
+        } catch (IOException e) {
             crearDialog("ERROR", "Hubo un problema al abrir el archivo de cartas..");
-        }catch (Exception e){
+        } catch (Exception e) {
             crearDialog("ERROR", "Ha surgido un error desconocido");
         }
         //se da la bienvenida, sorteo inicio y se reparten las 5 cartas iniciales.
-        inicioJuego("Bienvenido al juego de Yu-Gi-Oh!","Presione Ok para empezar a jugar!",partida,j1,j2);
-
-
-
-
+        inicioJuego("Bienvenido al juego de Yu-Gi-Oh!", "Presione Ok para empezar a jugar!", partida, j1, j2);
 
 
     }
-    public void llenartableromaquina(Tablero tablero, Jugador j2){
+
+    public void llenartableromaquina(Tablero tablero, Jugador j2) {
         j2.llenarTableroMaquina(tablero);
         ArrayList<Carta> esp_mons = tablero.getTableroCompartido().get(2).get("CartasMonstruo");
         ArrayList<Carta> esp_esp = tablero.getTableroCompartido().get(2).get("CartasEspeciales");
         int indice = 1;
-        for (Carta carta: esp_mons){
-            CartaMonstruo c = (CartaMonstruo)carta;
-            agregarImagenTablero(c,R.id.mons_1_maq_carta,2, false, true);
+        int cont = 1;
+        for (Carta carta : esp_mons) {
+            CartaMonstruo c = (CartaMonstruo) carta;
+            if (cont == 1)
+                agregarImagenTablero(c, R.id.mons_1_maq_carta, 2, false, true);
+            else if (cont == 2)
+                agregarImagenTablero(c, R.id.mons_2_maq_carta, 2, false, true);
+            else if (cont == 3)
+                agregarImagenTablero(c, R.id.mons_3_maq_carta, 2, false, true);
+
+            cont++;
         }
-        for (Carta carta: esp_esp){
-            if (indice ==1) {
+        for (Carta carta : esp_esp) {
+            if (indice == 1) {
                 agregarImagenTablero(carta, R.id.esp_1_maq_carta, 2, false, true);
-            }
-            else if (indice ==2){
-                agregarImagenTablero(carta, R.id.esp_2_maq_carta,2, false, true);
-            }
-            else{
-                agregarImagenTablero(carta,R.id.esp_3_maq_carta,2, false, true);
+            } else if (indice == 2) {
+                agregarImagenTablero(carta, R.id.esp_2_maq_carta, 2, false, true);
+            } else if (indice == 3) {
+                agregarImagenTablero(carta, R.id.esp_3_maq_carta, 2, false, true);
             }
             indice++;
         }
-        Toast.makeText(this, "La máquina ya ha llenado su tablero", Toast.LENGTH_SHORT).show();
+        Utilitaria.crearToast(this, "La máquina ya ha llenado su tablero", false);
 
     }
 
 
-
-
-
     //METODOS
-    public void inicioJuego(String title,String mensaje,Partida partida,Jugador j1, Jugador j2){
+    public void inicioJuego(String title, String mensaje, Partida partida, Jugador j1, Jugador j2) {
         //Antes se llamaba mostrar mensajeInicio.
         //Muestra una bienvenida -> realiza el sorteo de inicia -> y reparte las 5 cartas iniciales, tanto para el juego logico y virtual
         AlertDialog.Builder abd = new AlertDialog.Builder(this);
         abd.setTitle(title);
         abd.setMessage(mensaje);
-        abd.setPositiveButton("OK",(dialog,b)->{
-            Jugador jinicial = partida.sorteoInicios(j1,j2);
-            dialog.dismiss();
-            crearDialog("Sorteo inicial","El jugador que comienza es: "+jinicial.getNombre()+"\nPara continuar da clic en 'Siguiente fase'");
-            repartirCartasIniciales();
-            restringir_movimientos(true,1);
-            restringir_movimientos(true,2);
+        abd.setPositiveButton("OK", (dialog, b) -> {
+                    Jugador jinicial = partida.sorteoInicios(j1, j2);
+                    dialog.dismiss();
+                    crearDialog("Sorteo inicial", "El jugador que comienza es: " + jinicial.getNombre() + "\nPara continuar da clic en 'Siguiente fase'");
+                    repartirCartasIniciales();
+                    restringir_movimientos(true, 1);
+                    restringir_movimientos(true, 2);
 
-        }
+                }
         );
         AlertDialog dialog = abd.create();
         dialog.show();
 
     }
-    public void crearDialog(String title, String mensaje){
+
+    public void crearDialog(String title, String mensaje) {
         AlertDialog.Builder abd = new AlertDialog.Builder(this);
         abd.setTitle(title);
         abd.setMessage(mensaje);
-        abd.setPositiveButton("OK",(dialog,b)->{
-            dialog.dismiss();}
+        abd.setPositiveButton("OK", (dialog, b) -> {
+                    dialog.dismiss();
+                }
         );
         AlertDialog dialog = abd.create();
         dialog.show();
@@ -151,12 +159,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //ignorar
-    public void cargarCartasEnMemoria(){
+    public void cargarCartasEnMemoria() {
 
-        try{
+        try {
             ArrayList<Carta> cartas = Carta.leerCartas(getAssets(), "archivocartas.txt");
             //recorremos las cartas para irlas creando en memoria
-            for(Carta c : cartas){
+            for (Carta c : cartas) {
                 Resources res = getResources(); //obtenemos la referencia a la carpeta resources
 
                 int rId = res.getIdentifier(c.getRutaImagen(), "drawable", getPackageName());
@@ -172,11 +180,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void repartirCartasIniciales(){
+    public void repartirCartasIniciales() {
         //llamo al modelo para q reparta las cartas una por una
 
 
-        for(int i = 0; i < 5; i++){
+        for (int i = 0; i < 5; i++) {
             //agregamos una a jugador 1
             Carta cJ1 = j1.tomarCartaEnTurno(deckuser);
             //la aniadimos al scroll
@@ -191,31 +199,38 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
-    public void quitarImagenMano(Carta c, int id_jugador){
+    public void quitarImagenMano(Carta c, int id_jugador) {
         if (id_jugador == 2) {
             LinearLayout azul = findViewById(R.id.contenedorScrollAzul);
             for (int i = 0; i < azul.getChildCount(); i++) {
                 View cartita = azul.getChildAt(i);
-                if (cartita.getTag().equals(c.getRutaImagen())){
+                if (cartita.getTag().equals(c.getRutaImagen())) {
                     azul.removeView(cartita);
                 }
             }
-        }else{
+        } else {
             LinearLayout rojo = findViewById(R.id.contenedorScrollRojo);
-            for (int i = 0; i < rojo.getChildCount(); i ++){
+            for (int i = 0; i < rojo.getChildCount(); i++) {
                 View cartita = rojo.getChildAt(i);
-                if(cartita.getTag().equals(c.getRutaImagen())){
+                if (cartita.getTag().equals(c.getRutaImagen())) {
                     rojo.removeView(cartita);
                 }
             }
         }
-        tablero.quitarCartaMano(id_jugador,c);
+        tablero.quitarCartaMano(id_jugador, c);
     }
-    //metodo todavia en proceso -----------
-    //public void quitarImagenTablero(Carta c, int id_jugador, int id_view){
-    //    ImageView v = findViewById(id_view);
+    public static void quitarImagenTablero(Carta carta, ConstraintLayout contenedor) {
+        for (int i = contenedor.getChildCount() - 1; i >= 0; i--) {
+            View cartita = contenedor.getChildAt(i);
+            if (cartita.getTag() != null && cartita.getTag().equals(carta.getRutaImagen())) {
+                ImageView v = (ImageView)cartita;
+                int rId = R.drawable.imagen_base;
+                v.setImageResource(rId);
+                v.setTag("imagen_base.png");
+                //se ha cambiado la imagen por la base (fondo blanco) y se ha guardado la ruta del view para poder compararla despues(setTag)
+            }
+        }
+    }
 
     //}
     //preguntar como hacer establecer los guidelines de la imagen por codigo
@@ -226,22 +241,38 @@ public class MainActivity extends AppCompatActivity {
         //puede representar al metodo ronda de java
         //codigo que queremos que haga //v representa al boton
         //este es solo un ejemplo porque se necesita el cod de java
+
         if (partida.getRonda()==1 || partida.getRonda()==2) {
-                faseLLenarTableros();
-                partida.cambiarTurno();
+            faseLLenarTableros();
+            partida.cambiarTurno();
 
         }
         else{
-            crearDialog("PRUEBA AVISO","a partir de esta ronda ya se puede declarar batalla");
+            //crearDialog("PRUEBA AVISO","a partir de esta ronda ya se puede declarar batalla");
+            if ((partida.getRonda()%2) !=0) {
+                if (partida.getRonda() ==3) {
+                    Utilitaria.crearToast(this,"Desde este turno ya se puede declarar batalla",true);
+                }
+                faseLLenarTableros();
+            }
+            else {
+                faseDeclararBatalla();
+                partida.cambiarTurno();
+                //partida.resetearEstadoCartasMonstruo(); //ya pueden jugar con todas sus monstruos
+            }
+
         }
+        //partida.cambiarTurno();
         partida.setRonda(partida.getRonda()+1);
 
         //para probar el metodo
 
 
     }
+
     public void faseLLenarTableros(){
         if (partida.getJugadorActual() == 2){
+            j2.setNoAgregoMonstruo(true);
             restringir_movimientos(true,1);
             restringir_movimientos(false,2);
             crearDialog("Llenar Tablero","La Máquina ha robado una carta del deck y procede a llenar su tablero");
@@ -250,12 +281,22 @@ public class MainActivity extends AppCompatActivity {
             mostrarImagenScroll(c,R.id.contenedorScrollAzul);
         }
         else{
+            j1.setNoAgregoMonstruo(true);
             restringir_movimientos(false,1);
             restringir_movimientos(true,2);
             Carta c1 = j1.tomarCartaEnTurno(deckuser);
             crearDialog("Llenar Tablero","Has robado una carta del deck y es tu turno de llenar tu tablero");
             mostrarImagenScroll(c1,R.id.contenedorScrollRojo);
         }
+    }
+    public void faseDeclararBatalla(){
+        //solo de prueba
+        Utilitaria.mensajeLargo(findViewById(R.id.contenedorScrollAzul),"Testeto de los mensajes largos acá (interaccion con usuario), se puede utilizar esto o el toast",true);
+        if (partida.getJugadorActual() ==1){
+            crearDialog("DECLARAR BATALLA","Es tu turno de declarar batalla");
+        }
+        else
+            j2.declararBatallaComoMaquina(tablero,j1,this);
     }
     //la funcion esta pensada para que el jugador no pueda hacer nada mientras no sea su turno
     //con true se restringen los movimientos
@@ -440,13 +481,13 @@ public class MainActivity extends AppCompatActivity {
                         //agregamos la carta al tablero definiendola si va girada o no de acuerdo al modo
                         if(resultado){
                             buscarAgregarImagenTablero(c, findViewById(R.id.CartasMonstruoJugador), false, true);
-                            Toast.makeText(this, "Carta en Modo Ataque aniadida", Toast.LENGTH_SHORT).show();
+                            Utilitaria.crearToast(this,"Carta en Modo Ataque añadida",false);
                             isInAtaque[0]= true;
 
                         }else {
                             //ojo si se agrega en defensa se debe dar el drawable de la carta boca abajo
                             buscarAgregarImagenTablero(c, findViewById(R.id.CartasMonstruoJugador), true, false);
-                            Toast.makeText(this, "Carta en Modo Defensa Aniadida", Toast.LENGTH_SHORT).show();
+                            Utilitaria.crearToast(this,"Carta en Modo Defensa Aniadida",false);
                             isInAtaque[0] = false;
                         }
                     });
@@ -461,7 +502,7 @@ public class MainActivity extends AppCompatActivity {
                     //ojo se deben agregar boca abajo
                     //solo agregamos al tablero (ojala todas fueran asi xd)
                     buscarAgregarImagenTablero(c, findViewById(R.id.CartasEspecialesJugador), false, true);
-                    Toast.makeText(this, "Carta Trampa Aniadida", Toast.LENGTH_SHORT).show();
+                    Utilitaria.crearToast(this,"Carta Trampa Aniadida",false);
                 }
             }
 
@@ -514,6 +555,7 @@ public class MainActivity extends AppCompatActivity {
                 int idImage = imV.getId();
                 if(imV.getContentDescription().equals("Casillero Disponible")){
                     agregarImagenTablero(cartaAAgregar, idImage, j1.getId(), vaGirada, mostrar);
+                    tablero.aniadirCartaTablero(cartaAAgregar,j1.getId());
                     return;
                 }
 
@@ -534,9 +576,10 @@ public class MainActivity extends AppCompatActivity {
         }
         quitarImagenMano(c,id_jugador); //
         v.setImageResource(rId); //
+        v.setTag(c.getRutaImagen());//necesito identificarla para borrarla luego
         //aniadido
         if(vaGirada) v.setRotation(-90f);
-        tablero.aniadirCartaTablero(c,id_jugador);
+        //tablero.aniadirCartaTablero(c,id_jugador); se la puso en el metodo buscaragregarimagen por problemas con la maquina
 
         //cambiamos el estado a casillero ocupado
         v.setContentDescription("Casillero ocupado");
@@ -568,10 +611,10 @@ public class MainActivity extends AppCompatActivity {
                         if (selectedPosition != -1) {
                             String selectedName = names[selectedPosition];
                             // Realizar acción con el nombre seleccionado (por ejemplo, enlazar)
-                            Toast.makeText(MainActivity.this, "Enlazado con " + selectedName, Toast.LENGTH_SHORT).show();
+                            Utilitaria.crearToast(MainActivity.this,"Enlazado con " + selectedName,false);
                             buscarAgregarImagenTablero(cartaMagica, contenedorCartasEspeciales, false, true);
                         } else {
-                            Toast.makeText(MainActivity.this, "No se seleccionó ningúna carta", Toast.LENGTH_SHORT).show();
+                            Utilitaria.crearToast(MainActivity.this,"No se seleccionó ninguna carta",false);
                         }
                     }
                 })
@@ -580,7 +623,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         // Acción de cancelación
                         dialog.dismiss();
-                        Toast.makeText(MainActivity.this, "Enlace cancelado", Toast.LENGTH_SHORT).show();
+                        Utilitaria.crearToast(MainActivity.this, "Enlace cancelado",false);
                     }
                 });
 

@@ -2,6 +2,7 @@ package com.example.yugioh.modelo;
 
 import android.content.res.AssetManager;
 
+import com.example.yugioh.MainActivity;
 import com.example.yugioh.modelo.exceptions.AgregacionCartaMonstruoException;
 import com.example.yugioh.modelo.exceptions.CartaMagicaAsociacionException;
 import com.example.yugioh.modelo.exceptions.SinEspacioTableroException;
@@ -15,6 +16,7 @@ public class Tablero {
     public Jugador jugador1;
     public Jugador jugador2;
     public HashMap<Integer, HashMap<String, ArrayList<Carta>>> tableroCompartido;
+
 
     public Tablero(AssetManager am, String archivoCartas) throws IOException {
         this.id = 1;
@@ -66,8 +68,16 @@ public class Tablero {
     public void quitarCartaTablero(Carta carta, int idJugador) {
         if (carta instanceof CartaMonstruo) {
             tableroCompartido.get(idJugador).get("CartasMonstruo").remove(carta);
+            if(idJugador==1)
+                MainActivity.quitarImagenTablero(carta,MainActivity.contenedorMonstruosUser);
+            else
+                MainActivity.quitarImagenTablero(carta,MainActivity.contenedorMontruosMaquina);
         } else {
             tableroCompartido.get(idJugador).get("CartasEspeciales").remove(carta);
+            if(idJugador==1)
+                MainActivity.quitarImagenTablero(carta,MainActivity.contenedorEspecialesUser);
+            else
+                MainActivity.quitarImagenTablero(carta,MainActivity.contenedorEspecialesMaquina);
         }
     }
 
@@ -135,6 +145,7 @@ public class Tablero {
             }
             Carta cartaAEliminar = espacioCartasEspecialesJ.get(indiceCarta);
             quitarCartaTablero(cartaAEliminar, jugador.getId());
+
         }
     }
 
@@ -153,112 +164,116 @@ public class Tablero {
 
 
     //revisada
-//    public Tupla ataqueEntreCartas(CartaMonstruo cartaJugador, CartaMonstruo cartaEnemigo, Jugador jugador, Jugador enemigo) {
-//        int jugadorID = jugador.getId();
-//        int enemigoID = enemigo.getId();
-//
-//
-//        //Existen cartas Trampa enemigas que impidan el ataque?
-//        if (verificarCartaTrampa(enemigo, cartaJugador) == null) {
-//            //No existen ->
-//
-//            //1 Calculamos incrementos de ataque y defensa asociados
-//            int incAtkJugador = 0;
-//            //int incDefJugador = 0; //no se está utikizando
-//            int incAtkEnemigo = 0;
-//            int incDefEnemigo = 0;
-//
-//            Integer danioRealAEnemigo = 0;  //inicializar con null?
-//            Integer danioRealAJugador = 0;
-//
-//            //La carta enemiga tiene una carta magica asociada?
-//            if(cartaEnemigo.getCartaMagica() != null){
-//                //si tiene asociada -> se guarda sus incrementos de ATK y DEF
-//                incAtkEnemigo = cartaEnemigo.getCartaMagica().getIncrementoAtaque();
-//                incDefEnemigo = cartaEnemigo.getCartaMagica().getIncrementoDefensa();
-//            }
-//            //La carta del jugador tiene una carta magica asociada?
-//            if(cartaJugador.getCartaMagica() != null){
-//                incAtkJugador = cartaJugador.getCartaMagica().getIncrementoAtaque();
-//                //incDefJugador = cartaJugador.getCartaMagica().getIncrementoDefensa();
-//            }
-//
-//
-//            //Comprobamos si la carta enemigo esta en ataque
-//            if (cartaEnemigo.getIsInAtaque()) {
-//
-//                //la carta de jugador es mas fuerte que la del enemigo?
-//                if ((cartaJugador.getAtaque() + incAtkJugador) > (cartaEnemigo.getAtaque() + incAtkEnemigo)) {
-//                    danioRealAEnemigo = (cartaJugador.getAtaque() + incAtkJugador) - (cartaEnemigo.getAtaque() + incAtkEnemigo);
-//                    danioRealAJugador = 0;
-//                    //formato salida
-//                    System.out.println("|| Choque de ataques ||     ||" + cartaJugador.getNombre() + " vs " + cartaEnemigo.getNombre() + "||");
-//                    System.out.println("\t " + cartaJugador.getAtaque() + " + " + incAtkJugador + "  -->  <--  " + cartaEnemigo.getAtaque() + " + " + incAtkEnemigo);
-//                    System.out.println("| " + cartaJugador.getNombre() + " destruyó a " + cartaEnemigo.getNombre() + " en batalla!");
-//                    quitarCartaTablero(cartaEnemigo, enemigoID);
-//                    eliminarCartaMagicaAsociada(enemigo, cartaEnemigo);
-//                    return new Tupla(danioRealAEnemigo, danioRealAJugador);
-//                }
-//                //la carta jugador y enemigo son iguales en fuerza:
-//                else if((cartaJugador.getAtaque() + incAtkJugador) == (cartaEnemigo.getAtaque() + incAtkEnemigo)){
-//                    danioRealAEnemigo = 0;
-//                    danioRealAJugador = 0;
-//                    System.out.println("|| Choque de ataques ||     ||" + cartaJugador.getNombre() + " vs " + cartaEnemigo.getNombre() + "||");
-//                    System.out.println("\t " + cartaJugador.getAtaque() + " + " + incAtkJugador + "  -->  <--  " + cartaEnemigo.getAtaque() + " + " + incAtkEnemigo);
-//                    System.out.println("| " + cartaJugador.getNombre() + " destruyó a " + cartaEnemigo.getNombre() + " en batalla!");
-//                    System.out.println("| " + cartaEnemigo.getNombre() + " destruyó a " + cartaJugador.getNombre() + " en batalla!");
-//
-//                    quitarCartaTablero(cartaEnemigo, enemigoID);
-//                    eliminarCartaMagicaAsociada(enemigo, cartaEnemigo);
-//                    quitarCartaTablero(cartaJugador,jugadorID);
-//                    eliminarCartaMagicaAsociada(jugador, cartaJugador);
-//
-//                    return new Tupla(danioRealAEnemigo, danioRealAJugador);
-//
-//                }
-//                // la carta enemigo es mayor en fuerza a la del jugador:
-//                else{
-//                    danioRealAEnemigo = 0;
-//                    danioRealAJugador = (cartaEnemigo.getAtaque() + incAtkEnemigo) - (cartaJugador.getAtaque()+ incAtkJugador);
-//                    System.out.println("|| Choque de ataques ||     ||" + cartaJugador.getNombre() + " vs " + cartaEnemigo.getNombre() + "||");
-//                    System.out.println("\t " + cartaJugador.getAtaque() + " + " + incAtkJugador + "  -->  <--  " + cartaEnemigo.getAtaque() + " + " + incAtkEnemigo);
-//                    System.out.println("| " + cartaEnemigo.getNombre() + " destruyó a " + cartaJugador.getNombre() + " en batalla!");
-//                    quitarCartaTablero(cartaJugador, jugadorID);
-//                    eliminarCartaMagicaAsociada(jugador, cartaJugador);
-//
-//                    return new Tupla(danioRealAEnemigo, danioRealAJugador);
-//                }
-//             //si la carta enemigo esta en defensa
-//            }else{
-//                if((cartaJugador.getAtaque() + incAtkJugador) >= (cartaEnemigo.getDefensa() + incDefEnemigo)){
-//                    //si el ataque del jugador es mayor a la defensa del enemigo
-//                    System.out.println("|| Ataque y defensa ||     ||" + cartaJugador.getNombre() + " vs " + cartaEnemigo.getNombre() + "||");
-//                    System.out.println("\t " + cartaJugador.getAtaque() + " + " + incAtkJugador + "  -->  <--  " + cartaEnemigo.getDefensa() + " + " + incDefEnemigo);
-//                    System.out.println("| " + cartaJugador.getNombre() + " destruyó a " + cartaEnemigo.getNombre() + " en batalla!");
-//                    quitarCartaTablero(cartaEnemigo, enemigoID);
-//                    eliminarCartaMagicaAsociada(enemigo, cartaEnemigo);
-//                    return new Tupla(0, 0);
-//                }else{
-//                    //la defensa del enemigo fue mayor
-//                    danioRealAJugador = (cartaEnemigo.getDefensa()+ incDefEnemigo) - (cartaJugador.getAtaque()+ incAtkJugador);
-//                    System.out.println("|| Ataque y defensa ||     ||" + cartaJugador.getNombre() + " vs " + cartaEnemigo.getNombre() + "||");
-//                    System.out.println("\t " + cartaJugador.getAtaque() + " + " + incAtkJugador + "  -->  <--  " + cartaEnemigo.getDefensa() + " + " + incDefEnemigo);
-//                    danioRealAEnemigo = 0;
-//
-//                    //si la carta en defensa estaba boca abajo se cambia
-//                    if(!cartaEnemigo.getIsBocaArriba()) cartaEnemigo.setBocaArriba(false);
-//                    //no se destruye ningun monstruo
-//                    return new Tupla(danioRealAEnemigo, danioRealAJugador);
-//                }
-//            }
-//        }else{
-//            //si existe una carta trampa q impida el ataque
-//            CartaTrampa cartaTrampa = verificarCartaTrampa(enemigo, cartaJugador);
-//            System.out.println("|   Se detuvo el ataque! la carta Trampa " + "'"+cartaTrampa.getNombre()+"'"+ "se interpuso");
-//            quitarCartaTablero(cartaTrampa, enemigoID);
-//            return new Tupla(0, 0);
-//        }
-//    }
+    public Tupla ataqueEntreCartas(CartaMonstruo cartaJugador, CartaMonstruo cartaEnemigo, Jugador jugador, Jugador enemigo) {
+        int jugadorID = jugador.getId();
+        int enemigoID = enemigo.getId();
+
+
+        //Existen cartas Trampa enemigas que impidan el ataque?
+        if (verificarCartaTrampa(enemigo, cartaJugador) == null) {
+            //No existen ->
+
+            //1 Calculamos incrementos de ataque y defensa asociados
+            int incAtkJugador = 0;
+            //int incDefJugador = 0; //no se está utikizando
+            int incAtkEnemigo = 0;
+            int incDefEnemigo = 0;
+
+            Integer danioRealAEnemigo = 0;  //inicializar con null?
+            Integer danioRealAJugador = 0;
+
+            //La carta enemiga tiene una carta magica asociada?
+            if(cartaEnemigo.getCartaMagica() != null){
+                //si tiene asociada -> se guarda sus incrementos de ATK y DEF
+                incAtkEnemigo = cartaEnemigo.getCartaMagica().getIncrementoAtaque();
+                incDefEnemigo = cartaEnemigo.getCartaMagica().getIncrementoDefensa();
+            }
+            //La carta del jugador tiene una carta magica asociada?
+            if(cartaJugador.getCartaMagica() != null){
+                incAtkJugador = cartaJugador.getCartaMagica().getIncrementoAtaque();
+                //incDefJugador = cartaJugador.getCartaMagica().getIncrementoDefensa();
+            }
+
+
+            //Comprobamos si la carta enemigo esta en ataque
+            if (cartaEnemigo.getIsInAtaque()) {
+
+                //la carta de jugador es mas fuerte que la del enemigo?
+                if ((cartaJugador.getAtaque() + incAtkJugador) > (cartaEnemigo.getAtaque() + incAtkEnemigo)) {
+                    danioRealAEnemigo = (cartaJugador.getAtaque() + incAtkJugador) - (cartaEnemigo.getAtaque() + incAtkEnemigo);
+                    danioRealAJugador = 0;
+                    //formato salida
+                    System.out.println("|| Choque de ataques ||     ||" + cartaJugador.getNombre() + " vs " + cartaEnemigo.getNombre() + "||");
+                    System.out.println("\t " + cartaJugador.getAtaque() + " + " + incAtkJugador + "  -->  <--  " + cartaEnemigo.getAtaque() + " + " + incAtkEnemigo);
+                    System.out.println("| " + cartaJugador.getNombre() + " destruyó a " + cartaEnemigo.getNombre() + " en batalla!");
+                    quitarCartaTablero(cartaEnemigo, enemigoID);
+
+                    eliminarCartaMagicaAsociada(enemigo, cartaEnemigo);
+                    //tuve que tener una instancia de Main para poder llamar a los métodos acá
+
+                    return new Tupla(danioRealAEnemigo, danioRealAJugador);
+                }
+                //la carta jugador y enemigo son iguales en fuerza:
+                else if((cartaJugador.getAtaque() + incAtkJugador) == (cartaEnemigo.getAtaque() + incAtkEnemigo)){
+                    danioRealAEnemigo = 0;
+                    danioRealAJugador = 0;
+                    System.out.println("|| Choque de ataques ||     ||" + cartaJugador.getNombre() + " vs " + cartaEnemigo.getNombre() + "||");
+                    System.out.println("\t " + cartaJugador.getAtaque() + " + " + incAtkJugador + "  -->  <--  " + cartaEnemigo.getAtaque() + " + " + incAtkEnemigo);
+                    System.out.println("| " + cartaJugador.getNombre() + " destruyó a " + cartaEnemigo.getNombre() + " en batalla!");
+                    System.out.println("| " + cartaEnemigo.getNombre() + " destruyó a " + cartaJugador.getNombre() + " en batalla!");
+
+                    quitarCartaTablero(cartaEnemigo, enemigoID);
+                    eliminarCartaMagicaAsociada(enemigo, cartaEnemigo);
+                    quitarCartaTablero(cartaJugador,jugadorID);
+
+                    eliminarCartaMagicaAsociada(jugador, cartaJugador);
+
+                    return new Tupla(danioRealAEnemigo, danioRealAJugador);
+
+                }
+                // la carta enemigo es mayor en fuerza a la del jugador:
+                else{
+                    danioRealAEnemigo = 0;
+                    danioRealAJugador = (cartaEnemigo.getAtaque() + incAtkEnemigo) - (cartaJugador.getAtaque()+ incAtkJugador);
+                    System.out.println("|| Choque de ataques ||     ||" + cartaJugador.getNombre() + " vs " + cartaEnemigo.getNombre() + "||");
+                    System.out.println("\t " + cartaJugador.getAtaque() + " + " + incAtkJugador + "  -->  <--  " + cartaEnemigo.getAtaque() + " + " + incAtkEnemigo);
+                    System.out.println("| " + cartaEnemigo.getNombre() + " destruyó a " + cartaJugador.getNombre() + " en batalla!");
+                    quitarCartaTablero(cartaJugador, jugadorID);
+                    eliminarCartaMagicaAsociada(jugador, cartaJugador);
+
+                    return new Tupla(danioRealAEnemigo, danioRealAJugador);
+                }
+             //si la carta enemigo esta en defensa
+            }else{
+                if((cartaJugador.getAtaque() + incAtkJugador) >= (cartaEnemigo.getDefensa() + incDefEnemigo)){
+                    //si el ataque del jugador es mayor a la defensa del enemigo
+                    System.out.println("|| Ataque y defensa ||     ||" + cartaJugador.getNombre() + " vs " + cartaEnemigo.getNombre() + "||");
+                    System.out.println("\t " + cartaJugador.getAtaque() + " + " + incAtkJugador + "  -->  <--  " + cartaEnemigo.getDefensa() + " + " + incDefEnemigo);
+                    System.out.println("| " + cartaJugador.getNombre() + " destruyó a " + cartaEnemigo.getNombre() + " en batalla!");
+                    quitarCartaTablero(cartaEnemigo, enemigoID);
+                    eliminarCartaMagicaAsociada(enemigo, cartaEnemigo);
+                    return new Tupla(0, 0);
+                }else{
+                    //la defensa del enemigo fue mayor
+                    danioRealAJugador = (cartaEnemigo.getDefensa()+ incDefEnemigo) - (cartaJugador.getAtaque()+ incAtkJugador);
+                    System.out.println("|| Ataque y defensa ||     ||" + cartaJugador.getNombre() + " vs " + cartaEnemigo.getNombre() + "||");
+                    System.out.println("\t " + cartaJugador.getAtaque() + " + " + incAtkJugador + "  -->  <--  " + cartaEnemigo.getDefensa() + " + " + incDefEnemigo);
+                    danioRealAEnemigo = 0;
+
+                    //si la carta en defensa estaba boca abajo se cambia
+                    if(!cartaEnemigo.getIsBocaArriba()) cartaEnemigo.setBocaArriba(false);
+                    //no se destruye ningun monstruo
+                    return new Tupla(danioRealAEnemigo, danioRealAJugador);
+                }
+            }
+        }else{
+            //si existe una carta trampa q impida el ataque
+            CartaTrampa cartaTrampa = verificarCartaTrampa(enemigo, cartaJugador);
+            System.out.println("|   Se detuvo el ataque! la carta Trampa " + "'"+cartaTrampa.getNombre()+"'"+ "se interpuso");
+            quitarCartaTablero(cartaTrampa, enemigoID);
+            return new Tupla(0, 0);
+        }
+   }
 
     //Metodo nuevo para android
 
