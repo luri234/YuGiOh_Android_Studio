@@ -4,25 +4,18 @@ package com.example.yugioh;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ScrollView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -34,7 +27,6 @@ import com.example.yugioh.modelo.CartaTrampa;
 import com.example.yugioh.modelo.Jugador;
 import com.example.yugioh.modelo.Partida;
 import com.example.yugioh.modelo.Tablero;
-import com.example.yugioh.modelo.Utilitaria;
 import com.example.yugioh.modelo.exceptions.AgregacionCartaMonstruoException;
 import com.example.yugioh.modelo.exceptions.CartaMagicaAsociacionException;
 import com.example.yugioh.modelo.exceptions.SinEspacioTableroException;
@@ -493,39 +485,37 @@ public class MainActivity extends AppCompatActivity {
                 //validamos para cada caso de carta
                 if(c instanceof CartaMonstruo){
                     //preguntamos si en ataque o defensa
-                    crearDialogSetPosicionCarta(resultado -> {
+                    Utilitaria.crearDialogSetPosicionCarta(resultado -> {
                         //agregamos la carta al tablero definiendola si va girada o no de acuerdo al modo
                         if(resultado){
                             buscarAgregarImagenTablero(c, findViewById(R.id.CartasMonstruoJugador), false, true);
                             Utilitaria.crearToast(this,"Carta en Modo Ataque añadida",false);
                             isInAtaque[0]= true;
+                            //jugarCarta ya por detras setea PuedeAgregarMonstruo(false)
+                            j.jugarCarta(partida, c, isInAtaque[0]); //setea los atributos de la carta y la aniade al tablero logico
 
                         }else {
-                            //ojo si se agrega en defensa se debe dar el drawable de la carta boca abajo
-                            buscarAgregarImagenTablero(c, findViewById(R.id.CartasMonstruoJugador), true, false);
+                            buscarAgregarImagenTablero(c, findViewById(R.id.CartasMonstruoJugador), true, false); //por detras aniade la carta al tablero logico
                             Utilitaria.crearToast(this,"Carta en Modo Defensa Aniadida",false);
                             isInAtaque[0] = false;
+                            j.jugarCarta(partida, c, isInAtaque[0]); //agrega la carta al tablero logico y la quita de la mano logica del jugador
                         }
-                    });
-                    j1.setNoAgregoMonstruo(false); //con esto se activa el dialog de que solo se puede agregar un monstruo por turno
+                    }, this);
 
                 } else if ( c instanceof  CartaMagica) {
                     //mostramos en un dialog las cartas disponibles a enlazar
+                    //falta agregar la carta al tablero logico
                     crearDialogEnlazarCarta(c, findViewById(R.id.CartasEspecialesJugador));
 
 
                 } else if ( c instanceof  CartaTrampa) {
-                    //ojo se deben agregar boca abajo
-                    //solo agregamos al tablero (ojala todas fueran asi xd)
-                    buscarAgregarImagenTablero(c, findViewById(R.id.CartasEspecialesJugador), false, true); //OJO corregir despues
+                    //ojo se deben agregar boca abajo?
+                    buscarAgregarImagenTablero(c, findViewById(R.id.CartasEspecialesJugador), false, true);
+                    j.jugarCarta(partida, c, null); //agrega la carta al tablero logico y la quita de la mano logica del jugador
                     Utilitaria.crearToast(this,"Carta Trampa Aniadida",false);
                 }
             }
 
-            //actualizamos el tablero logico de la carta a aniadir
-
-            //hay problemas con jugarCarta
-            //j.jugarCarta(partida, c, isInAtaque[0]);
 
         } catch (AgregacionCartaMonstruoException | SinEspacioTableroException  | CartaMagicaAsociacionException e){
             crearDialog("Error",  e.getMessage());
@@ -535,29 +525,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-    //
-    public void crearDialogSetPosicionCarta(Consumer<Boolean> retorno){
-        //Crea y muestra el dialogo para que el usuario defina la posicion de una carta Monstruo
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Selecciona la posición de la carta");
-
-        // botones
-        builder.setPositiveButton("Modo Ataque", (dialog, which) -> {
-            retorno.accept(true);
-            dialog.dismiss();
-        });
-
-        builder.setNegativeButton("Modo Defensa", (dialog, which) -> {
-            // Acciónes para "Modo Defensa"
-            retorno.accept(false);
-            dialog.dismiss();
-        });
-
-        // Crear y mostrar el diálogo
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
 
     public void buscarAgregarImagenTablero(Carta cartaAAgregar, ConstraintLayout contenedorCartas, boolean vaGirada, boolean mostrar){
         //itera sobre los hijos del ConstraintLayout
@@ -574,7 +541,6 @@ public class MainActivity extends AppCompatActivity {
                 int idImage = imV.getId();
                 if(imV.getContentDescription().equals("Casillero Disponible")){
                     agregarImagenTablero(cartaAAgregar, idImage, j1.getId(), vaGirada, mostrar);
-                    tablero.aniadirCartaTablero(cartaAAgregar,j1.getId()); //agrega la carta al tablero logico del jugador y tambien elimina la carta de la mano logica del jugador
                     return;
                 }
 

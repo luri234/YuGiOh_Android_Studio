@@ -1,13 +1,9 @@
 package com.example.yugioh.modelo;
 
 import android.content.Context;
-import android.text.Editable;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-
+import com.example.yugioh.Utilitaria;
 import com.example.yugioh.modelo.exceptions.AgregacionCartaMonstruoException;
 import com.example.yugioh.modelo.exceptions.CartaMagicaAsociacionException;
 import com.example.yugioh.modelo.exceptions.SinEspacioTableroException;
@@ -91,30 +87,32 @@ public class Jugador {
     //metodo nuevo para android
 
 
-    public void jugarCarta(Partida partida, Carta cartaSeleccionada, boolean isInAtaque) throws AgregacionCartaMonstruoException, CartaMagicaAsociacionException, SinEspacioTableroException {
+    public void jugarCarta(Partida partida, Carta cartaSeleccionada, Boolean isInAtaque) {
+        //se encarga de hacer los respectivos ajustes de cada carta jugada y aniadirla al tablero logico.
+
         Tablero tablero = partida.getTablero();
+        //seteamos las reglas del juego y aniadimos la carta al tablero logico
 
-        //VALIDAMOS LA AGREGACION DE LA CARTA
-        if (tablero.sePuedeAgregarCarta(cartaSeleccionada, this)){
-            // Si la carta es un monstruo
-            if (cartaSeleccionada instanceof CartaMonstruo) {
-                //convertimos la seleccion en una carta monstruo
-                CartaMonstruo cartaMonstruoSelec = (CartaMonstruo)cartaSeleccionada;
+        // Si la carta es un monstruo
+        if (cartaSeleccionada instanceof CartaMonstruo) {
+            //convertimos la seleccion en una carta monstruo
+            CartaMonstruo cartaMonstruoSelec = (CartaMonstruo)cartaSeleccionada;
 
-                if (isInAtaque) {
-                    cartaMonstruoSelec.setisInAtaque(true);
-                    cartaMonstruoSelec.setBocaArriba(true);
-                } else {
-                    cartaMonstruoSelec.setisInAtaque(false);
-                    cartaMonstruoSelec.setBocaArriba(false);
-                }
-
-                setNoAgregoMonstruo(false);
-
+            if (isInAtaque) {
+                cartaMonstruoSelec.setisInAtaque(true);
+                cartaMonstruoSelec.setBocaArriba(true);
+            } else {
+                cartaMonstruoSelec.setisInAtaque(false);
+                cartaMonstruoSelec.setBocaArriba(false);
             }
+            tablero.aniadirCartaTablero(cartaSeleccionada, this.id);
+            setNoAgregoMonstruo(false);
+        } else if (cartaSeleccionada instanceof CartaMagica) {
+
+
+        } else if (cartaSeleccionada instanceof CartaTrampa) {
+            tablero.aniadirCartaTablero(cartaSeleccionada, this.id);
         }
-
-
     }
     public void declararBatallaComoMaquina(Tablero tablero, Jugador oponente, Context context, TextView vidauser,TextView vidamaq) {
         //se incluyo context para poder enviar mensajes directos cuando se llame a la funcion en el main
