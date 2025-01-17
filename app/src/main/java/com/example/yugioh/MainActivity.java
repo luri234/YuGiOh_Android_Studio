@@ -33,6 +33,8 @@ import com.example.yugioh.modelo.exceptions.SinEspacioTableroException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class MainActivity extends AppCompatActivity {
@@ -479,7 +481,7 @@ public class MainActivity extends AppCompatActivity {
 
         //variables para actualizar el tablero logico
         Boolean[] isInAtaque = {null} ;
-        CartaMonstruo cartaAAsociar = null;
+        Integer id_cartaMosntruoAEnlazar = null;
         try {
             if(tablero.sePuedeAgregarCarta(c, j)){  //funcion q valida si el jugador puede agregar la carta, basandose en las reglas del juego
                 //validamos para cada caso de carta
@@ -492,26 +494,25 @@ public class MainActivity extends AppCompatActivity {
                             Utilitaria.crearToast(this,"Carta en Modo Ataque añadida",false);
                             isInAtaque[0]= true;
                             //jugarCarta ya por detras setea PuedeAgregarMonstruo(false)
-                            j.jugarCarta(partida, c, isInAtaque[0]); //setea los atributos de la carta y la aniade al tablero logico
+                            j.jugarCarta(partida, c, isInAtaque[0],null); //setea los atributos de la carta y la aniade al tablero logico
 
                         }else {
                             buscarAgregarImagenTablero(c, findViewById(R.id.CartasMonstruoJugador), true, false); //por detras aniade la carta al tablero logico
                             Utilitaria.crearToast(this,"Carta en Modo Defensa Aniadida",false);
                             isInAtaque[0] = false;
-                            j.jugarCarta(partida, c, isInAtaque[0]); //agrega la carta al tablero logico y la quita de la mano logica del jugador
+                            j.jugarCarta(partida, c, isInAtaque[0], null); //agrega la carta al tablero logico y la quita de la mano logica del jugador
                         }
                     }, this);
 
                 } else if ( c instanceof  CartaMagica) {
                     //mostramos en un dialog las cartas disponibles a enlazar
-                    //falta agregar la carta al tablero logico
-                    crearDialogEnlazarCarta(c, findViewById(R.id.CartasEspecialesJugador));
+                    crearDialogEnlazarCarta(c,j, findViewById(R.id.CartasEspecialesJugador)); //ya agrega por detras al tablero logico,etc
 
 
                 } else if ( c instanceof  CartaTrampa) {
                     //ojo se deben agregar boca abajo?
                     buscarAgregarImagenTablero(c, findViewById(R.id.CartasEspecialesJugador), false, true);
-                    j.jugarCarta(partida, c, null); //agrega la carta al tablero logico y la quita de la mano logica del jugador
+                    j.jugarCarta(partida, c, null, null); //agrega la carta al tablero logico y la quita de la mano logica del jugador
                     Utilitaria.crearToast(this,"Carta Trampa Aniadida",false);
                 }
             }
@@ -582,10 +583,10 @@ public class MainActivity extends AppCompatActivity {
                 else if (carta instanceof CartaMagica) {
                     CartaMagica d = (CartaMagica) carta;
                     crearDialog("Descripcion de magica","no le se y tengo sueño");}
-                else if(carta instanceof CartaTrampa)
-                {   crearDialog("TENGI SUEÑI","A¿voy a mimir");
+                else if(carta instanceof CartaTrampa) {
+                    crearDialog("TENGI SUEÑI","A¿voy a mimir");
                 }
-                }
+            }
 
 
 
@@ -597,14 +598,24 @@ public class MainActivity extends AppCompatActivity {
         return Math.round(dp * getResources().getDisplayMetrics().density);
     }
 
-    public void crearDialogEnlazarCarta(Carta cartaMagica, ConstraintLayout contenedorCartasEspeciales ){
-        // Lista de nombres
-        final String[] names = {"Carta1", "Carta2", "Carta3"};
+    public void crearDialogEnlazarCarta(Carta cartaMagica, Jugador jQEnlaza, ConstraintLayout contenedorCartasEspeciales ){
+
+        CartaMagica cartaMagicaCasteada = (CartaMagica)cartaMagica;
+        int idJugador = jQEnlaza.getId(); //OJO si se utiliza
+
+        //de todas los mosntruos q hay en el tablero, clasifico solo las que coinciden con el tipoMonstruo de cartaMagica
+        HashMap<String, Integer> dic = tablero.filtrarCartasMonstruoPorAtributo(cartaMagicaCasteada, jQEnlaza);
+
+        //creo una array con las claves del dic(los nombres de las cartasMonstruo)
+        String[] nombresMonstruos = dic.keySet().toArray(new String[0]);
+
+        // de acuerdo a la elegida se actualiza la cartaMagica de la cartaMonstruo
+
 
         // Crear el AlertDialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Selecciona la carta a Enlazar")
-                .setSingleChoiceItems(names, -1, new DialogInterface.OnClickListener() {
+        builder.setTitle("Enlazar carta monstruo:")
+                .setSingleChoiceItems(nombresMonstruos, -1, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // Se puede capturar la selección aquí si es necesario
@@ -616,10 +627,13 @@ public class MainActivity extends AppCompatActivity {
                         // Obtener el nombre seleccionado
                         int selectedPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
                         if (selectedPosition != -1) {
-                            String selectedName = names[selectedPosition];
+                            String nombreMonstruoSeleccion = nombresMonstruos[selectedPosition];
                             // Realizar acción con el nombre seleccionado (por ejemplo, enlazar)
-                            Utilitaria.crearToast(MainActivity.this,"Enlazado con " + selectedName,false);
-                            buscarAgregarImagenTablero(cartaMagica, contenedorCartasEspeciales, false, true);
+                            Utilitaria.crearToast(MainActivity.this,"Enlazado con " + nombreMonstruoSeleccion,false);
+                            buscarAgregarImagenTablero(cartaMagica, contenedorCartasEspeciales, false, true);  //OJO
+                            //buscamos en el dic, el monstruo que eligio a enlazar y sacamos su id y actualizamos el tablero logico
+                            int id_monstruoElegido = dic.get(nombreMonstruoSeleccion);
+                            jQEnlaza.jugarCarta(partida, cartaMagica, null, id_monstruoElegido); //agrega por detras la carta al tablero logico y quita de la mano logica, ya setee la carta magica al mosntruo
                         } else {
                             Utilitaria.crearToast(MainActivity.this,"No se seleccionó ninguna carta",false);
                         }

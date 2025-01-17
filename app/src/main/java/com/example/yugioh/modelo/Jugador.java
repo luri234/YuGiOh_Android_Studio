@@ -87,7 +87,7 @@ public class Jugador {
     //metodo nuevo para android
 
 
-    public void jugarCarta(Partida partida, Carta cartaSeleccionada, Boolean isInAtaque) {
+    public void jugarCarta(Partida partida, Carta cartaSeleccionada, Boolean isInAtaque, Integer id_monstruoAEnlazar) {
         //se encarga de hacer los respectivos ajustes de cada carta jugada y aniadirla al tablero logico.
 
         Tablero tablero = partida.getTablero();
@@ -106,10 +106,12 @@ public class Jugador {
                 cartaMonstruoSelec.setBocaArriba(false);
             }
             tablero.aniadirCartaTablero(cartaSeleccionada, this.id);
-            setNoAgregoMonstruo(false);
+            setNoAgregoMonstruo(true);
         } else if (cartaSeleccionada instanceof CartaMagica) {
-
-
+            //en este else se setea la carta magica a la carta del jugador
+            CartaMagica cartaMagicaCasteada = (CartaMagica)cartaSeleccionada;
+            tablero.buscarCartaMonstruo(id_monstruoAEnlazar, this).setCartaMagica(cartaMagicaCasteada); //devuelve la cartaMonstruoEncontrada y le setea la carta magica elegida
+            tablero.aniadirCartaTablero(cartaSeleccionada, this.id);
         } else if (cartaSeleccionada instanceof CartaTrampa) {
             tablero.aniadirCartaTablero(cartaSeleccionada, this.id);
         }

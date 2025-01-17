@@ -316,7 +316,39 @@ public class Tablero {
         }
         return false;
     }
-    
+
+    public HashMap<String, Integer> filtrarCartasMonstruoPorAtributo(CartaMagica cm, Jugador j){
+        //itera el espacio de cartas mosntruo del jugador y guarda en el diccionario
+        //aquellas que cumplen igualdad con el atributo, guarda el nombre como calve y id como valor.
+        HashMap<String, Integer> dic = new HashMap<>();
+        ArrayList<Carta> monstruosTableroJ =  tableroCompartido.get(j.getId()).get("CartasMonstruo");
+
+        for(Carta carta : monstruosTableroJ){
+            CartaMonstruo cartaMonstruo = (CartaMonstruo)carta;
+            //si el tipodeMonstruo de la cartaMonstruo es igual al de la carta magica provista, se agrega al dic
+            if(cartaMonstruo.getTipoMonstruoString().equals(cm.getTipoMonstruoString())){
+                dic.put(cartaMonstruo.getNombre(), cartaMonstruo.getId());
+            }
+        }
+
+        return dic;
+    }
+
+
+    public CartaMonstruo buscarCartaMonstruo(int id_carta, Jugador j){
+        //busca una cartaMonstruo en el tablero del jugador de acuerdo al id de la carta y la devuelve
+        ArrayList<Carta> mosntruosTableroJ = tableroCompartido.get(j.getId()).get("CartasMonstruo");
+        CartaMonstruo cartaMonstruoEncontrada = null;
+
+        for(Carta c  : mosntruosTableroJ){
+            if(c.getId() == id_carta){
+                cartaMonstruoEncontrada = (CartaMonstruo)c;
+            }
+        }
+
+        return  cartaMonstruoEncontrada;
+    }
+
     //getters and setters
     public int getId() {
         return id;
