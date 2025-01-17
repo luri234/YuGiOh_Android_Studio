@@ -271,6 +271,9 @@ public class Tablero {
             CartaTrampa cartaTrampa = verificarCartaTrampa(enemigo, cartaJugador);
             System.out.println("|   Se detuvo el ataque! la carta Trampa " + "'"+cartaTrampa.getNombre()+"'"+ "se interpuso");
             quitarCartaTablero(cartaTrampa, enemigoID);
+            if (enemigoID==1){MainActivity.quitarImagenTablero(cartaTrampa,MainActivity.contenedorEspecialesUser);}
+            else
+                MainActivity.quitarImagenTablero(cartaTrampa,MainActivity.contenedorEspecialesMaquina);
             return new Tupla(0, 0);
         }
    }

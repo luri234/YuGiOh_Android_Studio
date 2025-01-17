@@ -2,6 +2,7 @@ package com.example.yugioh.modelo;
 
 import android.content.Context;
 import android.text.Editable;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -115,10 +116,10 @@ public class Jugador {
 
 
     }
-    public void declararBatallaComoMaquina(Tablero tablero, Jugador oponente, Context context) {
+    public void declararBatallaComoMaquina(Tablero tablero, Jugador oponente, Context context, TextView vidauser,TextView vidamaq) {
         //se incluyo context para poder enviar mensajes directos cuando se llame a la funcion en el main
         Utilitaria.crearToast(context,"La " + this.getNombre() + " te va a declarar batalla!! " + oponente.getNombre() + " más vale que estés preparadx ",true);
-
+        //Utilitaria.mensajeLargo(v,"La " + this.getNombre() + " te va a declarar batalla!! " + oponente.getNombre() + " más vale que estés preparadx ",false);
         // Obtener monstruos en ataque que pueden atacar
         ArrayList<CartaMonstruo> monstruosAtacantes = new ArrayList<>();
         ArrayList<CartaMagica> cartasMagicas = new ArrayList<>();
@@ -128,18 +129,21 @@ public class Jugador {
             CartaMonstruo carta_c = (CartaMonstruo)carta;
             if (carta_c.getisInAtaque() && carta_c.getPuedeAtacar()) {
                 monstruosAtacantes.add(carta_c);
+
             }
         }
 
         // Si no hay monstruos en ataque, cambiar a modo defensa
         if (monstruosAtacantes.isEmpty()) {
             Utilitaria.crearToast(context,"La " + this.getNombre() + " no tiene monstruos disponibles para atacar. Se coloca a la defensiva.",true);
+            //Utilitaria.mensajeLargo(v,"La " + this.getNombre() + " no tiene monstruos disponibles para atacar. Se coloca a la defensiva.",false);
             for (Carta carta : tablero.getTableroCompartido().get(this.getId()).get("CartasMonstruo")) {
                 CartaMonstruo carta_c = (CartaMonstruo)carta;
                 if (carta_c.getisInAtaque()) {
                     carta_c.setisInAtaque(noAgregoMonstruo);
                     carta_c.setBocaArriba(false);
                     Utilitaria.crearToast(context,this.getNombre() + " pone al monstruo " + carta.getNombre() + " en defensa.",false);
+                    //Utilitaria.mensajeLargo(v,this.getNombre() + " pone al monstruo " + carta.getNombre() + " en defensa.",false);
                 }
             }
             return;
@@ -168,10 +172,12 @@ public class Jugador {
                             //monstruo_c.setAtaque(monstruo_c.getAtaque() + cartaMagica.getIncrementoAtaque());
                             //en que momento se hace el incremento de ataque entonces?
                             Utilitaria.crearToast(context,this.getNombre() + " equipa '" + cartaMagica.getNombre() + "' a '" + monstruo_c.getNombre() + "', aumentando su ataque en " + cartaMagica.getIncrementoAtaque() + ".",false);
+                            //Utilitaria.mensajeLargo(v,this.getNombre() + " equipa '" + cartaMagica.getNombre() + "' a '" + monstruo_c.getNombre() + "', aumentando su ataque en " + cartaMagica.getIncrementoAtaque() + ".",false);
                             //monstruo_c.setCartaMagica(cartaMagica); en la lógica de llenar tablero ya se ha enlazado
                         } else if (cartaMagica.getIncrementoDefensa() > 0) {
                             //monstruo_c.setDefensa(monstruo_c.getDefensa() + cartaMagica.getIncrementoDefensa());
                             Utilitaria.crearToast(context,this.getNombre() + " equipa '" + cartaMagica.getNombre() + "' a '" + monstruo_c.getNombre() + "', aumentando su defensa en " + cartaMagica.getIncrementoDefensa() + ".",true);
+                            //Utilitaria.mensajeLargo(v,this.getNombre() + " equipa '" + cartaMagica.getNombre() + "' a '" + monstruo_c.getNombre() + "', aumentando su defensa en " + cartaMagica.getIncrementoDefensa() + ".",false);
                             //monstruo_c.setCartaMagica(cartaMagica);
 
                         }
@@ -188,6 +194,7 @@ public class Jugador {
             CartaTrampa cartaTrampa = tablero.verificarCartaTrampa(oponente, cartaAtacante);
             if (cartaTrampa != null) {
                 Utilitaria.crearToast(context,oponente.getNombre() + " activa la carta trampa '" + cartaTrampa.getNombre() + "' y detiene el ataque de '" + cartaAtacante.getNombre() + "'.",false);
+                //Utilitaria.mensajeLargo(v,oponente.getNombre() + " activa la carta trampa '" + cartaTrampa.getNombre() + "' y detiene el ataque de '" + cartaAtacante.getNombre() + "'.",false);
                 tablero.quitarCartaTablero(cartaTrampa, oponente.getId());
                 MainActivity.quitarImagenTablero(cartaTrampa,MainActivity.contenedorEspecialesUser);
 
@@ -196,7 +203,8 @@ public class Jugador {
 
             if (monstruosOponente.isEmpty()) {
                 Utilitaria.crearToast(context,cartaAtacante.getNombre() + " realiza un ataque directo",false);
-                oponente.setPuntosVida(oponente.getPuntosVida() - cartaAtacante.getAtaque());
+                oponente.setPuntosVida(oponente.getPuntosVida() - cartaAtacante.getAtaque(),vidauser);
+
                 cartaAtacante.setPuedeAtacar(false);
                 Utilitaria.crearToast(context,this.getNombre() + " ha terminado su fase de batalla.",false);
                 //System.out.println(this.getNombre() + " ha terminado su fase de batalla.");
@@ -215,12 +223,15 @@ public class Jugador {
                         Tupla tupla = tablero.ataqueEntreCartas(cartaAtacante, cartaMonstruoRival, this, oponente);
                         Integer danioAEnemigo = (Integer)(tupla.obj1);
                         Integer danioAJugador = (Integer)(tupla.obj2);
-                        this.puntosVida -= danioAJugador;
-                        oponente.puntosVida -= danioAEnemigo;
+                        //this.puntosVida -= danioAJugador;
+                        this.setPuntosVida(this.puntosVida-danioAJugador,vidamaq);//con este metodo lo actualizo en la interfaz
+                        oponente.setPuntosVida(oponente.puntosVida-danioAEnemigo,vidauser);
+                        //oponente.puntosVida -= danioAEnemigo;
                         cartaAtacante.setPuedeAtacar(false);
 
                     } else {
                         Utilitaria.crearToast(context,"La Maquina ha decidido no usar a " + cartaAtacante.getNombre() + " para atacar a tu carta " + cartaMonstruoRival.getNombre() + " porque no le conviene.",true);
+                        //Utilitaria.mensajeLargo(v,"La Maquina ha decidido no usar a " + cartaAtacante.getNombre() + " para atacar a tu carta " + cartaMonstruoRival.getNombre() + " porque no le conviene.",false);
                     }
                 }
             }
@@ -247,8 +258,13 @@ public class Jugador {
     }
 
 
-    public void setPuntosVida(int puntosVida) {
+    public void setPuntosVida(int puntosVida,TextView puntosVidaJugador) {
+        //modificada para que también actualice el xml
         this.puntosVida = puntosVida;
+        String n = "PUNTOS DE VIDA: "+puntosVida;
+        puntosVidaJugador.setText(n);
+
+
     }
 
 

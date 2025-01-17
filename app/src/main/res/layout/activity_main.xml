@@ -205,7 +205,33 @@
             app:layout_constraintTop_toTopOf="@+id/c_guidelineTop_EspecialesJugador"
             app:srcCompat="@drawable/imagen_base" />
 
+        <TextView
+            android:id="@+id/puntos_maquina"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:fontFamily="sans-serif-smallcaps"
+            android:text="Puntos de vida: 4000"
+            android:textColor="#DEFFFCFC"
+            tools:layout_editor_absoluteX="11dp"
+            tools:layout_editor_absoluteY="124dp" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_final_mensaje_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.9" />
+
+    <View
+        android:id="@+id/MensajeBatalla"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_final_mensaje_user"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineDer3_EspecialMaquina"
+        app:layout_constraintStart_toStartOf="@+id/guide_izq1_mons_user"
+        app:layout_constraintTop_toTopOf="@+id/guidelineFinal_EspecialesJugador" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guide_der2_mons_user_andpvuser"
@@ -345,6 +371,7 @@
             android:id="@+id/mons_3_user_carta"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginStart="2dp"
             android:layout_marginTop="2dp"
             android:layout_marginEnd="2dp"
             android:layout_marginBottom="2dp"
@@ -690,30 +717,19 @@
         app:layout_constraintGuide_percent="0.81" />
 
     <TextView
-        android:id="@+id/puntos_vida"
+        android:id="@+id/vidaUser"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fontFamily="sans-serif-smallcaps"
+        android:gravity="center"
         android:text="Puntos de vida: 4000"
         android:textColor="#DEFFFCFC"
         app:layout_constraintBottom_toTopOf="@+id/guideline_seccionRoja"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/guide_der2_mons_user_andpvuser"
+        app:layout_constraintStart_toStartOf="@+id/izq2_esp_maq"
         app:layout_constraintTop_toTopOf="@+id/guidelineTop_SeccionVida"
         app:layout_constraintVertical_bias="0.0" />
-
-    <TextView
-        android:id="@+id/puntos_maquina"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:fontFamily="sans-serif-smallcaps"
-        android:text="Puntos de vida: 4000"
-        android:textColor="#DEFFFCFC"
-        app:layout_constraintBottom_toTopOf="@+id/guideline_cuadroVidaMaquina"
-        app:layout_constraintEnd_toStartOf="@+id/guide_izq2_mons_user_andpvmaquina"
-        app:layout_constraintTop_toTopOf="@+id/guidelineBottom_SeccionAzul"
-        app:layout_constraintVertical_bias="1.0" />
 
     <ImageView
         android:id="@+id/deck_maquina"
@@ -785,14 +801,15 @@
         app:layout_constraintGuide_percent="0.19" />
 
     <TextView
-        android:id="@+id/Puntos_vda_maquina"
+        android:id="@+id/vidaMaq"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fontFamily="sans-serif-smallcaps"
+        android:gravity="center"
         android:text="Puntos de vida: 4000"
         android:textColor="#FCDEFFFC"
         app:layout_constraintBottom_toTopOf="@+id/guideline_cuadroVidaMaquina"
-        app:layout_constraintEnd_toStartOf="@+id/guide_izq2_mons_user_andpvmaquina"
+        app:layout_constraintEnd_toStartOf="@+id/der2_esp_user"
         app:layout_constraintHorizontal_bias="0.275"
         app:layout_constraintStart_toStartOf="@+id/izq1_esp_user_ydeckmmaquina"
         app:layout_constraintTop_toTopOf="@+id/guidelineBottom_SeccionAzul"
@@ -802,8 +819,8 @@
         android:id="@+id/num_deck_user"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
         android:fontFamily="sans-serif-condensed-medium"
+        android:gravity="center"
         android:text="30"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/guidelineFinal_EspecialesJugador"
@@ -815,8 +832,8 @@
         android:id="@+id/num_deck_maq"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
         android:fontFamily="sans-serif-condensed-medium"
+        android:gravity="center"
         android:text="30"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/GuidelineFinal_EspecialesMaquina"

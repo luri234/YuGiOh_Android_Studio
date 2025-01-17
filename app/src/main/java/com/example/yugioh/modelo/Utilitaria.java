@@ -9,9 +9,11 @@ import android.widget.Toast;
 import com.google.android.material.snackbar.Snackbar;
 
 public class Utilitaria {
+
     public static void crearToast(Context context, String mensaje,boolean duramucho){
         if(duramucho)
             Toast.makeText(context,mensaje,Toast.LENGTH_LONG).show();
+
         else
             Toast.makeText(context,mensaje,Toast.LENGTH_SHORT).show();
 

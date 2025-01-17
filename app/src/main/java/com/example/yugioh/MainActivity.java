@@ -53,10 +53,13 @@ public class MainActivity extends AppCompatActivity {
     Button sgtfase;
     TextView deckuser;
     TextView deckmaq;
+    TextView vidaUser;
+    TextView vidaMaq;
     public static ConstraintLayout contenedorMonstruosUser;
     public static ConstraintLayout contenedorEspecialesUser;
     public static ConstraintLayout contenedorMontruosMaquina;
     public static ConstraintLayout contenedorEspecialesMaquina;
+    View mensajes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +75,9 @@ public class MainActivity extends AppCompatActivity {
         deckuser = findViewById(R.id.num_deck_user);
         deckmaq = findViewById(R.id.num_deck_maq);
         contenedorMonstruosUser = findViewById(R.id.CartasMonstruoJugador);
+        mensajes = findViewById(R.id.MensajeBatalla);
+        vidaMaq = findViewById(R.id.vidaMaq);
+        vidaUser = findViewById(R.id.vidaUser);
 
 
         //asignando valor a las instancias , manejando posibles errores en la creacion
@@ -121,6 +127,9 @@ public class MainActivity extends AppCompatActivity {
         Utilitaria.crearToast(this, "La máquina ya ha llenado su tablero", false);
 
     }
+
+
+
 
 
     //METODOS
@@ -227,9 +236,12 @@ public class MainActivity extends AppCompatActivity {
                 int rId = R.drawable.imagen_base;
                 v.setImageResource(rId);
                 v.setTag("imagen_base.png");
-                //se ha cambiado la imagen por la base (fondo blanco) y se ha guardado la ruta del view para poder compararla despues(setTag)
-            }
-        }
+                if (v.getRotation() !=0)
+                    v.setRotation(0);//si está girada ya se puso correctamente
+                v.setContentDescription("Casillero Disponible");
+                    //se ha cambiado la imagen por la base (fondo blanco) y se ha guardado la ruta del view para poder compararla despues(setTag)
+            }}
+
     }
 
     //}
@@ -291,12 +303,12 @@ public class MainActivity extends AppCompatActivity {
     }
     public void faseDeclararBatalla(){
         //solo de prueba
-        Utilitaria.mensajeLargo(findViewById(R.id.contenedorScrollAzul),"Testeto de los mensajes largos acá (interaccion con usuario), se puede utilizar esto o el toast",true);
+        Utilitaria.mensajeLargo(mensajes,"Testeto de los mensajes largos acá (interaccion con usuario), se puede utilizar esto o el toast",true);
         if (partida.getJugadorActual() ==1){
             crearDialog("DECLARAR BATALLA","Es tu turno de declarar batalla");
         }
         else
-            j2.declararBatallaComoMaquina(tablero,j1,this);
+            j2.declararBatallaComoMaquina(tablero,j1,this,vidaUser,vidaMaq);
     }
     //la funcion esta pensada para que el jugador no pueda hacer nada mientras no sea su turno
     //con true se restringen los movimientos
