@@ -134,7 +134,6 @@ public class MainActivity extends AppCompatActivity {
 
     //METODOS
     public void inicioJuego(String title, String mensaje, Partida partida, Jugador j1, Jugador j2) {
-        //Antes se llamaba mostrar mensajeInicio.
         //Muestra una bienvenida -> realiza el sorteo de inicia -> y reparte las 5 cartas iniciales, tanto para el juego logico y virtual
         AlertDialog.Builder abd = new AlertDialog.Builder(this);
         abd.setTitle(title);
@@ -155,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void crearDialog(String title, String mensaje) {
+        //Crea un dialogo normal
         AlertDialog.Builder abd = new AlertDialog.Builder(this);
         abd.setTitle(title);
         abd.setMessage(mensaje);
@@ -167,31 +167,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    //ignorar
-    public void cargarCartasEnMemoria() {
-
-        try {
-            ArrayList<Carta> cartas = Carta.leerCartas(getAssets(), "archivocartas.txt");
-            //recorremos las cartas para irlas creando en memoria
-            for (Carta c : cartas) {
-                Resources res = getResources(); //obtenemos la referencia a la carpeta resources
-
-                int rId = res.getIdentifier(c.getRutaImagen(), "drawable", getPackageName());
-                //creamos la instancia del recurso a crear en memoria
-                ImageView imv = new ImageView(this);
-                imv.setImageResource(rId);
-                imv.getLayoutParams().width = 300; //ERROR
-                imv.getLayoutParams().height = 300;
-
-            }
-        } catch (IOException e) {
-            crearDialog("ERROR", "Hubo un problema al abrir el archivo de cartas..");
-        }
-    }
-
     public void repartirCartasIniciales() {
-        //llamo al modelo para q reparta las cartas una por una
-
+        //llamo al modelo para q reparta las cartas una por una en el tablero logico
+        //y llama al metodo mostraImagenScroll paraq las cartas repartidas se muestren en la vista.
 
         for (int i = 0; i < 5; i++) {
             //agregamos una a jugador 1
@@ -209,6 +187,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void quitarImagenMano(Carta c, int id_jugador) {
+        // dependiendo del jugador y carta recibida, quita la carta visual de la mano del jugador
+        // y llama al modelo para quitar la carta de la mano logica.
         if (id_jugador == 2) {
             LinearLayout azul = findViewById(R.id.contenedorScrollAzul);
             for (int i = 0; i < azul.getChildCount(); i++) {
@@ -228,7 +208,10 @@ public class MainActivity extends AppCompatActivity {
         }
         tablero.quitarCartaMano(id_jugador, c);
     }
+
     public static void quitarImagenTablero(Carta carta, ConstraintLayout contenedor) {
+        //Recibe un Constraint Layout y una carta , de acuerdo a eso quita la carta del constraint layout y
+        //la deja en su forma por defecto.
         for (int i = contenedor.getChildCount() - 1; i >= 0; i--) {
             View cartita = contenedor.getChildAt(i);
             if (cartita.getTag() != null && cartita.getTag().equals(carta.getRutaImagen())) {
@@ -246,13 +229,14 @@ public class MainActivity extends AppCompatActivity {
 
     //}
     //preguntar como hacer establecer los guidelines de la imagen por codigo
-    // .
-
+    //
 
     public void pasarFase(View v){
         //puede representar al metodo ronda de java
         //codigo que queremos que haga //v representa al boton
         //este es solo un ejemplo porque se necesita el cod de java
+
+        //
 
         if (partida.getRonda()==1 || partida.getRonda()==2) {
             faseLLenarTableros();
@@ -283,12 +267,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void faseLLenarTableros(){
+
         if (partida.getJugadorActual() == 2){
             j2.setNoAgregoMonstruo(true);
             restringir_movimientos(true,1);
             restringir_movimientos(false,2);
             crearDialog("Llenar Tablero","La Máquina ha robado una carta del deck y procede a llenar su tablero");
-            Carta c = j2.tomarCartaEnTurno(deckmaq);
+            Carta c = j2.tomarCartaEnTurno(deckmaq); //actualiza por detras al numero(view) de cartas del jugador, retorna y agrega la carta tomada a la mano logica
             llenartableromaquina(tablero,j2);
             mostrarImagenScroll(c,R.id.contenedorScrollAzul);
         }
@@ -310,9 +295,11 @@ public class MainActivity extends AppCompatActivity {
         else
             j2.declararBatallaComoMaquina(tablero,j1,this,vidaUser,vidaMaq);
     }
-    //la funcion esta pensada para que el jugador no pueda hacer nada mientras no sea su turno
-    //con true se restringen los movimientos
+
     public void restringir_movimientos(boolean val,int id_jugador){
+        //restringe la habilidad de dar 'click' del jugador recibido
+        // no pueda hacer nada mientras no sea su turno
+        //con true se restringen los movimientos
         LinearLayout rojo = findViewById(R.id.contenedorScrollRojo);
         LinearLayout azul = findViewById(R.id.contenedorScrollAzul);
         if (id_jugador == 1) {
@@ -333,6 +320,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void mostrarImagenScroll(Carta cartaAMostrar, int idLinearLayoutScroll){
+        //Recibe el linearLayout de un Scroll y una carta, crea la vista de la carta en el Scroll
+        //ademas crea un onClick en la carta para luego poder ver su info o colocarla en el tablero visual  //OJO luego reparar para que las de la maquina no salgan el boton 'colocar'
         LinearLayout contenedor = findViewById(idLinearLayoutScroll);
 
         //para encontrar donde se dan los errores
@@ -343,6 +332,7 @@ public class MainActivity extends AppCompatActivity {
 
         Resources res = getResources();
         int rId = res.getIdentifier(cartaAMostrar.getRutaImagen(), "drawable", getPackageName());
+
         //para mostrar en caso de error
         if(rId == 0){
             crearDialog("Error en el programa", "No se encontro la imagen: "+ cartaAMostrar.getRutaImagen());
@@ -366,19 +356,13 @@ public class MainActivity extends AppCompatActivity {
         imV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Acción al hacer clic en la imagen
-//                Toast.makeText(getApplicationContext(),
-//                        "Clic en la carta: " + cartaAMostrar.getNombre(),
-//                        Toast.LENGTH_SHORT).show();
                 crearDialogAgregarCarta(cartaAMostrar,idLinearLayoutScroll);
-
-
             }
         });
-
         //agregamos la imagen al LinearLayout(Scroll)
         contenedor.addView(imV);
     }
+
 
     //ignorar
     public void mostrarTurno(int idJugador){
@@ -394,10 +378,12 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void crearDialogAgregarCarta(Carta carta, int id_contenedor){
+        //Crea un dialogo personalizado para mostrar la info de la carta y poderla colocar en el tablero
+
         //obtenemos el numero de imagenes en el layout
         LinearLayout contenedor = findViewById(id_contenedor);
-
         int numImagenes = contenedor.getChildCount();
+
         //obtenemos el size de la lista cartasEnMano logico(que debe ser igual, solo para verificar q si lo sean)
         Jugador jj; //esto es solo para que funcione para el user y la maquina, evita problemas con usuario malo (preguntar a May de ser necesario)
         if (id_contenedor == R.id.contenedorScrollRojo)
@@ -407,7 +393,7 @@ public class MainActivity extends AppCompatActivity {
         int tamanio =  jj.getCartasEnMano().size();
 
         //creamos el dialogo personalizado
-        // Crear un Inflater para el diseño personalizado
+        // Uso de un Inflater para el diseño personalizado
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.datos_colocar_carta, null);
         TextView nombre = dialogView.findViewById(R.id.c_nombre);
@@ -463,29 +449,34 @@ public class MainActivity extends AppCompatActivity {
             dialogView.findViewById(R.id.btn_cancel).setOnClickListener(v -> {
                 dialog.dismiss(); // Cierrar el dialogo
             });
-            //se restringe para que solo se pueda colocar desde la mano del jugador y no desde la maquina
-            if (id_contenedor == R.id.contenedorScrollRojo) {
-                dialogView.findViewById(R.id.btn_accept).setOnClickListener(v -> {
-                    //accciones al clicar 'colocar'
-                    aniadirCartaTableroFisico(carta, j1);
-                    dialog.dismiss();
-                });
+
+            dialogView.findViewById(R.id.btn_accept).setOnClickListener(v -> {
+                //accciones al clicar 'colocar'
+                aniadirCartaTableroFisico(carta, j1);
+                dialog.dismiss();
+            });
+            //Desaparece el boton 'colocar' para las cartas del scroll de la maquina
+            if(id_contenedor != R.id.contenedorScrollRojo) {
+                dialogView.findViewById(R.id.btn_accept).setVisibility(View.GONE);
             }
             // Mostrar el diálogo
             dialog.show();
 
         }else{
-            crearDialog("Error de programa", "El tamanio del scroll j1 no coincide con el logico");
+            crearDialog("Error de programa", "El tamanio del scroll  no coincide con el logico");
         }
     }
 
     public void aniadirCartaTableroFisico(Carta c, Jugador j ){
+        // valida si cierta carta se puede aniadir al tablero del jugador,
+        // de acuerdo al tipo de carta realiza el proceso de aniadirla y crea la vista en el tablero
+
+
         //variables para actualizar el tablero logico
         Boolean[] isInAtaque = {null} ;
         CartaMonstruo cartaAAsociar = null;
-        //valida si el jugador puede aniadir una carta y procede a aniadirla
         try {
-            if(tablero.sePuedeAgregarCarta(c, j)){
+            if(tablero.sePuedeAgregarCarta(c, j)){  //funcion q valida si el jugador puede agregar la carta, basandose en las reglas del juego
                 //validamos para cada caso de carta
                 if(c instanceof CartaMonstruo){
                     //preguntamos si en ataque o defensa
@@ -503,17 +494,18 @@ public class MainActivity extends AppCompatActivity {
                             isInAtaque[0] = false;
                         }
                     });
-                    j1.setNoAgregoMonstruo(false); //con esto se activa el dialog de que solo se puede agregar un monstruo por turno
+                    //CORREGIR
+                    j1.setNoAgregoMonstruo(true); //con esto se activa el dialog de que solo se puede agregar un monstruo por turno
 
                 } else if ( c instanceof  CartaMagica) {
-                    //mostramos en un dialog cartas a enlazar
+                    //mostramos en un dialog las cartas disponibles a enlazar
                     crearDialogEnlazarCarta(c, findViewById(R.id.CartasEspecialesJugador));
 
 
                 } else if ( c instanceof  CartaTrampa) {
                     //ojo se deben agregar boca abajo
                     //solo agregamos al tablero (ojala todas fueran asi xd)
-                    buscarAgregarImagenTablero(c, findViewById(R.id.CartasEspecialesJugador), false, true);
+                    buscarAgregarImagenTablero(c, findViewById(R.id.CartasEspecialesJugador), false, true); //OJO corregir despues
                     Utilitaria.crearToast(this,"Carta Trampa Aniadida",false);
                 }
             }
@@ -534,6 +526,7 @@ public class MainActivity extends AppCompatActivity {
 
     //
     public void crearDialogSetPosicionCarta(Consumer<Boolean> retorno){
+        //Crea y muestra el dialogo para que el usuario defina la posicion de una carta Monstruo
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Selecciona la posición de la carta");
 
@@ -555,8 +548,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void buscarAgregarImagenTablero(Carta cartaAAgregar, ConstraintLayout contenedorCartas, boolean vaGirada, boolean mostrar){
-        //busca el espacio vacio donde pueda agregar la imagen en la seccion
-
+        //itera sobre los hijos del ConstraintLayout
+        //y busca el espacio vacio(de acuerdo al contentDescription) donde pueda agregar la imagen y usar la funcion 'agregarImagenTablero()'
+        //de la carta en el ConstraintLayout dado(tablero del jugador)
+        //tambien recibe parametros para definir el giro y si la carta va boca abajo
 
         int totalHijos = contenedorCartas.getChildCount();
 
@@ -567,7 +562,7 @@ public class MainActivity extends AppCompatActivity {
                 int idImage = imV.getId();
                 if(imV.getContentDescription().equals("Casillero Disponible")){
                     agregarImagenTablero(cartaAAgregar, idImage, j1.getId(), vaGirada, mostrar);
-                    tablero.aniadirCartaTablero(cartaAAgregar,j1.getId());
+                    tablero.aniadirCartaTablero(cartaAAgregar,j1.getId()); //agrega la carta al tablero logico del jugador y tambien elimina la carta de la mano logica del jugador
                     return;
                 }
 
@@ -576,29 +571,28 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    //funcion que agrega la imagen, trabaja con aniadircartatablero
     public void agregarImagenTablero(Carta c, int id_view,int id_jugador , boolean vaGirada, boolean mostrar){
+        // agrega la imagen de la carta recibida al View con el id recibido y define su posicion, quita la carta  de la mano visual del jugador.
+
         ImageView v = findViewById(id_view); //
         Resources res = getResources(); //
         int rId = R.drawable.carta_bocaabajo;
 
-        //aniadido
         if(mostrar){
             rId = res.getIdentifier(c.getRutaImagen(), "drawable", getPackageName()); //
         }
         quitarImagenMano(c,id_jugador); //
         v.setImageResource(rId); //
         v.setTag(c.getRutaImagen());//necesito identificarla para borrarla luego
-        //aniadido
+
         if(vaGirada) v.setRotation(-90f);
         //tablero.aniadirCartaTablero(c,id_jugador); se la puso en el metodo buscaragregarimagen por problemas con la maquina
-
         //cambiamos el estado a casillero ocupado
         v.setContentDescription("Casillero ocupado");
     }
 
-    // Metodo para convertir dp a px (para garantizar consistencia en diferentes pantallas)
     private int dpToPx(int dp) {
+        // Metodo para convertir dp a px (para garantizar consistencia en diferentes pantallas)
         return Math.round(dp * getResources().getDisplayMetrics().density);
     }
 
