@@ -133,6 +133,10 @@ public class Deck {
             return null; // Si la baraja está vacía, retorna null
         }
     }
+
+    public ArrayList<Carta> getBaraja() {
+        return baraja;
+    }
 }
 
 

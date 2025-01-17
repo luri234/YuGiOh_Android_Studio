@@ -10,6 +10,7 @@ import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -75,9 +76,13 @@ public class MainActivity extends AppCompatActivity {
         deckuser = findViewById(R.id.num_deck_user);
         deckmaq = findViewById(R.id.num_deck_maq);
         contenedorMonstruosUser = findViewById(R.id.CartasMonstruoJugador);
+        contenedorEspecialesUser = findViewById(R.id.CartasEspecialesJugador);
+        contenedorEspecialesMaquina = findViewById(R.id.CartasEspecialesMaquina);
+        contenedorMontruosMaquina = findViewById(R.id.CartasMonstruoMaquina);
         mensajes = findViewById(R.id.MensajeBatalla);
         vidaMaq = findViewById(R.id.vidaMaq);
         vidaUser = findViewById(R.id.vidaUser);
+
 
 
         //asignando valor a las instancias , manejando posibles errores en la creacion
@@ -244,17 +249,23 @@ public class MainActivity extends AppCompatActivity {
 
         }
         else{
-            //crearDialog("PRUEBA AVISO","a partir de esta ronda ya se puede declarar batalla");
-            if ((partida.getRonda()%2) !=0) {
-                if (partida.getRonda() ==3) {
-                    Utilitaria.crearToast(this,"Desde este turno ya se puede declarar batalla",true);
+            if(!j1.esDerrotado()&&!j2.esDerrotado()) {
+                if ((partida.getRonda() % 2) != 0) {
+                    if (partida.getRonda() == 3) {
+                        Utilitaria.crearToast(this, "Desde este turno ya se puede declarar batalla", true);
+                    }
+                    faseLLenarTableros();
+                } else {
+                    faseDeclararBatalla();
+                    partida.cambiarTurno();
+                    //partida.resetearEstadoCartasMonstruo(); //ya pueden jugar con todas sus monstruos
                 }
-                faseLLenarTableros();
             }
-            else {
-                faseDeclararBatalla();
-                partida.cambiarTurno();
-                //partida.resetearEstadoCartasMonstruo(); //ya pueden jugar con todas sus monstruos
+            else{
+                if (j1.esDerrotado())
+                    crearDialog("GAME OVER","Has perdido contra la máquina\nInténtalo de nuevo");
+                else
+                    crearDialog("GAME OVER",j1.getNombre()+" ha ganado contra la máquina.\nFelicidades");
             }
 
         }
@@ -315,6 +326,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+
 
 
 
@@ -494,8 +507,7 @@ public class MainActivity extends AppCompatActivity {
                             isInAtaque[0] = false;
                         }
                     });
-                    //CORREGIR
-                    j1.setNoAgregoMonstruo(true); //con esto se activa el dialog de que solo se puede agregar un monstruo por turno
+                    j1.setNoAgregoMonstruo(false); //con esto se activa el dialog de que solo se puede agregar un monstruo por turno
 
                 } else if ( c instanceof  CartaMagica) {
                     //mostramos en un dialog las cartas disponibles a enlazar
@@ -589,6 +601,29 @@ public class MainActivity extends AppCompatActivity {
         //tablero.aniadirCartaTablero(c,id_jugador); se la puso en el metodo buscaragregarimagen por problemas con la maquina
         //cambiamos el estado a casillero ocupado
         v.setContentDescription("Casillero ocupado");
+        aniadirDesc(c,id_view);
+    }
+    public void aniadirDesc(Carta carta,int id_view){
+        //esto se puede mejorar, solo es prueba
+        View v = findViewById(id_view);
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (carta instanceof CartaMonstruo){
+                    CartaMonstruo c = (CartaMonstruo)carta;
+                    crearDialog("Descripción Carta","ATK: "+c.getAtaque()+"\nDEF: "+c.getDefensa()+"Atributo: "+c.getTipoAtributo().toString());
+                }
+                else if (carta instanceof CartaMagica) {
+                    CartaMagica d = (CartaMagica) carta;
+                    crearDialog("Descripcion de magica","no le se y tengo sueño");}
+                else if(carta instanceof CartaTrampa)
+                {   crearDialog("TENGI SUEÑI","A¿voy a mimir");
+                }
+                }
+
+
+
+        });
     }
 
     private int dpToPx(int dp) {

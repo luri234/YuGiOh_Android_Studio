@@ -207,7 +207,6 @@ public class Jugador {
 
                 cartaAtacante.setPuedeAtacar(false);
                 Utilitaria.crearToast(context,this.getNombre() + " ha terminado su fase de batalla.",false);
-                //System.out.println(this.getNombre() + " ha terminado su fase de batalla.");
             } else {
                 //uso de for clasico para evitar errores.
                 for(int i = 0; i < monstruosOponente.size(); i++){
@@ -219,7 +218,6 @@ public class Jugador {
                     Integer incAtaqueCartaRival = (Integer)(cartaMonstruoRival.obtenerIncrementosATKyDEF().obj1);
                     if ((cartaMonstruoRival.getAtaque() + incAtaqueCartaRival) < (cartaAtacante.getAtaque() + incAtaqueCartaEleg)) {
                         Utilitaria.crearToast(context,cartaAtacante.getNombre() + " ataca a " + cartaMonstruoRival.getNombre() + "!",false);
-                        //System.out.println("---+ " + cartaAtacante.getNombre() + " ataca a " + cartaMonstruoRival.getNombre() + "!");
                         Tupla tupla = tablero.ataqueEntreCartas(cartaAtacante, cartaMonstruoRival, this, oponente);
                         Integer danioAEnemigo = (Integer)(tupla.obj1);
                         Integer danioAJugador = (Integer)(tupla.obj2);
@@ -238,7 +236,13 @@ public class Jugador {
         }
     }
 
+    public boolean esDerrotado() {
+        boolean sinCartasEnMano = getCartasEnMano().isEmpty();
+        boolean sinCartasEnDeck = getDeck().getBaraja().isEmpty();
+        boolean sinVida = getPuntosVida() <= 0;
 
+        return sinVida || (sinCartasEnMano && sinCartasEnDeck);
+    }
 
 
 

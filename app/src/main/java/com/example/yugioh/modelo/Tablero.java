@@ -207,6 +207,8 @@ public class Tablero {
                     System.out.println("\t " + cartaJugador.getAtaque() + " + " + incAtkJugador + "  -->  <--  " + cartaEnemigo.getAtaque() + " + " + incAtkEnemigo);
                     System.out.println("| " + cartaJugador.getNombre() + " destruyó a " + cartaEnemigo.getNombre() + " en batalla!");
                     quitarCartaTablero(cartaEnemigo, enemigoID);
+                    if ( enemigo.getId() ==1)
+                        MainActivity.quitarImagenTablero(cartaEnemigo,MainActivity.contenedorMonstruosUser);
 
                     eliminarCartaMagicaAsociada(enemigo, cartaEnemigo);
                     //tuve que tener una instancia de Main para poder llamar a los métodos acá
