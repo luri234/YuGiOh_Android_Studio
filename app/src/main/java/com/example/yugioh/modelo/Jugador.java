@@ -235,7 +235,7 @@ public class Jugador {
 
         // Actualizar vida de los jugadores
         this.setPuntosVida(this.getPuntosVida() - danioAJugador,vidaUser );
-        enemigo.setPuntosVida(this.getPuntosVida() - danioAEnemigo, vidaMaquina);
+        enemigo.setPuntosVida(enemigo.getPuntosVida() - danioAEnemigo, vidaMaquina);
         cartaMonstruoSelec.setPuedeAtacar(false);
 
         Log.w("declararBatalla()", "fin de la funcion");
