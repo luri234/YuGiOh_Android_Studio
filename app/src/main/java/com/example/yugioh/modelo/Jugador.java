@@ -46,7 +46,7 @@ public class Jugador {
             tomarCartaEnTurno(deck);
         }
     }
-    public void llenarTableroMaquina(Tablero tablero) {
+    public void llenarTableroMaquina(Tablero tablero,Context context) {
         // mano_maquina sería la lista de cartas en mano del jugador
         ArrayList<Carta> manoMaquina = new ArrayList<>(tablero.getJugador2().getCartasEnMano());//debe ser una copiar para que no se modifique
         // Colocar cartas de monstruo
@@ -70,6 +70,12 @@ public class Jugador {
                                     if ((c1.getCartaMagica()==null) && (c1.getTipoMonstruo() == carta1.getTipoMonstruo()) ){
                                         tablero.aniadirCartaTablero(carta1, 2);
                                         c1.setCartaMagica(carta1);
+                                        Utilitaria.crearToast(context,"La máquina ha enlazado '"+carta.getNombre()+"' al monstruo '"+c1.getNombre()+"'",false);
+                                        if(carta1.getIncrementoAtaque()>0)
+                                            Utilitaria.crearToast(context,c1.getNombre()+"recibe un aumento en ataque: "+c1.getAtaque()+"--->" +(c1.getAtaque()+carta1.getIncrementoAtaque()),false);
+                                        else
+                                            Utilitaria.crearToast(context,c1.getNombre()+"recibe un aumento en defensa: "+c1.getDefensa()+"--->" +(c1.getDefensa()+carta1.getIncrementoDefensa()),false);
+
                                         return;
                                     }}
                             }
@@ -118,102 +124,44 @@ public class Jugador {
     }
     public void declararBatallaComoMaquina(Tablero tablero, Jugador oponente, Context context, TextView vidauser,TextView vidamaq) {
         //se incluyo context para poder enviar mensajes directos cuando se llame a la funcion en el main
-        Utilitaria.crearToast(context,"La " + this.getNombre() + " te va a declarar batalla!! " + oponente.getNombre() + " más vale que estés preparadx ",true);
-        //Utilitaria.mensajeLargo(v,"La " + this.getNombre() + " te va a declarar batalla!! " + oponente.getNombre() + " más vale que estés preparadx ",false);
-        // Obtener monstruos en ataque que pueden atacar
+        ArrayList<Carta> MonstruosTablero = tablero.getTableroCompartido().get(this.id).get("CartasMonstruo");
         ArrayList<CartaMonstruo> monstruosAtacantes = new ArrayList<>();
-        ArrayList<CartaMagica> cartasMagicas = new ArrayList<>();
-        ArrayList<CartaTrampa> cartasTrampa = new ArrayList<>();
-
-        for (Carta carta : tablero.getTableroCompartido().get(this.getId()).get("CartasMonstruo")) {
-            CartaMonstruo carta_c = (CartaMonstruo)carta;
-            if (carta_c.getisInAtaque() && carta_c.getPuedeAtacar()) {
-                monstruosAtacantes.add(carta_c);
-
-            }
-        }
-
-        // Si no hay monstruos en ataque, cambiar a modo defensa
-        if (monstruosAtacantes.isEmpty()) {
-            Utilitaria.crearToast(context,"La " + this.getNombre() + " no tiene monstruos disponibles para atacar. Se coloca a la defensiva.",true);
-            //Utilitaria.mensajeLargo(v,"La " + this.getNombre() + " no tiene monstruos disponibles para atacar. Se coloca a la defensiva.",false);
-            for (Carta carta : tablero.getTableroCompartido().get(this.getId()).get("CartasMonstruo")) {
-                CartaMonstruo carta_c = (CartaMonstruo)carta;
-                if (carta_c.getisInAtaque()) {
-                    carta_c.setisInAtaque(noAgregoMonstruo);
-                    carta_c.setBocaArriba(false);
-                    Utilitaria.crearToast(context,this.getNombre() + " pone al monstruo " + carta.getNombre() + " en defensa.",false);
-                    //Utilitaria.mensajeLargo(v,this.getNombre() + " pone al monstruo " + carta.getNombre() + " en defensa.",false);
-                }
-            }
+        //valida si hay algún monstruo en el tablero(sin importar si está en defensa o ataque)
+        if (MonstruosTablero.isEmpty()){
+            Utilitaria.crearToast(context,"La Máquina no tiene monstruos en el tablero para atacar",false);
             return;
         }
-
+        Utilitaria.crearToast(context,"La " + this.getNombre() + " podría declararte batalla!! " + oponente.getNombre() + " más vale que estés preparadx ",true);
+        for (Carta c:MonstruosTablero) {
+            CartaMonstruo mons = (CartaMonstruo)c;
+            if (mons.getisInAtaque() && mons.getPuedeAtacar())
+                monstruosAtacantes.add(mons);
+        }
         // Obtener monstruos del oponente
         ArrayList<Carta> monstruosOponente = tablero.getTableroCompartido().get(oponente.getId()).get("CartasMonstruo");
-
-        // Obtener cartas mágicas y trampa
-        for (Carta carta : tablero.getTableroCompartido().get(this.getId()).get("CartasEspeciales")) {
-            if (carta instanceof CartaTrampa) {
-                cartasTrampa.add((CartaTrampa) carta);
-            } else if (carta instanceof CartaMagica) {
-                cartasMagicas.add((CartaMagica) carta);
-            }
-        }
-
-        // Función de carta mágica
-        for (CartaMagica cartaMagica : cartasMagicas) {
-            //if (tablero.validarAgregacionCartaMagica(cartaMagica, this)) {//esto ya ha sido validado en llenartableromaquina
-                for (Carta monstruo : tablero.getTableroCompartido().get(this.getId()).get("CartasMonstruo")) {
-                    CartaMonstruo monstruo_c = (CartaMonstruo)monstruo; //casting
-                    if (monstruo_c.getTipoMonstruo() == cartaMagica.getTipoMonstruo()) {
-                        if (cartaMagica.getIncrementoAtaque() > 0) {
-                            //no se debe alterar el ataque de la carta base
-                            //monstruo_c.setAtaque(monstruo_c.getAtaque() + cartaMagica.getIncrementoAtaque());
-                            //en que momento se hace el incremento de ataque entonces?
-                            Utilitaria.crearToast(context,this.getNombre() + " equipa '" + cartaMagica.getNombre() + "' a '" + monstruo_c.getNombre() + "', aumentando su ataque en " + cartaMagica.getIncrementoAtaque() + ".",false);
-                            //Utilitaria.mensajeLargo(v,this.getNombre() + " equipa '" + cartaMagica.getNombre() + "' a '" + monstruo_c.getNombre() + "', aumentando su ataque en " + cartaMagica.getIncrementoAtaque() + ".",false);
-                            //monstruo_c.setCartaMagica(cartaMagica); en la lógica de llenar tablero ya se ha enlazado
-                        } else if (cartaMagica.getIncrementoDefensa() > 0) {
-                            //monstruo_c.setDefensa(monstruo_c.getDefensa() + cartaMagica.getIncrementoDefensa());
-                            Utilitaria.crearToast(context,this.getNombre() + " equipa '" + cartaMagica.getNombre() + "' a '" + monstruo_c.getNombre() + "', aumentando su defensa en " + cartaMagica.getIncrementoDefensa() + ".",true);
-                            //Utilitaria.mensajeLargo(v,this.getNombre() + " equipa '" + cartaMagica.getNombre() + "' a '" + monstruo_c.getNombre() + "', aumentando su defensa en " + cartaMagica.getIncrementoDefensa() + ".",false);
-                            //monstruo_c.setCartaMagica(cartaMagica);
-
-                        }
-                        //si se equipa no se elimina del tablero, solo se elimina si el monstruo q la equipo es eliminado
-                        //tablero.quitarCartaTablero(cartaMagica, this.getId());
-                        break;
-                    }
-                }
-
-        }
-
+        int contador=0;//modo defensa
         // Función de carta monstruo y carta trampa
         for (CartaMonstruo cartaAtacante : monstruosAtacantes) {
             CartaTrampa cartaTrampa = tablero.verificarCartaTrampa(oponente, cartaAtacante);
+            Integer incAtk;
+            Tupla incrementos = cartaAtacante.obtenerIncrementosATKyDEF();
+            incAtk = (Integer)incrementos.obj1;
+
             if (cartaTrampa != null) {
                 Utilitaria.crearToast(context,oponente.getNombre() + " activa la carta trampa '" + cartaTrampa.getNombre() + "' y detiene el ataque de '" + cartaAtacante.getNombre() + "'.",false);
-                //Utilitaria.mensajeLargo(v,oponente.getNombre() + " activa la carta trampa '" + cartaTrampa.getNombre() + "' y detiene el ataque de '" + cartaAtacante.getNombre() + "'.",false);
                 tablero.quitarCartaTablero(cartaTrampa, oponente.getId());
-                MainActivity.quitarImagenTablero(cartaTrampa,MainActivity.contenedorEspecialesUser);
-
-                continue;
+                cartaAtacante.setPuedeAtacar(false);//ejecutó un ataque directo, entonces ya no puede atacar
+                continue; //pasa a la siguiente iteracion
             }
-
+            assert monstruosOponente != null;
             if (monstruosOponente.isEmpty()) {
                 Utilitaria.crearToast(context,cartaAtacante.getNombre() + " realiza un ataque directo",false);
-                oponente.setPuntosVida(oponente.getPuntosVida() - cartaAtacante.getAtaque(),vidauser);
-
+                oponente.setPuntosVida(oponente.getPuntosVida() - cartaAtacante.getAtaque()-incAtk,vidauser);
                 cartaAtacante.setPuedeAtacar(false);
-                Utilitaria.crearToast(context,this.getNombre() + " ha terminado su fase de batalla.",false);
             } else {
                 //uso de for clasico para evitar errores.
                 for(int i = 0; i < monstruosOponente.size(); i++){
                     CartaMonstruo cartaMonstruoRival = (CartaMonstruo)monstruosOponente.get(i);
-                    //if
-                    //obtenemos el incremento de ataque de la carta rival y de la propia
-
                     Integer incAtaqueCartaEleg =  (Integer)(cartaAtacante.obtenerIncrementosATKyDEF().obj1);
                     Integer incAtaqueCartaRival = (Integer)(cartaMonstruoRival.obtenerIncrementosATKyDEF().obj1);
                     if ((cartaMonstruoRival.getAtaque() + incAtaqueCartaRival) < (cartaAtacante.getAtaque() + incAtaqueCartaEleg)) {
@@ -229,8 +177,20 @@ public class Jugador {
 
                     } else {
                         Utilitaria.crearToast(context,"La Maquina ha decidido no usar a " + cartaAtacante.getNombre() + " para atacar a tu carta " + cartaMonstruoRival.getNombre() + " porque no le conviene.",true);
-                        //Utilitaria.mensajeLargo(v,"La Maquina ha decidido no usar a " + cartaAtacante.getNombre() + " para atacar a tu carta " + cartaMonstruoRival.getNombre() + " porque no le conviene.",false);
+                        contador++;
                     }
+                }
+                if(contador==monstruosAtacantes.size()){
+                    Utilitaria.crearToast(context,"La máquina no ha podido declararte batalla y se pone en modo defensa",false);
+                    for (Carta cartita:MonstruosTablero){
+                        CartaMonstruo monstruo = (CartaMonstruo) cartita;
+                        monstruo.setisInAtaque(false);
+                        monstruo.setBocaArriba(false);
+
+
+                    }
+
+
                 }
             }
         }
