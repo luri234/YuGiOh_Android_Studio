@@ -3,6 +3,7 @@ package com.example.yugioh.modelo;
 import android.content.res.AssetManager;
 
 import com.example.yugioh.MainActivity;
+import com.example.yugioh.Utilitaria;
 import com.example.yugioh.modelo.exceptions.AgregacionCartaMonstruoException;
 import com.example.yugioh.modelo.exceptions.CartaMagicaAsociacionException;
 import com.example.yugioh.modelo.exceptions.SinEspacioTableroException;
@@ -79,6 +80,7 @@ public class Tablero {
             else
                 MainActivity.quitarImagenTablero(carta,MainActivity.contenedorEspecialesMaquina);
         }
+
     }
 
     public void quitarCartaMano(int idJugador, Carta carta) {
@@ -211,7 +213,7 @@ public class Tablero {
                         MainActivity.quitarImagenTablero(cartaEnemigo,MainActivity.contenedorMonstruosUser);
 
                     eliminarCartaMagicaAsociada(enemigo, cartaEnemigo);
-                    //tuve que tener una instancia de Main para poder llamar a los métodos acá
+
 
                     return new Tupla(danioRealAEnemigo, danioRealAJugador);
                 }

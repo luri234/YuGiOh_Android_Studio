@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void llenartableromaquina(Tablero tablero, Jugador j2) {
-        j2.llenarTableroMaquina(tablero);
+        j2.llenarTableroMaquina(tablero,this);
         ArrayList<Carta> esp_mons = tablero.getTableroCompartido().get(2).get("CartasMonstruo");
         ArrayList<Carta> esp_esp = tablero.getTableroCompartido().get(2).get("CartasEspeciales");
         int indice = 1;
@@ -108,11 +108,11 @@ public class MainActivity extends AppCompatActivity {
         for (Carta carta : esp_mons) {
             CartaMonstruo c = (CartaMonstruo) carta;
             if (cont == 1)
-                agregarImagenTablero(c, R.id.mons_1_maq_carta, 2, false, true);
+                agregarImagenTablero(c, R.id.mons_1_maq_carta, 2, !c.getisInAtaque(), c.getIsBocaArriba());
             else if (cont == 2)
-                agregarImagenTablero(c, R.id.mons_2_maq_carta, 2, false, true);
+                agregarImagenTablero(c, R.id.mons_2_maq_carta, 2, !c.getisInAtaque(), c.getIsBocaArriba());
             else if (cont == 3)
-                agregarImagenTablero(c, R.id.mons_3_maq_carta, 2, false, true);
+                agregarImagenTablero(c, R.id.mons_3_maq_carta, 2, !c.getisInAtaque(), c.getIsBocaArriba());
 
             cont++;
         }
@@ -142,11 +142,16 @@ public class MainActivity extends AppCompatActivity {
         abd.setMessage(mensaje);
         abd.setPositiveButton("OK", (dialog, b) -> {
                     Jugador jinicial = partida.sorteoInicios(j1, j2);
+                    String n = ""+j1.getDeck().getBaraja().size();
+                    String m = ""+j2.getDeck().getBaraja().size();
+                    deckuser.setText(n); //aparecen las cartas que tiene el dec "20"
+                    deckmaq.setText(m);
                     dialog.dismiss();
                     crearDialog("Sorteo inicial", "El jugador que comienza es: " + jinicial.getNombre() + "\nPara continuar da clic en 'Siguiente fase'");
                     repartirCartasIniciales();
                     restringir_movimientos(true, 1);
                     restringir_movimientos(true, 2);
+
 
                 }
         );
@@ -191,6 +196,7 @@ public class MainActivity extends AppCompatActivity {
     public void quitarImagenMano(Carta c, int id_jugador) {
         // dependiendo del jugador y carta recibida, quita la carta visual de la mano del jugador
         // y llama al modelo para quitar la carta de la mano logica.
+        tablero.quitarCartaMano(id_jugador, c);
         if (id_jugador == 2) {
             LinearLayout azul = findViewById(R.id.contenedorScrollAzul);
             for (int i = 0; i < azul.getChildCount(); i++) {
@@ -208,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-        tablero.quitarCartaMano(id_jugador, c);
+
     }
 
     public static void quitarImagenTablero(Carta carta, ConstraintLayout contenedor) {
@@ -255,7 +261,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     faseDeclararBatalla();
                     partida.cambiarTurno();
-                    //partida.resetearEstadoCartasMonstruo(); //ya pueden jugar con todas sus monstruos
+                    partida.resetearEstadoCartasMonstruo(); //ya pueden jugar con todas sus monstruos
                 }
             }
             else{
@@ -266,7 +272,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
-        //partida.cambiarTurno();
         partida.setRonda(partida.getRonda()+1);
 
         //para probar el metodo
@@ -300,8 +305,10 @@ public class MainActivity extends AppCompatActivity {
         if (partida.getJugadorActual() ==1){
             crearDialog("DECLARAR BATALLA","Es tu turno de declarar batalla");
         }
-        else
+        else{
             j2.declararBatallaComoMaquina(tablero,j1,this,vidaUser,vidaMaq);
+            llenartableromaquina(tablero,j2); //para que las cartas se pongan en modo defensa (cuando sea necesario)
+            }
     }
 
     public void restringir_movimientos(boolean val,int id_jugador){
@@ -555,7 +562,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void agregarImagenTablero(Carta c, int id_view,int id_jugador , boolean vaGirada, boolean mostrar){
         // agrega la imagen de la carta recibida al View con el id recibido y define su posicion, quita la carta  de la mano visual del jugador.
-
+        quitarImagenMano(c,id_jugador);
         ImageView v = findViewById(id_view); //
         Resources res = getResources(); //
         int rId = R.drawable.carta_bocaabajo;
@@ -563,7 +570,7 @@ public class MainActivity extends AppCompatActivity {
         if(mostrar){
             rId = res.getIdentifier(c.getRutaImagen(), "drawable", getPackageName()); //
         }
-        quitarImagenMano(c,id_jugador); //
+        //
         v.setImageResource(rId); //
         v.setTag(c.getRutaImagen());//necesito identificarla para borrarla luego
 

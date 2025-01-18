@@ -50,7 +50,7 @@ public class Deck {
             }
         }
         barajear(cartasMonstruo);
-        for (int i = 0; i < 16; i++) {
+        for (int i = 0; i < 10; i++) {
             baraja.add(cartasMonstruo.get(i));
         }
 
@@ -72,7 +72,7 @@ public class Deck {
             }
         }
         barajear(cartasMagicas);
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 5; i++) {
             baraja.add(cartasMagicas.get(i));
         }
 
@@ -90,7 +90,7 @@ public class Deck {
             }
         }
         barajear(cartasTrampa);
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 5; i++) {
             baraja.add(cartasTrampa.get(i));
         }
         barajear(baraja);

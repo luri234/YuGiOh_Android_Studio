@@ -265,16 +265,6 @@
             app:layout_constraintTop_toTopOf="@+id/c_guidelineTop_EspecialesJugador"
             app:srcCompat="@drawable/imagen_base" />
 
-        <TextView
-            android:id="@+id/puntos_maquina"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:fontFamily="sans-serif-smallcaps"
-            android:text="Puntos de vida: 4000"
-            android:textColor="#DEFFFCFC"
-            tools:layout_editor_absoluteX="11dp"
-            tools:layout_editor_absoluteY="124dp" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -632,7 +622,10 @@
             android:id="@+id/mons_2_user_carta"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="2dp"
             android:layout_marginEnd="2dp"
+            android:layout_marginBottom="2dp"
             android:contentDescription="Casillero Disponible"
             app:layout_constraintBottom_toTopOf="@+id/c_guidelineFinal_MonstruosJugador"
             app:layout_constraintEnd_toStartOf="@+id/c_guide_der2_mons_user_andpvuser"
@@ -975,7 +968,7 @@
         android:layout_height="0dp"
         android:fontFamily="sans-serif-smallcaps"
         android:gravity="center"
-        android:text="Puntos de vida: 4000"
+        android:text="PUNTOS DE VIDA: 4000"
         android:textColor="#DEFFFCFC"
         app:layout_constraintBottom_toTopOf="@+id/guideline_seccionRoja"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
@@ -1059,7 +1052,7 @@
         android:layout_height="0dp"
         android:fontFamily="sans-serif-smallcaps"
         android:gravity="center"
-        android:text="Puntos de vida: 4000"
+        android:text="PUNTOS DE VIDA: 4000"
         android:textColor="#FCDEFFFC"
         app:layout_constraintBottom_toTopOf="@+id/guideline_cuadroVidaMaquina"
         app:layout_constraintEnd_toStartOf="@+id/der2_esp_user"
@@ -1071,10 +1064,10 @@
     <TextView
         android:id="@+id/num_deck_user"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:fontFamily="sans-serif-condensed-medium"
         android:gravity="center"
-        android:text="30"
+        android:text="Yu-Gi-Oh!"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/guidelineFinal_EspecialesJugador"
         app:layout_constraintEnd_toEndOf="@+id/deck_user"
@@ -1084,10 +1077,10 @@
     <TextView
         android:id="@+id/num_deck_maq"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:fontFamily="sans-serif-condensed-medium"
         android:gravity="center"
-        android:text="30"
+        android:text="Yu-Gi-Oh!"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/GuidelineFinal_EspecialesMaquina"
         app:layout_constraintEnd_toStartOf="@+id/der_deck_maq"
