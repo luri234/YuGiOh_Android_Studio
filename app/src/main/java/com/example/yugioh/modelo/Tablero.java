@@ -176,7 +176,7 @@ public class Tablero {
         if (verificarCartaTrampa(enemigo, cartaJugador) == null) {
             //1 Calculamos incrementos de ataque y defensa asociados
             int incAtkJugador = 0;
-            //int incDefJugador = 0; //no se está utilizando
+            int incDefJugador = 0; //no se está utilizando
             int incAtkEnemigo = 0;
             int incDefEnemigo = 0;
 
@@ -192,7 +192,7 @@ public class Tablero {
             //La carta del jugador tiene una carta magica asociada?
             if(cartaJugador.getCartaMagica() != null){
                 incAtkJugador = cartaJugador.getCartaMagica().getIncrementoAtaque();
-                //incDefJugador = cartaJugador.getCartaMagica().getIncrementoDefensa();
+                incDefJugador = cartaJugador.getCartaMagica().getIncrementoDefensa();
             }
 
 
@@ -209,20 +209,7 @@ public class Tablero {
                     Utilitaria.crearToast(context, cartaJugador.getAtaque() + "+" + incAtkJugador +" -><- "+ cartaEnemigo.getAtaque() + "+" + incAtkEnemigo, false );
                     Utilitaria.crearToast(context, "se destruyo la carta enemiga", false);
 
-                    //actualiza los views de las cartas en el tablero de las que se eliminaron
-                    if ( enemigo.getId() ==1) {
-                        MainActivity.quitarImagenTablero(cartaEnemigo, MainActivity.contenedorMonstruosUser);
-                        if(cartaEnemigo.getCartaMagica() != null){
-                            MainActivity.quitarImagenTablero(cartaEnemigo.getCartaMagica(), MainActivity.contenedorEspecialesUser);
-                        }
-                    }else{
-                        MainActivity.quitarImagenTablero(cartaEnemigo, MainActivity.contenedorMontruosMaquina);
-                        if(cartaEnemigo.getCartaMagica() != null){
-                            MainActivity.quitarImagenTablero(cartaEnemigo.getCartaMagica(), MainActivity.contenedorEspecialesMaquina);
-                        }
-                    }
-
-                    quitarCartaTablero(cartaEnemigo, enemigoID);
+                    quitarCartaTablero(cartaEnemigo, enemigoID);//ya elimina la carta del view
                     eliminarCartaMagicaAsociada(enemigo, cartaEnemigo);
 
                     Log.w("* ataqueEntreCartas()", "Fin de la funcion");
@@ -234,15 +221,6 @@ public class Tablero {
                     danioRealAJugador = 0;
                     Utilitaria.crearToast(context, cartaJugador.getAtaque() + "+" + incAtkJugador +" -><- "+ cartaEnemigo.getAtaque() + "+" + incAtkEnemigo, false );
                     Utilitaria.crearToast(context, "se destruyeron ambas cartas", false);
-
-                    MainActivity.quitarImagenTablero(cartaEnemigo, MainActivity.contenedorMonstruosUser);
-                    MainActivity.quitarImagenTablero(cartaEnemigo, MainActivity.contenedorMontruosMaquina);
-                    if(cartaEnemigo.getCartaMagica() != null){
-                        MainActivity.quitarImagenTablero(cartaEnemigo.getCartaMagica(), MainActivity.contenedorEspecialesUser);
-                    }
-                    if(cartaEnemigo.getCartaMagica() != null){
-                        MainActivity.quitarImagenTablero(cartaEnemigo.getCartaMagica(), MainActivity.contenedorEspecialesMaquina);
-                    }
 
                     quitarCartaTablero(cartaEnemigo, enemigoID);
                     eliminarCartaMagicaAsociada(enemigo, cartaEnemigo);
@@ -260,18 +238,6 @@ public class Tablero {
                     Utilitaria.crearToast(context, cartaJugador.getAtaque() + "+" + incAtkJugador +" -><- "+ cartaEnemigo.getAtaque() + "+" + incAtkEnemigo, false );
                     Utilitaria.crearToast(context, "se destruyo la carta atacante xD", false);
 
-                    //actualiza los views de las cartas en el tablero de las que se eliminaron
-                    if ( enemigo.getId() ==1) {
-                        MainActivity.quitarImagenTablero(cartaJugador, MainActivity.contenedorMontruosMaquina);
-                        if(cartaEnemigo.getCartaMagica() != null){
-                            MainActivity.quitarImagenTablero(cartaJugador.getCartaMagica(), MainActivity.contenedorEspecialesMaquina);
-                        }
-                    }else{
-                        MainActivity.quitarImagenTablero(cartaJugador, MainActivity.contenedorMonstruosUser);
-                        if(cartaEnemigo.getCartaMagica() != null){
-                            MainActivity.quitarImagenTablero(cartaJugador.getCartaMagica(), MainActivity.contenedorEspecialesUser);
-                        }
-                    }
                     quitarCartaTablero(cartaJugador, jugadorID);
                     eliminarCartaMagicaAsociada(jugador, cartaJugador);
 
@@ -285,18 +251,6 @@ public class Tablero {
                     Utilitaria.crearToast(context, "(defensa)"+cartaJugador.getAtaque() + "+" + incAtkJugador +" -><- "+ cartaEnemigo.getDefensa() + "+" + incDefEnemigo, false );
                     Utilitaria.crearToast(context, "se destruyo la defensa del enemigo", false);
 
-                    if(jugadorID == 1){
-                        MainActivity.quitarImagenTablero(cartaEnemigo, MainActivity.contenedorMontruosMaquina);
-                        if(cartaEnemigo.getCartaMagica() != null){
-                            MainActivity.quitarImagenTablero(cartaEnemigo.getCartaMagica(), MainActivity.contenedorEspecialesMaquina);
-                        }
-                    }
-                    else{
-                        MainActivity.quitarImagenTablero(cartaEnemigo, MainActivity.contenedorMonstruosUser);
-                        if(cartaEnemigo.getCartaMagica() != null){
-                            MainActivity.quitarImagenTablero(cartaEnemigo.getCartaMagica(), MainActivity.contenedorEspecialesUser);
-                        }
-                    }
                     quitarCartaTablero(cartaEnemigo, enemigoID);
                     eliminarCartaMagicaAsociada(enemigo, cartaEnemigo);
                     Log.w("* ataqueEntreCartas()", "Fin de la funcion");
@@ -310,7 +264,13 @@ public class Tablero {
                     Utilitaria.crearToast(context, "Empate de ataque y defensa", false);
 
                     //si la carta en defensa estaba boca abajo se cambia
-                    if(!cartaEnemigo.getIsBocaArriba()) cartaEnemigo.setBocaArriba(false);
+                    if(!cartaEnemigo.getIsBocaArriba())
+                    {
+                        cartaEnemigo.setBocaArriba(false);
+                        if (enemigo.getId()==2)
+                            this.jugador2.setMaquinaCambiarViewUnico(true);
+                    }
+
                     //todo cambiar en la vista la carta a boca arriba con un metodo statico.
                     //no se destruye ningun monstruo
                     Log.w("* ataqueEntreCartas()", "Fin de la funcion");
@@ -322,9 +282,6 @@ public class Tablero {
             CartaTrampa cartaTrampa = verificarCartaTrampa(enemigo, cartaJugador);
             Utilitaria.crearToast(context, "La carta trampa "+ cartaTrampa.getNombre()+" detuvo el ataque", false);System.out.println("|   Se detuvo el ataque! la carta Trampa " + "'"+cartaTrampa.getNombre()+"'"+ "se interpuso");
             quitarCartaTablero(cartaTrampa, enemigoID);
-            if (enemigoID==1){MainActivity.quitarImagenTablero(cartaTrampa,MainActivity.contenedorEspecialesUser);}
-            else
-                MainActivity.quitarImagenTablero(cartaTrampa,MainActivity.contenedorEspecialesMaquina);
             Log.w("* ataqueEntreCartas()", "Fin de la funcion");
             return new Tupla(0, 0);
 

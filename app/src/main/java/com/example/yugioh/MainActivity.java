@@ -350,6 +350,7 @@ public class MainActivity extends AppCompatActivity {
     public void faseDeclararBatalla(){
         //solo de prueba
         //Utilitaria.mensajeLargo(mensajes,"Testeto de los mensajes largos acá (interaccion con usuario), se puede utilizar esto o el toast",true);
+        j2.setMaquinaCambiarViewUnico(false);//se modifica en declarabatallacomomaquina y en ataque entre cartas
         restringir_movimientos(true,1);//así no se puede añadir cartas en el tablero durante la base batalla
         if (partida.getJugadorActual() ==1){
             crearDialog("DECLARAR BATALLA","Es tu turno de declarar batalla");
@@ -357,8 +358,10 @@ public class MainActivity extends AppCompatActivity {
         }
         else{
             j2.declararBatallaComoMaquina(tablero,j1,this,vidaUser,vidaMaq);
-            llenartableromaquina(tablero,j2); //para que las cartas se pongan en modo defensa (cuando sea necesario)
+            if (j2.getMaquinaCambiarViewUnico()) //me indica si hay alguna carta volteada
+                llenartableromaquina(tablero,j2); //para que las cartas se pongan en modo defensa (cuando sea necesario)
             setearMonstruosParaAtacar(j1, false); //agregado Alan
+            j2.setMaquinaCambiarViewUnico(false);
         }
     }
 
@@ -969,6 +972,8 @@ public class MainActivity extends AppCompatActivity {
                             Log.w("* mostrarListaParaAtacar()","llamando a la funcion declararbatalla()");
                             //actualizamos el tablero logico y por dentro eliminamos las vistas correpondientes
                             j1.declararBatalla(j2, partida, monstruoAtacante, cartaQSeAtaca, context, vidaMaq, vidaUser);
+                            if (j2.getMaquinaCambiarViewUnico()) //si hay que voltear alguna carta en defensa
+                                llenartableromaquina(tablero,j2);
 
                         } else {
                             Utilitaria.crearToast(MainActivity.this,"No se seleccionó ninguna carta",false);

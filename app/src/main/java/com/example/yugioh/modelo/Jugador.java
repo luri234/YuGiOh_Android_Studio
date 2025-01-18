@@ -21,6 +21,7 @@ public class Jugador {
     private Deck deck;
     private ArrayList<Carta> cartasEnMano;
     private boolean noAgregoMonstruo;  //indicador si en el turno agrego monstruo
+    public boolean MaquinaCambiarViewUnico; //indica que la maquina debe cambiar de posicion su view(ya sea de vertical a horizontal,etc)
 
     public Jugador(String nombre, Deck deck){
         jugadores += 1;
@@ -181,8 +182,10 @@ public class Jugador {
                         contador++;
                     }
                 }
+                //hay que revisar esta función //la dejamos aquí para probar
                 if(contador==monstruosAtacantes.size()){
                     Utilitaria.crearToast(context,"La máquina no ha podido declararte batalla y se pone en modo defensa",false);
+                    this.setMaquinaCambiarViewUnico(true);
                     for (Carta cartita:MonstruosTablero){
                         CartaMonstruo monstruo = (CartaMonstruo) cartita;
                         monstruo.setisInAtaque(false);
@@ -196,6 +199,7 @@ public class Jugador {
             }
         }
     }
+    //
 
     //todo una funcion para ataque directos
     public void ataqueDirecto(Jugador enemigo, Partida partida, CartaMonstruo cartaMonstruoSelec, Context context, TextView vidaMaquina) {
@@ -227,7 +231,7 @@ public class Jugador {
         Tupla tupla = tablero.ataqueEntreCartas(cartaMonstruoSelec, cartaASerAtacada, this, enemigo, context);
         //descomprimimos la tupla
         danioAEnemigo =(Integer)tupla.getObj1();
-        danioAJugador = (Integer)tupla.getObj1();
+        danioAJugador = (Integer)tupla.getObj2();
 
         // Actualizar vida de los jugadores
         this.setPuntosVida(this.getPuntosVida() - danioAJugador,vidaUser );
@@ -314,5 +318,11 @@ public class Jugador {
 
     public void setNoAgregoMonstruo(boolean noAgregoMonstruo) {
         this.noAgregoMonstruo = noAgregoMonstruo;
+    }
+    public void setMaquinaCambiarViewUnico(boolean HayQueCambiarPosicion){
+        this.MaquinaCambiarViewUnico = HayQueCambiarPosicion;
+    }
+    public boolean getMaquinaCambiarViewUnico(){
+        return this.MaquinaCambiarViewUnico;
     }
 }
