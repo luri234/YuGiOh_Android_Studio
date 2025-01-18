@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     public static ConstraintLayout contenedorMontruosMaquina;
     public static ConstraintLayout contenedorEspecialesMaquina;
     View mensajes;
+    String nombreUsuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,7 +131,8 @@ public class MainActivity extends AppCompatActivity {
             }
             indice++;
         }
-        Utilitaria.crearToast(this, "La máquina ya ha llenado su tablero", false);
+        if(partida.getRonda()%2 !=0) //para evitar hacer otra funcion, preguntar de ser necesario
+            Utilitaria.crearToast(this, "La máquina ya ha llenado su tablero", false);
 
     }
 
@@ -144,19 +147,8 @@ public class MainActivity extends AppCompatActivity {
         abd.setTitle(title);
         abd.setMessage(mensaje);
         abd.setPositiveButton("OK", (dialog, b) -> {
-                    Jugador jinicial = partida.sorteoInicios(j1, j2);
-                    String n = ""+j1.getDeck().getBaraja().size();
-                    String m = ""+j2.getDeck().getBaraja().size();
-                    deckuser.setText(n); //aparecen las cartas que tiene el dec "20"
-                    deckmaq.setText(m);
-                    dialog.dismiss();
-                    crearDialog("Sorteo inicial", "El jugador que comienza es: " + jinicial.getNombre() + "\nPara continuar da clic en 'Siguiente fase'");
-                    repartirCartasIniciales();
-                    restringir_movimientos(true, 1);
-                    restringir_movimientos(true, 2);
-
-
-                }
+            DialogoNombre();
+        }
         );
         AlertDialog dialog = abd.create();
         dialog.show();
@@ -174,6 +166,49 @@ public class MainActivity extends AppCompatActivity {
         );
         AlertDialog dialog = abd.create();
         dialog.show();
+
+    }
+    public void DialogoNombre(){
+            // Crear un EditText para la entrada del nombre
+            EditText input = new EditText(this);
+            input.setHint("Escribe tu nombre aquí");
+
+            // Crear el cuadro de diálogo
+            AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
+            dialogo.setTitle("Añadiendo Jugador");
+            dialogo.setMessage("Por favor, ingresa tu nombre:");
+            dialogo.setView(input);
+
+            // Botón "Aceptar"
+            dialogo.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    nombreUsuario = input.getText().toString().trim(); // Guarda el nombre
+                    if (!nombreUsuario.isEmpty()) {
+                        Utilitaria.crearToast(MainActivity.this, "¡Hola, " + nombreUsuario + "!",false);
+                    } else {
+                        Utilitaria.crearToast(MainActivity.this,"No ingresaste ningún nombre.",false);
+                        nombreUsuario = "User_001";
+
+                    }
+
+                    j1.setNombre(nombreUsuario);
+                    Jugador jinicial = partida.sorteoInicios(j1, j2);
+                    String n = "" + j1.getDeck().getBaraja().size();
+                    String m = "" + j2.getDeck().getBaraja().size();
+                    deckuser.setText(n); //aparecen las cartas que tiene el dec "20"
+                    deckmaq.setText(m);
+                    dialog.dismiss();
+                    crearDialog("Sorteo inicial", "El jugador que comienza es:\n-->" + jinicial.getNombre() + "\nPara continuar da clic en 'Iniciar Juego'");
+                    repartirCartasIniciales();
+                    restringir_movimientos(true, 1);
+                    restringir_movimientos(true, 2);
+                    dialog.dismiss();
+
+                }
+            });//no hay botón cancelar >:< lo obligamos a ponerse un nombre
+            // Mostrar el diálogo
+            dialogo.show();
 
     }
 
@@ -244,10 +279,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void pasarFase(View v){
         //puede representar al metodo ronda de java
-        //codigo que queremos que haga //v representa al boton
-        //este es solo un ejemplo porque se necesita el cod de java
-
-        //
 
         if (partida.getRonda()==1 || partida.getRonda()==2) {
             faseLLenarTableros();
@@ -262,23 +293,31 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                     faseLLenarTableros();
+                    cambiarBotonFases("Fase Batalla","#FFCCCC",true);
                 } else {
                     faseDeclararBatalla();
                     partida.cambiarTurno();
-                    partida.resetearEstadoCartasMonstruo(); //ya pueden jugar con todas sus monstruos
+                    partida.resetearEstadoCartasMonstruo();
+                    //ya pueden jugar con todas sus monstruos
+                    if(!j1.esDerrotado()&&!j2.esDerrotado()) //valida el cambio de boton a 'Game Over'
+                        cambiarBotonFases("Fase Principal","#CCCCFF",true);
+                    else
+                        cambiarBotonFases("Game Over","#FFCC99",true);
+
                 }
             }
             else{
                 if (j1.esDerrotado())
-                    crearDialog("GAME OVER","Has perdido contra la máquina\nInténtalo de nuevo");
+
+                    crearDialog("Game Over","Has perdido contra la máquina\nInténtalo de nuevo");
                 else
+                    //crearDialog("GAME OVER",j1.getNombre()+" ha ganado contra la máquina.\nFelicidades");
                     crearDialog("GAME OVER",j1.getNombre()+" ha ganado contra la máquina.\nFelicidades");
             }
 
         }
         partida.setRonda(partida.getRonda()+1);
 
-        //para probar el metodo
 
 
     }
@@ -286,6 +325,8 @@ public class MainActivity extends AppCompatActivity {
     public void faseLLenarTableros(){
 
         if (partida.getJugadorActual() == 2){
+            if (partida.getRonda() <=2)
+                cambiarBotonFases("Robar carta","#CCCCFF",true);
             j2.setNoAgregoMonstruo(true);
             restringir_movimientos(true,1);
             restringir_movimientos(false,2);
@@ -293,16 +334,22 @@ public class MainActivity extends AppCompatActivity {
             Carta c = j2.tomarCartaEnTurno(deckmaq); //actualiza por detras al numero(view) de cartas del jugador, retorna y agrega la carta tomada a la mano logica
             llenartableromaquina(tablero,j2);
             mostrarImagenScroll(c,R.id.contenedorScrollAzul);
+
         }
         else{
+            if (partida.getRonda() <=2 )
+                cambiarBotonFases("Cambiar Turno","#CCCCFF",true);
             j1.setNoAgregoMonstruo(true);
             restringir_movimientos(false,1);
             restringir_movimientos(true,2);
             Carta c1 = j1.tomarCartaEnTurno(deckuser);
-            crearDialog("Llenar Tablero","Has robado una carta del deck y es tu turno de llenar tu tablero");
+            crearDialog("Llenar Tablero",j1.getNombre()+" ha tomado una carta del deck y es su turno de llenar el tablero");
             mostrarImagenScroll(c1,R.id.contenedorScrollRojo);
         }
+
+
     }
+
     public void faseDeclararBatalla(){
         //solo de prueba
         Utilitaria.mensajeLargo(mensajes,"Testeto de los mensajes largos acá (interaccion con usuario), se puede utilizar esto o el toast",true);
@@ -761,7 +808,7 @@ public class MainActivity extends AppCompatActivity {
         btnFases.setBackgroundColor(Color.parseColor(colorEnHexa));
         btnFases.setText(texto);
 
-        if(!visible) btnFases.setVisibility(View.GONE);
+        if(!visible) btnFases.setVisibility(View.INVISIBLE);
 
     }
 
