@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -41,8 +40,6 @@ import com.example.yugioh.modelo.exceptions.SinEspacioTableroException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.function.Consumer;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -99,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
             crearDialog("ERROR", "Ha surgido un error desconocido");
         }
         //se da la bienvenida, sorteo inicio y se reparten las 5 cartas iniciales.
-        inicioJuego("Bienvenido al juego de Yu-Gi-Oh!", "Presione Ok para empezar a jugar!", partida, j1, j2);
+        inicioJuego("Bienvenido al juego de Yu-Gi-Oh!", "Presione Ok para empezar a jugar!");
 
 
     }
@@ -141,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     //METODOS
-    public void inicioJuego(String title, String mensaje, Partida partida, Jugador j1, Jugador j2) {
+    public void inicioJuego(String title, String mensaje) {
         //Muestra una bienvenida -> realiza el sorteo de inicia -> y reparte las 5 cartas iniciales, tanto para el juego logico y virtual
         AlertDialog.Builder abd = new AlertDialog.Builder(this);
         abd.setTitle(title);
@@ -352,15 +349,19 @@ public class MainActivity extends AppCompatActivity {
 
     public void faseDeclararBatalla(){
         //solo de prueba
-        Utilitaria.mensajeLargo(mensajes,"Testeto de los mensajes largos acá (interaccion con usuario), se puede utilizar esto o el toast",true);
+        //Utilitaria.mensajeLargo(mensajes,"Testeto de los mensajes largos acá (interaccion con usuario), se puede utilizar esto o el toast",true);
+        j2.setMaquinaCambiarViewUnico(false);//se modifica en declarabatallacomomaquina y en ataque entre cartas
+        restringir_movimientos(true,1);//así no se puede añadir cartas en el tablero durante la base batalla
         if (partida.getJugadorActual() ==1){
             crearDialog("DECLARAR BATALLA","Es tu turno de declarar batalla");
             setearMonstruosParaAtacar(j1, true); ///agregado Alan
         }
         else{
             j2.declararBatallaComoMaquina(tablero,j1,this,vidaUser,vidaMaq);
-            llenartableromaquina(tablero,j2); //para que las cartas se pongan en modo defensa (cuando sea necesario)
+            if (j2.getMaquinaCambiarViewUnico()) //me indica si hay alguna carta volteada
+                llenartableromaquina(tablero,j2); //para que las cartas se pongan en modo defensa (cuando sea necesario)
             setearMonstruosParaAtacar(j1, false); //agregado Alan
+            j2.setMaquinaCambiarViewUnico(false);
         }
     }
 
@@ -432,20 +433,6 @@ public class MainActivity extends AppCompatActivity {
         //agregamos la imagen al LinearLayout(Scroll)
         contenedor.addView(imV);
     }
-
-
-    //ignorar
-    public void mostrarTurno(int idJugador){
-        //crea un dialogo que muestra el turno de quien de jugar una carta
-        String nombreJ = "Error de asignacion de nombre";
-        if(idJugador == 1){
-            nombreJ = j1.getNombre();
-        } else if (idJugador == 2) {
-            nombreJ = j2.getNombre();
-        }
-        crearDialog("Atencion", "Turno del jugador: " + nombreJ);
-    }
-
 
     public void crearDialogAgregarCarta(Carta carta, int id_contenedor){
         Log.w("crearDialogAgregarCarta()", "Entranda a la funcion");
@@ -645,7 +632,13 @@ public class MainActivity extends AppCompatActivity {
         v.setTag(c.getRutaImagen());//necesito identificarla para borrarla luego
 
         if(vaGirada) v.setRotation(-90f);
-        //tablero.aniadirCartaTablero(c,id_jugador); se la puso en el metodo buscaragregarimagen por problemas con la maquina
+        else{
+            //agregado por Mayra para el método Cambiar Posición Carta, por que las letras son de otro color, ayuda
+            if(v.getRotation()!=0)
+                v.setRotation(0);
+
+        }
+
         //cambiamos el estado a casillero ocupado
         v.setContentDescription("Casillero ocupado");
         Log.w("* AgregarImagenTablero", "se procedera a entrar a la funcion");
@@ -757,6 +750,7 @@ public class MainActivity extends AppCompatActivity {
 
         dialogView.findViewById(R.id.btn_accept).setOnClickListener(v -> {
             //accciones al clicar 'Cambiar Posicion'
+            cambiarPosicionCarta(carta);
 
             dialog.dismiss();
         });
@@ -1026,6 +1020,8 @@ public class MainActivity extends AppCompatActivity {
                             Log.w("* mostrarListaParaAtacar()","llamando a la funcion declararbatalla()");
                             //actualizamos el tablero logico y por dentro eliminamos las vistas correpondientes
                             j1.declararBatalla(j2, partida, monstruoAtacante, cartaQSeAtaca, context, vidaMaq, vidaUser);
+                            if (j2.getMaquinaCambiarViewUnico()) //si hay que voltear alguna carta en defensa
+                                llenartableromaquina(tablero,j2);
 
                         } else {
                             Utilitaria.crearToast(MainActivity.this,"No se seleccionó ninguna carta",false);
@@ -1047,10 +1043,33 @@ public class MainActivity extends AppCompatActivity {
         Log.w("* mostrarListaParaAtacar()","fin de la funcion");
 
     }
+    public void cambiarPosicionCarta(Carta cartaACambiar) {
+        CartaMonstruo mons = (CartaMonstruo) cartaACambiar; //en alguna otra funcion se validó que el botón cambiar Posicion solo aparezca para mons
+        //
+        int id_view=0;//solo para evitar errores
+        for (int i = 0; i < contenedorMonstruosUser.getChildCount(); i++){
+            View hijo = contenedorMonstruosUser.getChildAt(i);
+            if (hijo instanceof ImageView && hijo.getTag()!= null) {
+                if (contenedorMonstruosUser.getChildAt(i).getTag().equals(cartaACambiar.getRutaImagen()))
+                    id_view = contenedorMonstruosUser.getChildAt(i).getId();
+            }
+
+        }
+
+        if (mons.getIsBocaArriba()) {
+            if (mons.getisInAtaque())//si está en ataque, se pone en modo defensa
+            {
+                mons.setisInAtaque(false);
+                agregarImagenTablero(cartaACambiar,id_view,1,!mons.getisInAtaque(),true);
+                Utilitaria.crearToast(MainActivity.this,"La carta se ha puesto en modo defensa",false);}
+            else{
+                mons.setisInAtaque(true); //una carta puede estar en defensa boca arriba, luego de sobrevivir a un ataque cuando estaba boca abajo
+                agregarImagenTablero(cartaACambiar,id_view,1,!mons.getisInAtaque(),true);
+                Utilitaria.crearToast(MainActivity.this,"La carta se ha puesto en modo ataque",false);
+            }}
+        else
+            crearDialog("ERROR", "Una carta boca abajo no puede cambiar de Posición");
 
 
-
-
-
-
-}
+    }
+    }
