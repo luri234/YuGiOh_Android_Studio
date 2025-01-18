@@ -1146,7 +1146,7 @@
         android:backgroundTint="#F4F0F0"
         android:fontFamily="@font/alkatra"
         android:onClick="pasarFase"
-        android:text="Siguiente Fase"
+        android:text="Iniciar Juego"
         android:textColor="#070707"
         android:textColorLink="#16246D"
         android:textSize="11sp"
