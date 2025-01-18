@@ -4,10 +4,13 @@ package com.example.yugioh;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -50,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     TextView deckmaq;
     TextView vidaUser;
     TextView vidaMaq;
-    public static ConstraintLayout contenedorMonstruosUser;
+    public static ConstraintLayout contenedorMonstruosUser ;
     public static ConstraintLayout contenedorEspecialesUser;
     public static ConstraintLayout contenedorMontruosMaquina;
     public static ConstraintLayout contenedorEspecialesMaquina;
@@ -568,29 +571,116 @@ public class MainActivity extends AppCompatActivity {
         //tablero.aniadirCartaTablero(c,id_jugador); se la puso en el metodo buscaragregarimagen por problemas con la maquina
         //cambiamos el estado a casillero ocupado
         v.setContentDescription("Casillero ocupado");
-        aniadirDesc(c,id_view);
-    }
-    public void aniadirDesc(Carta carta,int id_view){
-        //esto se puede mejorar, solo es prueba
-        View v = findViewById(id_view);
+        Log.w("* AgregarImagenTablero", "se procedera a entrar a la funcion");
+        //definimos su onCLick Listener para que cuando se toque aparezca sus datos
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (carta instanceof CartaMonstruo){
-                    CartaMonstruo c = (CartaMonstruo)carta;
-                    crearDialog("Descripción Carta","ATK: "+c.getAtaque()+"\nDEF: "+c.getDefensa()+"Atributo: "+c.getTipoAtributo().toString());
-                }
-                else if (carta instanceof CartaMagica) {
-                    CartaMagica d = (CartaMagica) carta;
-                    crearDialog("Descripcion de magica","no le se y tengo sueño");}
-                else if(carta instanceof CartaTrampa) {
-                    crearDialog("TENGI SUEÑI","A¿voy a mimir");
-                }
+                crearVentanaDescCarta(c, id_view);
             }
-
-
-
         });
+
+    }
+
+    public void crearVentanaDescCarta(Carta carta, int id_view){
+
+        Log.w("* CrearVentanaDescCarta"," se obtendra el id del contenedor padre de cada imagen");
+        //obtenemos el id del layout al que pertenece la view para luego validar y borrar ciertos botones
+        ImageView imgCarta = findViewById(id_view);
+        ConstraintLayout contenedorPadre =(ConstraintLayout)(imgCarta.getParent());
+        int id_contenedor = contenedorPadre.getId();
+
+
+        Log.w("* CrearVentanaDescCarta",getResources().getResourceName(id_contenedor));
+
+        //creamos el dialogo personalizado
+        // Uso de un Inflater para el diseño personalizado
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.datos_colocar_carta, null);
+        TextView nombre = dialogView.findViewById(R.id.c_nombre);
+        TextView descripcion = dialogView.findViewById(R.id.c_desc);
+
+        Log.w("* CrearVentanaDescCarta"," validacion de cada instancia");
+
+        //validamos que instancia de carta es
+        if( carta instanceof CartaMonstruo){
+            CartaMonstruo cm = (CartaMonstruo)carta;
+            // Configurar los valores dinámicos a mostrar
+            TextView ataque = dialogView.findViewById(R.id.c_atk);
+            TextView defensa = dialogView.findViewById(R.id.c_def);
+            TextView atributoCarta = dialogView.findViewById(R.id.c_atributo);
+            TextView tipoCarta = dialogView.findViewById(R.id.c_tipo);
+            //damos los nuevos valores
+
+            ataque.setText("ATK: "+ cm.getAtaque());
+            defensa.setText("DEF: "+cm.getDefensa());
+            atributoCarta.setText("Atributo: " + cm.getTipoAtributo());
+            tipoCarta.setText("Tipo de Monstruo: " + cm.getTipoMonstruoString());
+        } else if (carta instanceof CartaMagica) {
+            CartaMagica cm = (CartaMagica)carta;
+            TextView incAtk = dialogView.findViewById(R.id.c_atk);
+            TextView incDef = dialogView.findViewById(R.id.c_def);
+            TextView tipoMonstruo = dialogView.findViewById(R.id.c_tipo);
+            //asignacion valores
+            incAtk.setText("INC ATK: " + cm.getIncrementoAtaque());
+            incDef.setText("INC DEF: " + cm.getIncrementoDefensa());
+            tipoMonstruo.setText("Tipo Monstruo: " + cm.getTipoMonstruoString());
+
+            //setteamos los demas campos no utilizados para q no aparezcan
+            dialogView.findViewById(R.id.c_atributo).setVisibility(View.GONE);
+
+        } else if (carta instanceof CartaTrampa) {
+            CartaTrampa ct = (CartaTrampa)carta;
+            TextView atributo = dialogView.findViewById(R.id.c_atributo);
+            atributo.setText("Atributo: "+ ct.getTipoAtributo());
+            dialogView.findViewById(R.id.c_tipo).setVisibility(View.GONE);
+            dialogView.findViewById(R.id.c_atk).setVisibility(View.GONE);
+            dialogView.findViewById(R.id.c_def).setVisibility(View.GONE);
+
+        }
+        Log.w("* CrearVentanaDescCarta"," seteamos los valores de toda carta");
+
+        //setteamos los valores que toda carta tiene
+        nombre.setText(carta.getNombre());
+        descripcion.setText("Descripcion: " + carta.getDescripcion());
+
+        // Crear el AlertDialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogView);
+
+        Log.w("* CrearVentanaDescCarta"," cambiamos el texto del boton y listeners");
+
+        //cambiamos el texto del boton a "Cambiar Posicion"
+        Button btnAccept = dialogView.findViewById(R.id.btn_accept);
+        btnAccept.setText("Cambiar Posicion");
+
+
+        // Obtener referencia a los botones y configurar listeners
+        AlertDialog dialog = builder.create();
+        dialogView.findViewById(R.id.btn_cancel).setOnClickListener(v -> {
+            dialog.dismiss(); // Cierrar el dialogo
+        });
+
+        dialogView.findViewById(R.id.btn_accept).setOnClickListener(v -> {
+            //accciones al clicar 'Cambiar Posicion'
+
+            dialog.dismiss();
+        });
+
+        Log.w("* CrearVentanaDescCarta"," validacion de contenedor padre y desapereciendo el boton");
+
+        //Desaparece el boton 'colocar' para las cartas de los layouts de la maquina
+        int idConstraintMonstruosJ = findViewById(R.id.CartasMonstruoJugador).getId();
+        int idConstraintEspecialesJ = findViewById(R.id.CartasEspecialesJugador).getId();
+
+        if(id_contenedor != idConstraintMonstruosJ && id_contenedor != idConstraintEspecialesJ) {
+            dialogView.findViewById(R.id.btn_accept).setVisibility(View.GONE);
+        } else if (carta instanceof CartaTrampa || carta instanceof CartaMagica) {
+            dialogView.findViewById(R.id.btn_accept).setVisibility(View.GONE);
+        }
+        // Mostrar el diálogo
+        dialog.show();
+
     }
 
     private int dpToPx(int dp) {
@@ -651,6 +741,20 @@ public class MainActivity extends AppCompatActivity {
         // Crear y mostrar el diálogo
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    // tiene error
+    public void cambiarBotonFases(String texto, String colorEnHexa, boolean visible){
+
+        Log.w("cambiarBotonFases()", "Se ha ingresado a la funcion");
+        //cambia el color, texto del boton de fases y su estado si se muestra o no
+        Button btnFases = findViewById(R.id.button_fases);
+
+        btnFases.setBackgroundColor(Color.parseColor(colorEnHexa));
+        btnFases.setText(texto);
+
+        if(!visible) btnFases.setVisibility(View.GONE);
+
     }
 
 

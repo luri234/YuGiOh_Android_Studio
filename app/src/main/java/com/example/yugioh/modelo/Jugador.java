@@ -106,7 +106,7 @@ public class Jugador {
                 cartaMonstruoSelec.setBocaArriba(false);
             }
             tablero.aniadirCartaTablero(cartaSeleccionada, this.id);
-            setNoAgregoMonstruo(true);
+            setNoAgregoMonstruo(false);
         } else if (cartaSeleccionada instanceof CartaMagica) {
             //en este else se setea la carta magica a la carta del jugador
             CartaMagica cartaMagicaCasteada = (CartaMagica)cartaSeleccionada;

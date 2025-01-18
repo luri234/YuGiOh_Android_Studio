@@ -319,7 +319,7 @@ public class Tablero {
 
     public HashMap<String, Integer> filtrarCartasMonstruoPorAtributo(CartaMagica cm, Jugador j){
         //itera el espacio de cartas mosntruo del jugador y guarda en el diccionario
-        //aquellas que cumplen igualdad con el atributo, guarda el nombre como calve y id como valor.
+        //aquellas que cumplen igualdad con el atributo, guarda el nombre como clave y id como valor.
         HashMap<String, Integer> dic = new HashMap<>();
         ArrayList<Carta> monstruosTableroJ =  tableroCompartido.get(j.getId()).get("CartasMonstruo");
 

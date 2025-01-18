@@ -100,4 +100,16 @@ public class Carta {
     public void setRutaImagen(String rutaImagen) {
         this.rutaImagen = rutaImagen;
     }
+
+    public String StringClaseCarta(){
+        //devuelve un texto indicando la clase de la carta
+        if(this instanceof  CartaMonstruo){
+            return "CARTA MONSTRUO";
+        } else if (this instanceof  CartaMagica) {
+            return "CARTA MAGICA";
+        } else if (this instanceof  CartaTrampa) {
+            return "CARTA TRAMPA";
+        }
+            return "Error obteniendo Clase";
+    }
 }
