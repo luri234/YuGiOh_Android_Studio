@@ -1,6 +1,8 @@
 package com.example.yugioh.modelo;
 
+import android.content.Context;
 import android.content.res.AssetManager;
+import android.util.Log;
 
 import com.example.yugioh.MainActivity;
 import com.example.yugioh.Utilitaria;
@@ -166,22 +168,19 @@ public class Tablero {
 
 
     //revisada
-    public Tupla ataqueEntreCartas(CartaMonstruo cartaJugador, CartaMonstruo cartaEnemigo, Jugador jugador, Jugador enemigo) {
+    public Tupla ataqueEntreCartas(CartaMonstruo cartaJugador, CartaMonstruo cartaEnemigo, Jugador jugador, Jugador enemigo, Context context) {
         int jugadorID = jugador.getId();
         int enemigoID = enemigo.getId();
 
-
-        //Existen cartas Trampa enemigas que impidan el ataque?
+        Log.w("* ataqueEntreCartas()", "Se ha ingresado a la funcion");
         if (verificarCartaTrampa(enemigo, cartaJugador) == null) {
-            //No existen ->
-
             //1 Calculamos incrementos de ataque y defensa asociados
             int incAtkJugador = 0;
-            //int incDefJugador = 0; //no se está utikizando
+            //int incDefJugador = 0; //no se está utilizando
             int incAtkEnemigo = 0;
             int incDefEnemigo = 0;
 
-            Integer danioRealAEnemigo = 0;  //inicializar con null?
+            Integer danioRealAEnemigo = 0;
             Integer danioRealAJugador = 0;
 
             //La carta enemiga tiene una carta magica asociada?
@@ -197,41 +196,60 @@ public class Tablero {
             }
 
 
-            //Comprobamos si la carta enemigo esta en ataque
+            Log.w("* ataqueEntreCartas()", "ifs de ataques");
+
+            //Comprobamos si la carta enemiga esta en ataque
             if (cartaEnemigo.getIsInAtaque()) {
 
                 //la carta de jugador es mas fuerte que la del enemigo?
                 if ((cartaJugador.getAtaque() + incAtkJugador) > (cartaEnemigo.getAtaque() + incAtkEnemigo)) {
                     danioRealAEnemigo = (cartaJugador.getAtaque() + incAtkJugador) - (cartaEnemigo.getAtaque() + incAtkEnemigo);
                     danioRealAJugador = 0;
-                    //formato salida
-                    System.out.println("|| Choque de ataques ||     ||" + cartaJugador.getNombre() + " vs " + cartaEnemigo.getNombre() + "||");
-                    System.out.println("\t " + cartaJugador.getAtaque() + " + " + incAtkJugador + "  -->  <--  " + cartaEnemigo.getAtaque() + " + " + incAtkEnemigo);
-                    System.out.println("| " + cartaJugador.getNombre() + " destruyó a " + cartaEnemigo.getNombre() + " en batalla!");
-                    quitarCartaTablero(cartaEnemigo, enemigoID);
-                    if ( enemigo.getId() ==1)
-                        MainActivity.quitarImagenTablero(cartaEnemigo,MainActivity.contenedorMonstruosUser);
 
+                    Utilitaria.crearToast(context, cartaJugador.getAtaque() + "+" + incAtkJugador +" -><- "+ cartaEnemigo.getAtaque() + "+" + incAtkEnemigo, false );
+                    Utilitaria.crearToast(context, "se destruyo la carta enemiga", false);
+
+                    //actualiza los views de las cartas en el tablero de las que se eliminaron
+                    if ( enemigo.getId() ==1) {
+                        MainActivity.quitarImagenTablero(cartaEnemigo, MainActivity.contenedorMonstruosUser);
+                        if(cartaEnemigo.getCartaMagica() != null){
+                            MainActivity.quitarImagenTablero(cartaEnemigo.getCartaMagica(), MainActivity.contenedorEspecialesUser);
+                        }
+                    }else{
+                        MainActivity.quitarImagenTablero(cartaEnemigo, MainActivity.contenedorMontruosMaquina);
+                        if(cartaEnemigo.getCartaMagica() != null){
+                            MainActivity.quitarImagenTablero(cartaEnemigo.getCartaMagica(), MainActivity.contenedorEspecialesMaquina);
+                        }
+                    }
+
+                    quitarCartaTablero(cartaEnemigo, enemigoID);
                     eliminarCartaMagicaAsociada(enemigo, cartaEnemigo);
 
-
+                    Log.w("* ataqueEntreCartas()", "Fin de la funcion");
                     return new Tupla(danioRealAEnemigo, danioRealAJugador);
                 }
                 //la carta jugador y enemigo son iguales en fuerza:
                 else if((cartaJugador.getAtaque() + incAtkJugador) == (cartaEnemigo.getAtaque() + incAtkEnemigo)){
                     danioRealAEnemigo = 0;
                     danioRealAJugador = 0;
-                    System.out.println("|| Choque de ataques ||     ||" + cartaJugador.getNombre() + " vs " + cartaEnemigo.getNombre() + "||");
-                    System.out.println("\t " + cartaJugador.getAtaque() + " + " + incAtkJugador + "  -->  <--  " + cartaEnemigo.getAtaque() + " + " + incAtkEnemigo);
-                    System.out.println("| " + cartaJugador.getNombre() + " destruyó a " + cartaEnemigo.getNombre() + " en batalla!");
-                    System.out.println("| " + cartaEnemigo.getNombre() + " destruyó a " + cartaJugador.getNombre() + " en batalla!");
+                    Utilitaria.crearToast(context, cartaJugador.getAtaque() + "+" + incAtkJugador +" -><- "+ cartaEnemigo.getAtaque() + "+" + incAtkEnemigo, false );
+                    Utilitaria.crearToast(context, "se destruyeron ambas cartas", false);
+
+                    MainActivity.quitarImagenTablero(cartaEnemigo, MainActivity.contenedorMonstruosUser);
+                    MainActivity.quitarImagenTablero(cartaEnemigo, MainActivity.contenedorMontruosMaquina);
+                    if(cartaEnemigo.getCartaMagica() != null){
+                        MainActivity.quitarImagenTablero(cartaEnemigo.getCartaMagica(), MainActivity.contenedorEspecialesUser);
+                    }
+                    if(cartaEnemigo.getCartaMagica() != null){
+                        MainActivity.quitarImagenTablero(cartaEnemigo.getCartaMagica(), MainActivity.contenedorEspecialesMaquina);
+                    }
 
                     quitarCartaTablero(cartaEnemigo, enemigoID);
                     eliminarCartaMagicaAsociada(enemigo, cartaEnemigo);
                     quitarCartaTablero(cartaJugador,jugadorID);
-
                     eliminarCartaMagicaAsociada(jugador, cartaJugador);
 
+                    Log.w("* ataqueEntreCartas()", "Fin de la funcion");
                     return new Tupla(danioRealAEnemigo, danioRealAJugador);
 
                 }
@@ -239,46 +257,77 @@ public class Tablero {
                 else{
                     danioRealAEnemigo = 0;
                     danioRealAJugador = (cartaEnemigo.getAtaque() + incAtkEnemigo) - (cartaJugador.getAtaque()+ incAtkJugador);
-                    System.out.println("|| Choque de ataques ||     ||" + cartaJugador.getNombre() + " vs " + cartaEnemigo.getNombre() + "||");
-                    System.out.println("\t " + cartaJugador.getAtaque() + " + " + incAtkJugador + "  -->  <--  " + cartaEnemigo.getAtaque() + " + " + incAtkEnemigo);
-                    System.out.println("| " + cartaEnemigo.getNombre() + " destruyó a " + cartaJugador.getNombre() + " en batalla!");
+                    Utilitaria.crearToast(context, cartaJugador.getAtaque() + "+" + incAtkJugador +" -><- "+ cartaEnemigo.getAtaque() + "+" + incAtkEnemigo, false );
+                    Utilitaria.crearToast(context, "se destruyo la carta atacante xD", false);
+
+                    //actualiza los views de las cartas en el tablero de las que se eliminaron
+                    if ( enemigo.getId() ==1) {
+                        MainActivity.quitarImagenTablero(cartaJugador, MainActivity.contenedorMontruosMaquina);
+                        if(cartaEnemigo.getCartaMagica() != null){
+                            MainActivity.quitarImagenTablero(cartaJugador.getCartaMagica(), MainActivity.contenedorEspecialesMaquina);
+                        }
+                    }else{
+                        MainActivity.quitarImagenTablero(cartaJugador, MainActivity.contenedorMonstruosUser);
+                        if(cartaEnemigo.getCartaMagica() != null){
+                            MainActivity.quitarImagenTablero(cartaJugador.getCartaMagica(), MainActivity.contenedorEspecialesUser);
+                        }
+                    }
                     quitarCartaTablero(cartaJugador, jugadorID);
                     eliminarCartaMagicaAsociada(jugador, cartaJugador);
 
+                    Log.w("* ataqueEntreCartas()", "Fin de la funcion");
                     return new Tupla(danioRealAEnemigo, danioRealAJugador);
                 }
              //si la carta enemigo esta en defensa
             }else{
                 if((cartaJugador.getAtaque() + incAtkJugador) >= (cartaEnemigo.getDefensa() + incDefEnemigo)){
                     //si el ataque del jugador es mayor a la defensa del enemigo
-                    System.out.println("|| Ataque y defensa ||     ||" + cartaJugador.getNombre() + " vs " + cartaEnemigo.getNombre() + "||");
-                    System.out.println("\t " + cartaJugador.getAtaque() + " + " + incAtkJugador + "  -->  <--  " + cartaEnemigo.getDefensa() + " + " + incDefEnemigo);
-                    System.out.println("| " + cartaJugador.getNombre() + " destruyó a " + cartaEnemigo.getNombre() + " en batalla!");
+                    Utilitaria.crearToast(context, "(defensa)"+cartaJugador.getAtaque() + "+" + incAtkJugador +" -><- "+ cartaEnemigo.getDefensa() + "+" + incDefEnemigo, false );
+                    Utilitaria.crearToast(context, "se destruyo la defensa del enemigo", false);
+
+                    if(jugadorID == 1){
+                        MainActivity.quitarImagenTablero(cartaEnemigo, MainActivity.contenedorMontruosMaquina);
+                        if(cartaEnemigo.getCartaMagica() != null){
+                            MainActivity.quitarImagenTablero(cartaEnemigo.getCartaMagica(), MainActivity.contenedorEspecialesMaquina);
+                        }
+                    }
+                    else{
+                        MainActivity.quitarImagenTablero(cartaEnemigo, MainActivity.contenedorMonstruosUser);
+                        if(cartaEnemigo.getCartaMagica() != null){
+                            MainActivity.quitarImagenTablero(cartaEnemigo.getCartaMagica(), MainActivity.contenedorEspecialesUser);
+                        }
+                    }
                     quitarCartaTablero(cartaEnemigo, enemigoID);
                     eliminarCartaMagicaAsociada(enemigo, cartaEnemigo);
+                    Log.w("* ataqueEntreCartas()", "Fin de la funcion");
                     return new Tupla(0, 0);
+
                 }else{
                     //la defensa del enemigo fue mayor
                     danioRealAJugador = (cartaEnemigo.getDefensa()+ incDefEnemigo) - (cartaJugador.getAtaque()+ incAtkJugador);
-                    System.out.println("|| Ataque y defensa ||     ||" + cartaJugador.getNombre() + " vs " + cartaEnemigo.getNombre() + "||");
-                    System.out.println("\t " + cartaJugador.getAtaque() + " + " + incAtkJugador + "  -->  <--  " + cartaEnemigo.getDefensa() + " + " + incDefEnemigo);
                     danioRealAEnemigo = 0;
+                    Utilitaria.crearToast(context, "(defensa)"+cartaJugador.getAtaque() + "+" + incAtkJugador +" -><- "+ cartaEnemigo.getDefensa() + "+" + incDefEnemigo, false );
+                    Utilitaria.crearToast(context, "Empate de ataque y defensa", false);
 
                     //si la carta en defensa estaba boca abajo se cambia
                     if(!cartaEnemigo.getIsBocaArriba()) cartaEnemigo.setBocaArriba(false);
+                    //todo cambiar en la vista la carta a boca arriba con un metodo statico.
                     //no se destruye ningun monstruo
+                    Log.w("* ataqueEntreCartas()", "Fin de la funcion");
                     return new Tupla(danioRealAEnemigo, danioRealAJugador);
                 }
             }
         }else{
             //si existe una carta trampa q impida el ataque
             CartaTrampa cartaTrampa = verificarCartaTrampa(enemigo, cartaJugador);
-            System.out.println("|   Se detuvo el ataque! la carta Trampa " + "'"+cartaTrampa.getNombre()+"'"+ "se interpuso");
+            Utilitaria.crearToast(context, "La carta trampa "+ cartaTrampa.getNombre()+" detuvo el ataque", false);System.out.println("|   Se detuvo el ataque! la carta Trampa " + "'"+cartaTrampa.getNombre()+"'"+ "se interpuso");
             quitarCartaTablero(cartaTrampa, enemigoID);
             if (enemigoID==1){MainActivity.quitarImagenTablero(cartaTrampa,MainActivity.contenedorEspecialesUser);}
             else
                 MainActivity.quitarImagenTablero(cartaTrampa,MainActivity.contenedorEspecialesMaquina);
+            Log.w("* ataqueEntreCartas()", "Fin de la funcion");
             return new Tupla(0, 0);
+
         }
    }
 
@@ -339,10 +388,10 @@ public class Tablero {
 
     public CartaMonstruo buscarCartaMonstruo(int id_carta, Jugador j){
         //busca una cartaMonstruo en el tablero del jugador de acuerdo al id de la carta y la devuelve
-        ArrayList<Carta> mosntruosTableroJ = tableroCompartido.get(j.getId()).get("CartasMonstruo");
+        ArrayList<Carta> monstruosTableroJ = tableroCompartido.get(j.getId()).get("CartasMonstruo");
         CartaMonstruo cartaMonstruoEncontrada = null;
 
-        for(Carta c  : mosntruosTableroJ){
+        for(Carta c  : monstruosTableroJ){
             if(c.getId() == id_carta){
                 cartaMonstruoEncontrada = (CartaMonstruo)c;
             }
@@ -350,6 +399,30 @@ public class Tablero {
 
         return  cartaMonstruoEncontrada;
     }
+
+    public CartaMonstruo buscarCartaMonstruoPorRuta(String ruta, Jugador j){
+        //busca y retorna la carta monstruo en el tablero del jugador q tenga la misma ruta recibidad
+        ArrayList<Carta> monstruosTableroJ = tableroCompartido.get(j.getId()).get("CartasMonstruo");
+        CartaMonstruo cartaMonstruoEncontrada = null;
+        for(Carta c : monstruosTableroJ){
+            if(c.getRutaImagen().equals(ruta)){
+                cartaMonstruoEncontrada = (CartaMonstruo) c;
+            }
+        }
+        return  cartaMonstruoEncontrada;
+    }
+
+    public CartaMonstruo buscarCartaMonstruoPorNombre(String nombre, Jugador j){
+        ArrayList<Carta> monstruosTableroJ = tableroCompartido.get(j.getId()).get("CartasMonstruo");
+        CartaMonstruo cartaMonstruoEncontrada = null;
+        for(Carta c : monstruosTableroJ){
+            if(c.getNombre().equals(nombre)){
+                cartaMonstruoEncontrada = (CartaMonstruo) c;
+            }
+        }
+        return  cartaMonstruoEncontrada;
+    }
+
 
     //getters and setters
     public int getId() {

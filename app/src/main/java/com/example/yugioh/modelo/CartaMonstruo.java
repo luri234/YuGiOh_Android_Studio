@@ -1,5 +1,8 @@
 package com.example.yugioh.modelo;
 
+import com.example.yugioh.modelo.exceptions.MonstruoNoEnAtaqueException;
+import com.example.yugioh.modelo.exceptions.MonstruoYaHaAtacadoException;
+
 public class CartaMonstruo extends Carta {
     private TipoAtributo tipoAtributo;
     private TipoMonstruo tipoMonstruo;
@@ -73,6 +76,13 @@ public class CartaMonstruo extends Carta {
         }
     }
     */
+
+    public boolean validarAtaqueCarta() throws MonstruoNoEnAtaqueException, MonstruoYaHaAtacadoException{
+        //inspecciona q la carta se encuentre modo ataque y pueda atacar en el turno
+        if(!this.isInAtaque) throw new MonstruoNoEnAtaqueException(this);
+        if(!this.puedeAtacar) throw new MonstruoYaHaAtacadoException(this);
+        return  this.getIsInAtaque() && this.getPuedeAtacar();
+    }
 
 
     //getters and setters

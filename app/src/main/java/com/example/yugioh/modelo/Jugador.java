@@ -1,6 +1,7 @@
 package com.example.yugioh.modelo;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.example.yugioh.Utilitaria;
@@ -166,7 +167,7 @@ public class Jugador {
                     Integer incAtaqueCartaRival = (Integer)(cartaMonstruoRival.obtenerIncrementosATKyDEF().obj1);
                     if ((cartaMonstruoRival.getAtaque() + incAtaqueCartaRival) < (cartaAtacante.getAtaque() + incAtaqueCartaEleg)) {
                         Utilitaria.crearToast(context,cartaAtacante.getNombre() + " ataca a " + cartaMonstruoRival.getNombre() + "!",false);
-                        Tupla tupla = tablero.ataqueEntreCartas(cartaAtacante, cartaMonstruoRival, this, oponente);
+                        Tupla tupla = tablero.ataqueEntreCartas(cartaAtacante, cartaMonstruoRival, this, oponente, context);
                         Integer danioAEnemigo = (Integer)(tupla.obj1);
                         Integer danioAJugador = (Integer)(tupla.obj2);
                         //this.puntosVida -= danioAJugador;
@@ -195,6 +196,50 @@ public class Jugador {
             }
         }
     }
+
+    //todo una funcion para ataque directos
+    public void ataqueDirecto(Jugador enemigo, Partida partida, CartaMonstruo cartaMonstruoSelec, Context context, TextView vidaMaquina) {
+        Tablero tablero = partida.getTablero();
+        // Ataque sin trampa
+        //obtenemos los INC de ataque de la carta monstruo
+        Integer incAtkJugador;
+        Tupla tIncrementos =  cartaMonstruoSelec.obtenerIncrementosATKyDEF();
+        incAtkJugador = (Integer)tIncrementos.obj1;
+
+        int danio = cartaMonstruoSelec.getAtaque() + incAtkJugador;
+        Utilitaria.crearToast(context, "Ataque directo a maquina! con "+  cartaMonstruoSelec.getNombre(), false);
+        enemigo.setPuntosVida(enemigo.getPuntosVida() - danio, vidaMaquina);
+        cartaMonstruoSelec.setPuedeAtacar(false);
+    }
+
+    public void declararBatalla(Jugador enemigo, Partida partida, CartaMonstruo cartaMonstruoSelec, CartaMonstruo cartaASerAtacada, Context context, TextView vidaMaquina, TextView vidaUser) {
+        Log.w("declararBatalla()", "inicio de la funcion");
+        Tablero tablero = partida.getTablero();
+        ArrayList<Carta> espacioCartasMonstruoJ = tablero.getTableroCompartido().get(this.id).get("CartasMonstruo");
+        ArrayList<Carta> espacioEnemigo = tablero.getTableroCompartido().get(enemigo.id).get("CartasMonstruo");
+
+        //Verificar cartas Trampa ya esta en el ataqueEntreCartas()
+
+        // Ejecutar el ataque
+        Integer danioAEnemigo = 0;
+        Integer danioAJugador = 0;
+        //se devuelve una tupla
+        Tupla tupla = tablero.ataqueEntreCartas(cartaMonstruoSelec, cartaASerAtacada, this, enemigo, context);
+        //descomprimimos la tupla
+        danioAEnemigo =(Integer)tupla.getObj1();
+        danioAJugador = (Integer)tupla.getObj1();
+
+        // Actualizar vida de los jugadores
+        this.setPuntosVida(this.puntosVida - danioAJugador,vidaUser );
+        enemigo.setPuntosVida(this.puntosVida - danioAEnemigo, vidaMaquina);
+        cartaMonstruoSelec.setPuedeAtacar(false);
+
+        Log.w("declararBatalla()", "fin de la funcion");
+    }
+
+
+
+
 
     public boolean esDerrotado() {
         boolean sinCartasEnMano = getCartasEnMano().isEmpty();

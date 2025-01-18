@@ -2,6 +2,7 @@ package com.example.yugioh;
 
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -32,6 +33,8 @@ import com.example.yugioh.modelo.Partida;
 import com.example.yugioh.modelo.Tablero;
 import com.example.yugioh.modelo.exceptions.AgregacionCartaMonstruoException;
 import com.example.yugioh.modelo.exceptions.CartaMagicaAsociacionException;
+import com.example.yugioh.modelo.exceptions.MonstruoNoEnAtaqueException;
+import com.example.yugioh.modelo.exceptions.MonstruoYaHaAtacadoException;
 import com.example.yugioh.modelo.exceptions.SinEspacioTableroException;
 
 import java.io.IOException;
@@ -256,6 +259,7 @@ public class MainActivity extends AppCompatActivity {
                 if ((partida.getRonda() % 2) != 0) {
                     if (partida.getRonda() == 3) {
                         Utilitaria.crearToast(this, "Desde este turno ya se puede declarar batalla", true);
+
                     }
                     faseLLenarTableros();
                 } else {
@@ -304,11 +308,13 @@ public class MainActivity extends AppCompatActivity {
         Utilitaria.mensajeLargo(mensajes,"Testeto de los mensajes largos acá (interaccion con usuario), se puede utilizar esto o el toast",true);
         if (partida.getJugadorActual() ==1){
             crearDialog("DECLARAR BATALLA","Es tu turno de declarar batalla");
+            setearMonstruosParaAtacar(j1, true); ///agregado Alan
         }
         else{
             j2.declararBatallaComoMaquina(tablero,j1,this,vidaUser,vidaMaq);
             llenartableromaquina(tablero,j2); //para que las cartas se pongan en modo defensa (cuando sea necesario)
-            }
+            setearMonstruosParaAtacar(j1, false); //agregado Alan
+        }
     }
 
     public void restringir_movimientos(boolean val,int id_jugador){
@@ -698,16 +704,12 @@ public class MainActivity extends AppCompatActivity {
     public void crearDialogEnlazarCarta(Carta cartaMagica, Jugador jQEnlaza, ConstraintLayout contenedorCartasEspeciales ){
 
         CartaMagica cartaMagicaCasteada = (CartaMagica)cartaMagica;
-        int idJugador = jQEnlaza.getId(); //OJO si se utiliza
 
         //de todas los mosntruos q hay en el tablero, clasifico solo las que coinciden con el tipoMonstruo de cartaMagica
         HashMap<String, Integer> dic = tablero.filtrarCartasMonstruoPorAtributo(cartaMagicaCasteada, jQEnlaza);
 
         //creo una array con las claves del dic(los nombres de las cartasMonstruo)
         String[] nombresMonstruos = dic.keySet().toArray(new String[0]);
-
-        // de acuerdo a la elegida se actualiza la cartaMagica de la cartaMonstruo
-
 
         // Crear el AlertDialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -750,10 +752,9 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    // tiene error
     public void cambiarBotonFases(String texto, String colorEnHexa, boolean visible){
 
-        Log.w("cambiarBotonFases()", "Se ha ingresado a la funcion");
+        Log.w("* cambiarBotonFases()", "Se ha ingresado a la funcion");
         //cambia el color, texto del boton de fases y su estado si se muestra o no
         Button btnFases = findViewById(R.id.button_fases);
 
@@ -763,6 +764,198 @@ public class MainActivity extends AppCompatActivity {
         if(!visible) btnFases.setVisibility(View.GONE);
 
     }
+
+    public void setearMonstruosParaAtacar(Jugador j, boolean esFaseBatalla){
+        //setea el onclick de los mosntruos en el tablero del jugador  dependiendo del booleano muestra el boton 'atacar' o no
+        //para to do Monstruo en el tablero del jugador se les debe actualizar el onclick
+        //iteramos en los elementos
+        ConstraintLayout contenedorMonstruosJ = (ConstraintLayout)findViewById(R.id.CartasMonstruoJugador);
+        int totalHijos = contenedorMonstruosJ.getChildCount();
+        Log.w("* setearMonstruosParaAtacar", "hijos del constraintLayout: "+ totalHijos);
+
+
+        for(int i = 0; i < totalHijos; i++){
+            View hijo = contenedorMonstruosJ.getChildAt(i);
+            if(hijo instanceof ImageView && hijo.getContentDescription().equals("Casillero ocupado")){
+                ImageView imV = (ImageView) hijo;
+                if(esFaseBatalla){
+                    //actualizamos el onclick de los casilleros ocupados, para mostrar el boton de 'atacar'
+                    imV.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            // Nuevo comportamiento
+                            Log.w("* setearMonstruosParaAtacar", "se ha cambiado el onClick del mosntruo para poder atacar");
+                            crearDialogAtaque(v, j); //todo
+
+                        }
+                    });
+                }
+                else{
+                    //acciones faseBatalla false
+
+                    //se sobreescribe para que se muestre la ventana de solo para cambiar posicion y ya no atacar
+                    imV.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Log.w("* setearMonstruosParaAtacar()", "se setean la cartas para un onclick de cambiar posicion ");
+                            String rutaCartaImagen = (String)v.getTag();
+                            CartaMonstruo cm = tablero.buscarCartaMonstruoPorRuta(rutaCartaImagen, j); //devuelve la carta monstruo del tablero
+                            crearVentanaDescCarta(cm, v.getId());
+                        }
+                    });
+                }
+            }
+        }
+
+        Log.w("* setearMonstruosParaAtacar()", "Fin de la funcion.");
+    }
+
+    public void crearDialogAtaque(View v, Jugador j){
+        Log.w("* crearDialogAtaque()","Se ha ingresado en la funcion");
+        String rutaCartaImagen = (String)v.getTag();
+        Log.w("* crearDialogAtaque()", "ruta carta en la view imagen: "+ rutaCartaImagen);
+
+        CartaMonstruo cm = tablero.buscarCartaMonstruoPorRuta(rutaCartaImagen, j); //devuelve la carta mosntruo del tablero
+
+        //creamos el dialogo personalizado
+        // Uso de un Inflater para el diseño personalizado
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.datos_colocar_carta, null);
+        TextView nombre = dialogView.findViewById(R.id.c_nombre);
+        TextView descripcion = dialogView.findViewById(R.id.c_desc);
+
+        Log.w("* crearDialogAtaque"," seteando los datos..");
+        // Configurar los valores dinámicos a mostrar
+        TextView ataque = dialogView.findViewById(R.id.c_atk);
+        TextView defensa = dialogView.findViewById(R.id.c_def);
+        TextView atributoCarta = dialogView.findViewById(R.id.c_atributo);
+        TextView tipoCarta = dialogView.findViewById(R.id.c_tipo);
+        //damos los nuevos valores
+        ataque.setText("ATK: "+ cm.getAtaque());
+        defensa.setText("DEF: "+cm.getDefensa());
+        atributoCarta.setText("Atributo: " + cm.getTipoAtributo());
+        tipoCarta.setText("Tipo de Monstruo: " + cm.getTipoMonstruoString());
+        nombre.setText(cm.getNombre());
+        descripcion.setText("Descripcion: " + cm.getDescripcion());
+
+        // Crear el AlertDialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogView);
+
+        Log.w("* crearDialogAtaque"," cambiamos el texto del boton y listeners");
+
+        //cambiamos el texto del boton a "Atacar"
+        Button btnAccept = dialogView.findViewById(R.id.btn_accept);
+        btnAccept.setText("Ejecutar ataque");
+
+
+        // Obtener referencia a los botones y configurar listeners
+        AlertDialog dialog = builder.create();
+        dialogView.findViewById(R.id.btn_cancel).setOnClickListener(vi -> {
+            dialog.dismiss();
+        });
+
+        dialogView.findViewById(R.id.btn_accept).setOnClickListener(vi -> {
+            Log.w("* crearDialogAtaque","creando el dialogo de lista de ataque");
+            //accciones al clicar 'Atacar'
+            try {
+                if(cm.validarAtaqueCarta()){
+                    ArrayList<Carta> espacioEnemigo = tablero.getTableroCompartido().get(j2.getId()).get("CartasMonstruo");
+                    if(espacioEnemigo.isEmpty()){
+                        // Ataque directo
+                        if (tablero.verificarCartaTrampa(j2, cm) != null) {
+                            Utilitaria.crearToast(this, "Una carta Trampa detuvo el ataque de "+ cm.getNombre(), false);
+                            CartaTrampa cartaTrampa = tablero.verificarCartaTrampa(j2, cm);
+                            tablero.quitarCartaTablero(cartaTrampa, j2.getId());
+                            cm.setPuedeAtacar(false);
+                            quitarImagenTablero(cartaTrampa, contenedorEspecialesMaquina);
+                        } else {
+                            j.ataqueDirecto(j2, partida, cm, this, vidaMaq);
+                        }
+                    }
+                    else {
+                        mostrarListaParaAtacar(j2, cm, this);
+                    }
+
+                }
+            } catch (MonstruoNoEnAtaqueException | MonstruoYaHaAtacadoException e) {
+                crearDialog("Error", e.getMessage());
+            }
+
+            dialog.dismiss();
+        });
+
+        // Mostrar el diálogo
+        dialog.show();
+
+        Log.w("* crearDialogAtaque()"," fin de la funcion");
+
+    }
+
+    public void mostrarListaParaAtacar(Jugador maquina, CartaMonstruo monstruoAtacante, Context context){
+
+        Log.w("* mostrarListaParaAtacar()","proceso de crear la lista de opciones de ataque");
+        //accedo a las cartas Monstruo de maquina en el tablero
+        ArrayList<Carta> monstruosTableroM = tablero.getTableroCompartido().get(maquina.getId()).get("CartasMonstruo");
+
+        String[] nomMonstruos = new String[monstruosTableroM.size()];
+        //itero en los mosntruos y lo agrego a un array de nombres
+        for(int i = 0; i < nomMonstruos.length; i++){
+            CartaMonstruo cm = (CartaMonstruo) monstruosTableroM.get(i);
+            if(cm.getisBocaArriba()){
+                nomMonstruos[i] = cm.getNombre();
+            }else{
+                nomMonstruos[i] = "Monstruo boca abajo";
+            }
+        }
+
+        // Crear el AlertDialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Atacar carta monstruo:")
+                .setSingleChoiceItems(nomMonstruos, -1, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Se puede capturar la selección aquí si es necesario
+                    }
+                })
+                .setPositiveButton("Atacar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Obtener el nombre seleccionado
+                        int selectedPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
+                        if (selectedPosition != -1) {
+                            String nombreMonstruoSeleccion = nomMonstruos[selectedPosition];
+                            // Realizar acción con el nombre seleccionado
+                            Utilitaria.crearToast(MainActivity.this,"Se ataco a: " + nombreMonstruoSeleccion,false);
+                            CartaMonstruo cartaQSeAtaca = tablero.buscarCartaMonstruoPorNombre(nombreMonstruoSeleccion, j2);
+                            Log.w("* mostrarListaParaAtacar()","llamando a la funcion declararbatalla()");
+                            //actualizamos el tablero logico y por dentro eliminamos las vistas correpondientes
+                            j1.declararBatalla(j2, partida, monstruoAtacante, cartaQSeAtaca, context, vidaMaq, vidaUser);
+
+                        } else {
+                            Utilitaria.crearToast(MainActivity.this,"No se seleccionó ninguna carta",false);
+                        }
+                    }
+                })
+                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Acción de cancelación
+                        dialog.dismiss();
+                        Utilitaria.crearToast(MainActivity.this, "Ataque cancelado",false);
+                    }
+                });
+
+        // Crear y mostrar el diálogo
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        Log.w("* mostrarListaParaAtacar()","fin de la funcion");
+
+    }
+
+
+
+
 
 
 }
