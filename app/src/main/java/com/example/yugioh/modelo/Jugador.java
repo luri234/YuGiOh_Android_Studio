@@ -171,8 +171,8 @@ public class Jugador {
                         Integer danioAEnemigo = (Integer)(tupla.obj1);
                         Integer danioAJugador = (Integer)(tupla.obj2);
                         //this.puntosVida -= danioAJugador;
-                        this.setPuntosVida(this.puntosVida-danioAJugador,vidamaq);//con este metodo lo actualizo en la interfaz
-                        oponente.setPuntosVida(oponente.puntosVida-danioAEnemigo,vidauser);
+                        this.setPuntosVida(this.getPuntosVida()-danioAJugador,vidamaq);//con este metodo lo actualizo en la interfaz
+                        oponente.setPuntosVida(oponente.getPuntosVida()-danioAEnemigo,vidauser);
                         //oponente.puntosVida -= danioAEnemigo;
                         cartaAtacante.setPuedeAtacar(false);
 
@@ -230,8 +230,8 @@ public class Jugador {
         danioAJugador = (Integer)tupla.getObj1();
 
         // Actualizar vida de los jugadores
-        this.setPuntosVida(this.puntosVida - danioAJugador,vidaUser );
-        enemigo.setPuntosVida(this.puntosVida - danioAEnemigo, vidaMaquina);
+        this.setPuntosVida(this.getPuntosVida() - danioAJugador,vidaUser );
+        enemigo.setPuntosVida(this.getPuntosVida() - danioAEnemigo, vidaMaquina);
         cartaMonstruoSelec.setPuedeAtacar(false);
 
         Log.w("declararBatalla()", "fin de la funcion");
