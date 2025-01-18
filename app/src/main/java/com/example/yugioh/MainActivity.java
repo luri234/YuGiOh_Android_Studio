@@ -448,6 +448,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void crearDialogAgregarCarta(Carta carta, int id_contenedor){
+        Log.w("crearDialogAgregarCarta()", "Entranda a la funcion");
         //Crea un dialogo personalizado para mostrar la info de la carta y poderla colocar en el tablero
 
         //obtenemos el numero de imagenes en el layout
@@ -466,11 +467,14 @@ public class MainActivity extends AppCompatActivity {
         // Uso de un Inflater para el diseño personalizado
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.datos_colocar_carta, null);
+        TextView claseCarta = dialogView.findViewById(R.id.claseCarta);
         TextView nombre = dialogView.findViewById(R.id.c_nombre);
+
         TextView descripcion = dialogView.findViewById(R.id.c_desc);
         if( numImagenes == tamanio){
             //validamos que instancia de carta es
             if( carta instanceof CartaMonstruo){
+                Log.w("crearDialogAgregarCarta()", "ingresado a una carta de instacia Monstruo");
                 CartaMonstruo cm = (CartaMonstruo)carta;
                 // Configurar los valores dinámicos a mostrar
                 TextView ataque = dialogView.findViewById(R.id.c_atk);
@@ -478,37 +482,47 @@ public class MainActivity extends AppCompatActivity {
                 TextView atributoCarta = dialogView.findViewById(R.id.c_atributo);
                 TextView tipoCarta = dialogView.findViewById(R.id.c_tipo);
                 //damos los nuevos valores
+                ataque.setText(String.valueOf(cm.getAtaque()));
+                defensa.setText(String.valueOf(cm.getDefensa()));
+                Log.w("crearDialogAgregarCarta()", "se ha seteado  ataque y def del mosntruo" );
 
-                ataque.setText("ATK: "+ cm.getAtaque());
-                defensa.setText("DEF: "+cm.getDefensa());
-                atributoCarta.setText("Atributo: " + cm.getTipoAtributo());
-                tipoCarta.setText("Tipo de Monstruo: " + cm.getTipoMonstruoString());
+                atributoCarta.setText(""+cm.getTipoAtributo());
+                tipoCarta.setText(cm.getTipoMonstruoString());
             } else if (carta instanceof CartaMagica) {
+                Log.w("crearDialogAgregarCarta()", "ingresado a una carta de instacia Magica");
+
                 CartaMagica cm = (CartaMagica)carta;
+                TextView tituloIncAtk = dialogView.findViewById(R.id.tituloAtk);
+                TextView tituloIncDef = dialogView.findViewById(R.id.tituloDef);
                 TextView incAtk = dialogView.findViewById(R.id.c_atk);
                 TextView incDef = dialogView.findViewById(R.id.c_def);
                 TextView tipoMonstruo = dialogView.findViewById(R.id.c_tipo);
                 //asignacion valores
-                incAtk.setText("INC ATK: " + cm.getIncrementoAtaque());
-                incDef.setText("INC DEF: " + cm.getIncrementoDefensa());
-                tipoMonstruo.setText("Tipo Monstruo: " + cm.getTipoMonstruoString());
+                tituloIncAtk.setText("INC ATK: ");
+                tituloIncDef.setText("INC DEF: ");
+                incAtk.setText(String.valueOf(cm.getIncrementoAtaque()));
+                incDef.setText(String.valueOf(cm.getIncrementoDefensa()));
+                tipoMonstruo.setText(cm.getTipoMonstruoString());
 
                 //setteamos los demas campos no utilizados para q no aparezcan
-                dialogView.findViewById(R.id.c_atributo).setVisibility(View.GONE);
+                dialogView.findViewById(R.id.layout_atributo).setVisibility(View.GONE);
+
 
             } else if (carta instanceof CartaTrampa) {
+                Log.w("crearDialogAgregarCarta()", "ingresado a una carta de instacia Trampa");
+
                 CartaTrampa ct = (CartaTrampa)carta;
                 TextView atributo = dialogView.findViewById(R.id.c_atributo);
-                atributo.setText("Atributo: "+ ct.getTipoAtributo());
-                dialogView.findViewById(R.id.c_tipo).setVisibility(View.GONE);
-                dialogView.findViewById(R.id.c_atk).setVisibility(View.GONE);
-                dialogView.findViewById(R.id.c_def).setVisibility(View.GONE);
+                atributo.setText(""+ct.getTipoAtributo());
+                dialogView.findViewById(R.id.layout_tipo).setVisibility(View.GONE);
+                dialogView.findViewById(R.id.layout_atqYdef).setVisibility(View.GONE);
 
             }
 
             //setteamos los valores que toda carta tiene
+            claseCarta.setText(carta.StringClaseCarta());
             nombre.setText(carta.getNombre());
-            descripcion.setText("Descripcion: " + carta.getDescripcion());
+            descripcion.setText(carta.getDescripcion());
 
             // Crear el AlertDialog
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -529,6 +543,9 @@ public class MainActivity extends AppCompatActivity {
             if(id_contenedor != R.id.contenedorScrollRojo) {
                 dialogView.findViewById(R.id.btn_accept).setVisibility(View.GONE);
             }
+            //desaparece el layout carta magica enlazada:
+            dialogView.findViewById(R.id.layout_CartaEnlazada).setVisibility(View.GONE);
+
             // Mostrar el diálogo
             dialog.show();
 
@@ -657,6 +674,7 @@ public class MainActivity extends AppCompatActivity {
         // Uso de un Inflater para el diseño personalizado
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.datos_colocar_carta, null);
+        TextView claseCarta = dialogView.findViewById(R.id.claseCarta);
         TextView nombre = dialogView.findViewById(R.id.c_nombre);
         TextView descripcion = dialogView.findViewById(R.id.c_desc);
 
@@ -670,39 +688,55 @@ public class MainActivity extends AppCompatActivity {
             TextView defensa = dialogView.findViewById(R.id.c_def);
             TextView atributoCarta = dialogView.findViewById(R.id.c_atributo);
             TextView tipoCarta = dialogView.findViewById(R.id.c_tipo);
+            TextView magicaEnlazada = dialogView.findViewById(R.id.c_magicaEnlazada);
+            // obtenemos los inc de atk y def de la carta(si no tiene se pone por default 0)
+            Integer incATK =  (Integer)cm.obtenerIncrementosATKyDEF().getObj1();
+            Integer incDEF =  (Integer)cm.obtenerIncrementosATKyDEF().getObj2();
             //damos los nuevos valores
+            ataque.setText(cm.getAtaque()+ " + " + incATK);
+            defensa.setText(cm.getDefensa()+ " + "+ incDEF);
+            atributoCarta.setText(""+cm.getTipoAtributo());
+            tipoCarta.setText(cm.getTipoMonstruoString());
+            //modificamos el layout de carta magica enlazada
+            if(cm.getCartaMagica() != null) {
+                magicaEnlazada.setText(cm.getCartaMagica().getNombre());
+            }
 
-            ataque.setText("ATK: "+ cm.getAtaque());
-            defensa.setText("DEF: "+cm.getDefensa());
-            atributoCarta.setText("Atributo: " + cm.getTipoAtributo());
-            tipoCarta.setText("Tipo de Monstruo: " + cm.getTipoMonstruoString());
         } else if (carta instanceof CartaMagica) {
             CartaMagica cm = (CartaMagica)carta;
+            TextView tituloIncAtk = dialogView.findViewById(R.id.tituloAtk);
+            TextView tituloIncDef = dialogView.findViewById(R.id.tituloDef);
             TextView incAtk = dialogView.findViewById(R.id.c_atk);
             TextView incDef = dialogView.findViewById(R.id.c_def);
             TextView tipoMonstruo = dialogView.findViewById(R.id.c_tipo);
             //asignacion valores
-            incAtk.setText("INC ATK: " + cm.getIncrementoAtaque());
-            incDef.setText("INC DEF: " + cm.getIncrementoDefensa());
-            tipoMonstruo.setText("Tipo Monstruo: " + cm.getTipoMonstruoString());
+            tituloIncAtk.setText("INC ATK: ");
+            tituloIncDef.setText("INC DEF: ");
+            incAtk.setText(String.valueOf(cm.getIncrementoAtaque()));
+            incDef.setText(String.valueOf(cm.getIncrementoDefensa()));
+            tipoMonstruo.setText(cm.getTipoMonstruoString());
+
+            //escondemos el layout de carta enlazada:
+            dialogView.findViewById(R.id.layout_CartaEnlazada).setVisibility(View.GONE);
 
             //setteamos los demas campos no utilizados para q no aparezcan
-            dialogView.findViewById(R.id.c_atributo).setVisibility(View.GONE);
+            dialogView.findViewById(R.id.layout_atributo).setVisibility(View.GONE);
 
         } else if (carta instanceof CartaTrampa) {
             CartaTrampa ct = (CartaTrampa)carta;
             TextView atributo = dialogView.findViewById(R.id.c_atributo);
-            atributo.setText("Atributo: "+ ct.getTipoAtributo());
-            dialogView.findViewById(R.id.c_tipo).setVisibility(View.GONE);
-            dialogView.findViewById(R.id.c_atk).setVisibility(View.GONE);
-            dialogView.findViewById(R.id.c_def).setVisibility(View.GONE);
+            atributo.setText(""+ct.getTipoAtributo());
+            dialogView.findViewById(R.id.layout_tipo).setVisibility(View.GONE);
+            dialogView.findViewById(R.id.layout_atqYdef).setVisibility(View.GONE);
+            dialogView.findViewById(R.id.layout_CartaEnlazada).setVisibility(View.GONE);
 
         }
         Log.w("* CrearVentanaDescCarta"," seteamos los valores de toda carta");
 
         //setteamos los valores que toda carta tiene
+        claseCarta.setText(carta.StringClaseCarta());
         nombre.setText(carta.getNombre());
-        descripcion.setText("Descripcion: " + carta.getDescripcion());
+        descripcion.setText(carta.getDescripcion());
 
         // Crear el AlertDialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -868,22 +902,36 @@ public class MainActivity extends AppCompatActivity {
         // Uso de un Inflater para el diseño personalizado
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.datos_colocar_carta, null);
+        TextView claseCarta = dialogView.findViewById(R.id.claseCarta);
         TextView nombre = dialogView.findViewById(R.id.c_nombre);
         TextView descripcion = dialogView.findViewById(R.id.c_desc);
 
+
         Log.w("* crearDialogAtaque"," seteando los datos..");
+
+
         // Configurar los valores dinámicos a mostrar
         TextView ataque = dialogView.findViewById(R.id.c_atk);
         TextView defensa = dialogView.findViewById(R.id.c_def);
         TextView atributoCarta = dialogView.findViewById(R.id.c_atributo);
         TextView tipoCarta = dialogView.findViewById(R.id.c_tipo);
+        TextView magicaEnlazada = dialogView.findViewById(R.id.c_magicaEnlazada);
+        // obtenemos los inc de atk y def de la carta(si no tiene se pone por default 0)
+        Integer incATK =  (Integer)cm.obtenerIncrementosATKyDEF().getObj1();
+        Integer incDEF =  (Integer)cm.obtenerIncrementosATKyDEF().getObj2();
         //damos los nuevos valores
-        ataque.setText("ATK: "+ cm.getAtaque());
-        defensa.setText("DEF: "+cm.getDefensa());
-        atributoCarta.setText("Atributo: " + cm.getTipoAtributo());
-        tipoCarta.setText("Tipo de Monstruo: " + cm.getTipoMonstruoString());
+        ataque.setText(cm.getAtaque()+ " + " + incATK);
+        defensa.setText(cm.getDefensa()+ " + "+ incDEF);
+        atributoCarta.setText(""+cm.getTipoAtributo());
+        tipoCarta.setText(cm.getTipoMonstruoString());
+        //modificamos el layout de carta magica enlazada
+        if(cm.getCartaMagica() != null) {
+            magicaEnlazada.setText(cm.getCartaMagica().getNombre());
+        }
+
+        claseCarta.setText(cm.StringClaseCarta());
         nombre.setText(cm.getNombre());
-        descripcion.setText("Descripcion: " + cm.getDescripcion());
+        descripcion.setText(cm.getDescripcion());
 
         // Crear el AlertDialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
