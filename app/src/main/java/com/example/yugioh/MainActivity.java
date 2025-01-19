@@ -101,8 +101,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void llenartableromaquina(Tablero tablero, Jugador j2) {
-        j2.llenarTableroMaquina(tablero,this);
+    public void llenartableromaquina(Tablero tablero, Jugador j2,boolean soloQuieroActualizarView) {
+        if(!soloQuieroActualizarView)
+            j2.llenarTableroMaquina(tablero,this);
+        //se supone que ya modificó las cartas xd
+        //de esta forma, si ademas de actualizar el tablero fisico, quiero aplicar la logica de llenar tablero, es valido
+        Jugador.SalirDelModoDefensa(tablero);
         ArrayList<Carta> esp_mons = tablero.getTableroCompartido().get(2).get("CartasMonstruo");
         ArrayList<Carta> esp_esp = tablero.getTableroCompartido().get(2).get("CartasEspeciales");
         int indice = 1;
@@ -110,21 +114,21 @@ public class MainActivity extends AppCompatActivity {
         for (Carta carta : esp_mons) {
             CartaMonstruo c = (CartaMonstruo) carta;
             if (cont == 1)
-                agregarImagenTablero(c, R.id.mons_1_maq_carta, 2, !c.getisInAtaque(), c.getIsBocaArriba());
+                agregarImagenTablero(c, R.id.mons_1_maq_carta, 2, !c.getisInAtaque(), c.getIsBocaArriba(),soloQuieroActualizarView);
             else if (cont == 2)
-                agregarImagenTablero(c, R.id.mons_2_maq_carta, 2, !c.getisInAtaque(), c.getIsBocaArriba());
+                agregarImagenTablero(c, R.id.mons_2_maq_carta, 2, !c.getisInAtaque(), c.getIsBocaArriba(),soloQuieroActualizarView);
             else if (cont == 3)
-                agregarImagenTablero(c, R.id.mons_3_maq_carta, 2, !c.getisInAtaque(), c.getIsBocaArriba());
+                agregarImagenTablero(c, R.id.mons_3_maq_carta, 2, !c.getisInAtaque(), c.getIsBocaArriba(),soloQuieroActualizarView);
 
             cont++;
         }
         for (Carta carta : esp_esp) {
             if (indice == 1) {
-                agregarImagenTablero(carta, R.id.esp_1_maq_carta, 2, false, true);
+                agregarImagenTablero(carta, R.id.esp_1_maq_carta, 2, false, true,soloQuieroActualizarView);
             } else if (indice == 2) {
-                agregarImagenTablero(carta, R.id.esp_2_maq_carta, 2, false, true);
+                agregarImagenTablero(carta, R.id.esp_2_maq_carta, 2, false, true,soloQuieroActualizarView);
             } else if (indice == 3) {
-                agregarImagenTablero(carta, R.id.esp_3_maq_carta, 2, false, true);
+                agregarImagenTablero(carta, R.id.esp_3_maq_carta, 2, false, true,soloQuieroActualizarView);
             }
             indice++;
         }
@@ -250,6 +254,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+
     }
 
     public static void quitarImagenTablero(Carta carta, ConstraintLayout contenedor) {
@@ -329,7 +334,7 @@ public class MainActivity extends AppCompatActivity {
             restringir_movimientos(false,2);
             crearDialog("Llenar Tablero","La Máquina ha robado una carta del deck y procede a llenar su tablero");
             Carta c = j2.tomarCartaEnTurno(deckmaq); //actualiza por detras al numero(view) de cartas del jugador, retorna y agrega la carta tomada a la mano logica
-            llenartableromaquina(tablero,j2);
+            llenartableromaquina(tablero,j2,false);
             mostrarImagenScroll(c,R.id.contenedorScrollAzul);
 
         }
@@ -350,19 +355,25 @@ public class MainActivity extends AppCompatActivity {
     public void faseDeclararBatalla(){
         //solo de prueba
         //Utilitaria.mensajeLargo(mensajes,"Testeto de los mensajes largos acá (interaccion con usuario), se puede utilizar esto o el toast",true);
-        j2.setMaquinaCambiarViewUnico(false);//se modifica en declarabatallacomomaquina y en ataque entre cartas
         restringir_movimientos(true,1);//así no se puede añadir cartas en el tablero durante la base batalla
         if (partida.getJugadorActual() ==1){
             crearDialog("DECLARAR BATALLA","Es tu turno de declarar batalla");
             setearMonstruosParaAtacar(j1, true); ///agregado Alan
+        //por si acaso haya algún cambio en el view de la máquina por el ataque del user
+            if(j2.getMaquinaCambiarViewUnico())
+                llenartableromaquina(tablero,j2,true);
+            //lo puse aca tambien porque no se estaba actualizando el boton
+            if(j2.esDerrotado())
+                cambiarBotonFases("Game Over","#FFCC99",true);
         }
         else{
+            setearMonstruosParaAtacar(j1, false); //agregado Alan
             j2.declararBatallaComoMaquina(tablero,j1,this,vidaUser,vidaMaq);
             if (j2.getMaquinaCambiarViewUnico()) //me indica si hay alguna carta volteada
-                llenartableromaquina(tablero,j2); //para que las cartas se pongan en modo defensa (cuando sea necesario)
-            setearMonstruosParaAtacar(j1, false); //agregado Alan
-            j2.setMaquinaCambiarViewUnico(false);
+                llenartableromaquina(tablero,j2,true); //para que las cartas se pongan en modo defensa (cuando sea necesario)
         }
+        //se resetea para el siguiente turno
+        j2.setMaquinaCambiarViewUnico(false);//se modifica en declarabatallacomomaquina y en ataque entre carta
     }
 
     public void restringir_movimientos(boolean val,int id_jugador){
@@ -384,11 +395,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
-
-
-
-
 
     public void mostrarImagenScroll(Carta cartaAMostrar, int idLinearLayoutScroll){
         //Recibe el linearLayout de un Scroll y una carta, crea la vista de la carta en el Scroll
@@ -608,7 +614,7 @@ public class MainActivity extends AppCompatActivity {
                 ImageView imV = (ImageView)hijo;
                 int idImage = imV.getId();
                 if(imV.getContentDescription().equals("Casillero Disponible")){
-                    agregarImagenTablero(cartaAAgregar, idImage, j1.getId(), vaGirada, mostrar);
+                    agregarImagenTablero(cartaAAgregar, idImage, j1.getId(), vaGirada, mostrar,false);
                     return;
                 }
 
@@ -617,9 +623,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void agregarImagenTablero(Carta c, int id_view,int id_jugador , boolean vaGirada, boolean mostrar){
+    public void agregarImagenTablero(Carta c, int id_view,int id_jugador , boolean vaGirada, boolean mostrar,boolean soloQuieroActualizar){
         // agrega la imagen de la carta recibida al View con el id recibido y define su posicion, quita la carta  de la mano visual del jugador.
-        quitarImagenMano(c,id_jugador);
+        //solo quier actualizar servirá para evitar errores con la lógica de la máquina y para que se actualice automásticamente el view del tablero
+        if(!soloQuieroActualizar)
+            quitarImagenMano(c,id_jugador);
         ImageView v = findViewById(id_view); //
         Resources res = getResources(); //
         int rId = R.drawable.carta_bocaabajo;
@@ -1021,7 +1029,7 @@ public class MainActivity extends AppCompatActivity {
                             //actualizamos el tablero logico y por dentro eliminamos las vistas correpondientes
                             j1.declararBatalla(j2, partida, monstruoAtacante, cartaQSeAtaca, context, vidaMaq, vidaUser);
                             if (j2.getMaquinaCambiarViewUnico()) //si hay que voltear alguna carta en defensa
-                                llenartableromaquina(tablero,j2);
+                                llenartableromaquina(tablero,j2,true);
 
                         } else {
                             Utilitaria.crearToast(MainActivity.this,"No se seleccionó ninguna carta",false);
@@ -1060,11 +1068,11 @@ public class MainActivity extends AppCompatActivity {
             if (mons.getisInAtaque())//si está en ataque, se pone en modo defensa
             {
                 mons.setisInAtaque(false);
-                agregarImagenTablero(cartaACambiar,id_view,1,!mons.getisInAtaque(),true);
+                agregarImagenTablero(cartaACambiar,id_view,1,!mons.getisInAtaque(),true,true);
                 Utilitaria.crearToast(MainActivity.this,"La carta se ha puesto en modo defensa",false);}
             else{
                 mons.setisInAtaque(true); //una carta puede estar en defensa boca arriba, luego de sobrevivir a un ataque cuando estaba boca abajo
-                agregarImagenTablero(cartaACambiar,id_view,1,!mons.getisInAtaque(),true);
+                agregarImagenTablero(cartaACambiar,id_view,1,!mons.getisInAtaque(),true,true);
                 Utilitaria.crearToast(MainActivity.this,"La carta se ha puesto en modo ataque",false);
             }}
         else

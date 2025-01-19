@@ -249,7 +249,7 @@ public class Tablero {
                 if((cartaJugador.getAtaque() + incAtkJugador) >= (cartaEnemigo.getDefensa() + incDefEnemigo)){
                     //si el ataque del jugador es mayor a la defensa del enemigo
                     Utilitaria.crearToast(context, "(defensa)"+cartaJugador.getAtaque() + "+" + incAtkJugador +" -><- "+ cartaEnemigo.getDefensa() + "+" + incDefEnemigo, false );
-                    Utilitaria.crearToast(context, "se destruyo la defensa del enemigo", false);
+                    Utilitaria.crearToast(context, "se destruyo la defensa de "+enemigo.getNombre(), false);
 
                     quitarCartaTablero(cartaEnemigo, enemigoID);
                     eliminarCartaMagicaAsociada(enemigo, cartaEnemigo);
