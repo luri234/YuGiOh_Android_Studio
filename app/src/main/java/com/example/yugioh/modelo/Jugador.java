@@ -76,9 +76,9 @@ public class Jugador {
                                         c1.setCartaMagica(carta1);
                                         Utilitaria.crearToast(context,"La máquina ha enlazado '"+carta.getNombre()+"' al monstruo '"+c1.getNombre()+"'",false);
                                         if(carta1.getIncrementoAtaque()>0)
-                                            Utilitaria.crearToast(context,c1.getNombre()+"recibe un aumento en ataque: "+c1.getAtaque()+"--->" +(c1.getAtaque()+carta1.getIncrementoAtaque()),false);
+                                            Utilitaria.crearToast(context,c1.getNombre()+"aumenta su ataque: "+c1.getAtaque()+"--->" +(c1.getAtaque()+carta1.getIncrementoAtaque()),false);
                                         else
-                                            Utilitaria.crearToast(context,c1.getNombre()+"recibe un aumento en defensa: "+c1.getDefensa()+"--->" +(c1.getDefensa()+carta1.getIncrementoDefensa()),false);
+                                            Utilitaria.crearToast(context,c1.getNombre()+"aumenta su defensa: "+c1.getDefensa()+"--->" +(c1.getDefensa()+carta1.getIncrementoDefensa()),false);
 
                                         return;
                                     }}
@@ -138,7 +138,7 @@ public class Jugador {
             Utilitaria.crearToast(context,"La Máquina no tiene monstruos en el tablero para atacar",false);
             return;
         }
-        Utilitaria.crearToast(context,"La " + this.getNombre() + " podría declararte batalla!! " + oponente.getNombre() + " más vale que estés preparadx ",true);
+        Utilitaria.crearToast(context,"La " + this.getNombre() + " podría declararte batalla!! ",true);
         for (Carta c:MonstruosTablero) {
             CartaMonstruo mons = (CartaMonstruo)c;
             if (mons.getisInAtaque() && mons.getPuedeAtacar())
@@ -157,7 +157,7 @@ public class Jugador {
             incAtk = (Integer)incrementos.obj1;
 
             if (cartaTrampa != null) {
-                Utilitaria.crearToast(context,oponente.getNombre() + " activa la carta trampa '" + cartaTrampa.getNombre() + "' y detiene el ataque de '" + cartaAtacante.getNombre() + "'.",false);
+                Utilitaria.crearToast(context,oponente.getNombre() + "niega el ataque con '" + cartaTrampa.getNombre() ,false);
                 tablero.quitarCartaTablero(cartaTrampa, oponente.getId());
                 cartaAtacante.setPuedeAtacar(false);//ejecutó un ataque directo, entonces ya no puede atacar
                 continue; //pasa a la siguiente iteracion
@@ -186,7 +186,7 @@ public class Jugador {
                         }
 
                     } else {
-                        Utilitaria.crearToast(context,"La Máquina decidió no usar a " + cartaAtacante.getNombre() + " para atacar a tu carta " + cartaMonstruoRival.getNombre() + " porque no le conviene.",true);
+                        Utilitaria.crearToast(context,"La Máquina no va usar " + cartaAtacante.getNombre() + " para atacar a " + cartaMonstruoRival.getNombre() + " porque no le conviene.",true);
                         contador++;
                     }
                 }

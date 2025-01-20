@@ -668,6 +668,10 @@ public class MainActivity extends AppCompatActivity {
         ConstraintLayout contenedorPadre =(ConstraintLayout)(imgCarta.getParent());
         int id_contenedor = contenedorPadre.getId();
 
+        //definimos el id de los contenedor de cartas del jugador(para mas adelante)
+        int idConstraintMonstruosJ = findViewById(R.id.CartasMonstruoJugador).getId();
+        int idConstraintEspecialesJ = findViewById(R.id.CartasEspecialesJugador).getId();
+
 
         Log.w("* CrearVentanaDescCarta",getResources().getResourceName(id_contenedor));
 
@@ -678,6 +682,11 @@ public class MainActivity extends AppCompatActivity {
         TextView claseCarta = dialogView.findViewById(R.id.claseCarta);
         TextView nombre = dialogView.findViewById(R.id.c_nombre);
         TextView descripcion = dialogView.findViewById(R.id.c_desc);
+
+        //setteamos los valores que toda carta tiene
+        claseCarta.setText(carta.StringClaseCarta());
+        nombre.setText(carta.getNombre());
+        descripcion.setText(carta.getDescripcion());
 
         Log.w("* CrearVentanaDescCarta"," validacion de cada instancia");
 
@@ -701,6 +710,16 @@ public class MainActivity extends AppCompatActivity {
             //modificamos el layout de carta magica enlazada
             if(cm.getCartaMagica() != null) {
                 magicaEnlazada.setText(cm.getCartaMagica().getNombre());
+            }
+
+            //eliminamos la visibilidad de los datos de la carta si esta boca abajo
+            if(id_contenedor != idConstraintMonstruosJ && id_contenedor != idConstraintEspecialesJ && !cm.getisBocaArriba()){
+                nombre.setText("Carta Boca Abajo");
+                ataque.setText("???");
+                defensa.setText("???");
+                dialogView.findViewById(R.id.layout_descripcion).setVisibility(View.GONE);
+                dialogView.findViewById(R.id.layout_atributo).setVisibility(View.GONE);
+                dialogView.findViewById(R.id.layout_tipo).setVisibility(View.GONE);
             }
 
         } else if (carta instanceof CartaMagica) {
@@ -734,11 +753,6 @@ public class MainActivity extends AppCompatActivity {
         }
         Log.w("* CrearVentanaDescCarta"," seteamos los valores de toda carta");
 
-        //setteamos los valores que toda carta tiene
-        claseCarta.setText(carta.StringClaseCarta());
-        nombre.setText(carta.getNombre());
-        descripcion.setText(carta.getDescripcion());
-
         // Crear el AlertDialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(dialogView);
@@ -766,11 +780,9 @@ public class MainActivity extends AppCompatActivity {
         Log.w("* CrearVentanaDescCarta"," validacion de contenedor padre y desapereciendo el boton");
 
         //Desaparece el boton 'colocar' para las cartas de los layouts de la maquina
-        int idConstraintMonstruosJ = findViewById(R.id.CartasMonstruoJugador).getId();
-        int idConstraintEspecialesJ = findViewById(R.id.CartasEspecialesJugador).getId();
-
         if(id_contenedor != idConstraintMonstruosJ && id_contenedor != idConstraintEspecialesJ) {
             dialogView.findViewById(R.id.btn_accept).setVisibility(View.GONE);
+
         } else if (carta instanceof CartaTrampa || carta instanceof CartaMagica) {
             dialogView.findViewById(R.id.btn_accept).setVisibility(View.GONE);
         }
@@ -788,7 +800,7 @@ public class MainActivity extends AppCompatActivity {
 
         CartaMagica cartaMagicaCasteada = (CartaMagica)cartaMagica;
 
-        //de todas los mosntruos q hay en el tablero, clasifico solo las que coinciden con el tipoMonstruo de cartaMagica
+        //de todas los mosntruos q hay en el tablero, clasifico solo las que coinciden con el tipoMonstruo de cartaMagica y que no tengan asociado
         HashMap<String, Integer> dic = tablero.filtrarCartasMonstruoPorAtributo(cartaMagicaCasteada, jQEnlaza);
 
         //creo una array con las claves del dic(los nombres de las cartasMonstruo)

@@ -159,7 +159,7 @@ public class Tablero {
         ArrayList<Carta> espacioMonstruosJ = tableroCompartido.get(jugador.getId()).get("CartasMonstruo");
         int i = 0;
         for (Carta cartaMonstruo : espacioMonstruosJ) {
-            if (((CartaMonstruo) cartaMonstruo).getTipoMonstruo() == cm.getTipoMonstruo()) {
+            if (((CartaMonstruo) cartaMonstruo).getTipoMonstruo() == cm.getTipoMonstruo() && ((CartaMonstruo) cartaMonstruo).getCartaMagica() == null ) {
                 i += 1;
             }
         }
@@ -207,7 +207,7 @@ public class Tablero {
                     danioRealAJugador = 0;
 
                     Utilitaria.crearToast(context, cartaJugador.getAtaque() + "+" + incAtkJugador +" -><- "+ cartaEnemigo.getAtaque() + "+" + incAtkEnemigo, false );
-                    Utilitaria.crearToast(context, "se destruyo la carta enemiga", false);
+                    Utilitaria.crearToast(context, "se destruyo la carta de"+ enemigo.getNombre(), false);
 
                     quitarCartaTablero(cartaEnemigo, enemigoID);//ya elimina la carta del view
                     eliminarCartaMagicaAsociada(enemigo, cartaEnemigo);
@@ -280,7 +280,7 @@ public class Tablero {
         }else{
             //si existe una carta trampa q impida el ataque
             CartaTrampa cartaTrampa = verificarCartaTrampa(enemigo, cartaJugador);
-            Utilitaria.crearToast(context, "La carta trampa "+ cartaTrampa.getNombre()+" detuvo el ataque", false);System.out.println("|   Se detuvo el ataque! la carta Trampa " + "'"+cartaTrampa.getNombre()+"'"+ "se interpuso");
+            Utilitaria.crearToast(context, "La carta trampa "+ cartaTrampa.getNombre()+" detuvo el ataque!", false);System.out.println("|   Se detuvo el ataque! la carta Trampa " + "'"+cartaTrampa.getNombre()+"'"+ "se interpuso");
             quitarCartaTablero(cartaTrampa, enemigoID);
             Log.w("* ataqueEntreCartas()", "Fin de la funcion");
             return new Tupla(0, 0);
@@ -334,7 +334,7 @@ public class Tablero {
         for(Carta carta : monstruosTableroJ){
             CartaMonstruo cartaMonstruo = (CartaMonstruo)carta;
             //si el tipodeMonstruo de la cartaMonstruo es igual al de la carta magica provista, se agrega al dic
-            if(cartaMonstruo.getTipoMonstruoString().equals(cm.getTipoMonstruoString())){
+            if(cartaMonstruo.getTipoMonstruoString().equals(cm.getTipoMonstruoString()) && (cartaMonstruo.getCartaMagica() == null)){
                 dic.put(cartaMonstruo.getNombre(), cartaMonstruo.getId());
             }
         }
